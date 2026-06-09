@@ -1,0 +1,25 @@
+# OpenVPN Access Server (https://meclayt.openvpn.com/):
+#   Log in in a browser → download your user profile → save as client.ovpn
+#   Or: ./scripts/download-profile.sh (see README)
+#
+# Other VPNs: provider dashboard → OpenVPN → download .ovpn
+#
+# Minimal template (your provider will give you remote, certs, and auth):
+
+client
+dev tun
+proto udp
+remote vpn.example.com 1194
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+remote-cert-tls server
+verb 3
+
+# auth-user-pass          # uncomment if username/password required
+# <ca>
+# -----BEGIN CERTIFICATE-----
+# ... paste CA from provider ...
+# -----END CERTIFICATE-----
+# </ca>

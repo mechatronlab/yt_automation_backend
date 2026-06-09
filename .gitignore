@@ -1,0 +1,7 @@
+node_modules/
+config.json
+.openvpn.pid
+*.ovpn
+auth.txt
+openvpn.log
+logs/

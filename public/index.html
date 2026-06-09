@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VPN Server Scanner</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0f1419;
+      --panel: #1a2332;
+      --border: #2d3a4f;
+      --text: #e7ecf3;
+      --muted: #8b9cb3;
+      --success: #3dd68c;
+      --error: #ff6b6b;
+      --pending: #f0b429;
+      --accent: #5b9dff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 600;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    button {
+      background: var(--accent);
+      color: #081018;
+      border: none;
+      border-radius: 8px;
+      padding: 0.55rem 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    main {
+      padding: 1.5rem 2rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .stat-value {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-top: 0.25rem;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-idle { background: #334155; color: var(--muted); }
+    .status-running { background: #3d2e00; color: var(--pending); }
+    .status-completed { background: #0f3d2e; color: var(--success); }
+
+    .entries {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .entry {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .entry-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.9rem 1rem;
+      cursor: pointer;
+    }
+
+    .entry-header:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .entry-title {
+      font-weight: 600;
+    }
+
+    .entry-meta {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .pill {
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .pill.success { background: #0f3d2e; color: var(--success); }
+    .pill.error { background: #3d1515; color: var(--error); }
+    .pill.pending { background: #3d2e00; color: var(--pending); }
+
+    .entry-body {
+      display: none;
+      padding: 0 1rem 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .entry.open .entry-body {
+      display: block;
+    }
+
+    pre {
+      background: #0b1017;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      overflow: auto;
+      font-size: 0.82rem;
+      margin: 0.75rem 0 0;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 3rem 1rem;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+    }
+
+    .meta-row {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>VPN Server Scanner</h1>
+    <div class="actions">
+      <span id="scanState" class="status-badge status-idle">idle</span>
+      <button id="refreshBtn" type="button">Refresh</button>
+      <button id="scanBtn" type="button">Start Scan</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="meta-row" id="runMeta">No scan data yet.</div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Total</div>
+        <div class="stat-value" id="statTotal">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Completed</div>
+        <div class="stat-value" id="statCompleted">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Success</div>
+        <div class="stat-value" id="statSuccess">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Failed</div>
+        <div class="stat-value" id="statFailed">0</div>
+      </div>
+    </div>
+
+    <div class="entries" id="entries">
+      <div class="empty">Run a scan to see results here.</div>
+    </div>
+  </main>
+
+  <script>
+    const entriesEl = document.getElementById("entries");
+    const scanBtn = document.getElementById("scanBtn");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const scanState = document.getElementById("scanState");
+
+    function formatTime(iso) {
+      if (!iso) return "—";
+      return new Date(iso).toLocaleString();
+    }
+
+    function renderLogs(data) {
+      document.getElementById("statTotal").textContent = data.total ?? 0;
+      document.getElementById("statCompleted").textContent = data.completed ?? 0;
+      document.getElementById("statSuccess").textContent = data.success ?? 0;
+      document.getElementById("statFailed").textContent = data.failed ?? 0;
+
+      const status = data.status ?? "idle";
+      scanState.textContent = status;
+      scanState.className = `status-badge status-${status}`;
+
+      const meta = [];
+      if (data.startedAt) meta.push(`Started: ${formatTime(data.startedAt)}`);
+      if (data.finishedAt) meta.push(`Finished: ${formatTime(data.finishedAt)}`);
+      document.getElementById("runMeta").textContent = meta.length ? meta.join(" · ") : "No scan data yet.";
+
+      if (!data.entries || data.entries.length === 0) {
+        entriesEl.innerHTML = '<div class="empty">Run a scan to see results here.</div>';
+        return;
+      }
+
+      entriesEl.innerHTML = data.entries.map((entry) => {
+        const pillClass = entry.status === "success" ? "success" : entry.status === "error" ? "error" : "pending";
+        return `
+          <article class="entry">
+            <div class="entry-header" onclick="this.parentElement.classList.toggle('open')">
+              <div>
+                <div class="entry-title">${entry.index}/${entry.total} · ${entry.server}</div>
+                <div class="entry-meta">${entry.filename}</div>
+              </div>
+              <span class="pill ${pillClass}">${entry.status}</span>
+            </div>
+            <div class="entry-body">
+              <div class="entry-meta">Started: ${formatTime(entry.startedAt)} · Finished: ${formatTime(entry.finishedAt)}</div>
+              ${entry.error ? `<pre>${entry.error}</pre>` : ""}
+              ${entry.ipCheck ? `<pre>${JSON.stringify(entry.ipCheck.body, null, 2)}</pre>` : ""}
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function fetchLogs() {
+      const res = await fetch("/api/logs");
+      const data = await res.json();
+      renderLogs(data);
+    }
+
+    async function fetchStatus() {
+      const res = await fetch("/api/status");
+      const data = await res.json();
+      scanBtn.disabled = data.scanRunning;
+      scanBtn.textContent = data.scanRunning ? "Scan Running..." : "Start Scan";
+    }
+
+    async function refresh() {
+      await Promise.all([fetchLogs(), fetchStatus()]);
+    }
+
+    scanBtn.addEventListener("click", async () => {
+      scanBtn.disabled = true;
+      await fetch("/api/scan", { method: "POST" });
+      await refresh();
+    });
+
+    refreshBtn.addEventListener("click", refresh);
+
+    refresh();
+    setInterval(refresh, 3000);
+  </script>
+</body>
+</html>

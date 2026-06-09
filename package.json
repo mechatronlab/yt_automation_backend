@@ -1,0 +1,21 @@
+{
+  "name": "vpn-controller",
+  "version": "1.0.0",
+  "description": "Connect and disconnect VPN from Node.js",
+  "type": "module",
+  "main": "src/vpn.js",
+  "bin": {
+    "vpn": "src/cli.js"
+  },
+  "scripts": {
+    "connect": "node src/cli.js connect",
+    "disconnect": "node src/cli.js disconnect",
+    "status": "node src/cli.js status",
+    "scan": "node src/scanner.js",
+    "dashboard": "node src/server.js",
+    "clean": "node scripts/clean.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

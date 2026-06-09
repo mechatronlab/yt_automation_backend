@@ -1,0 +1,19 @@
+{
+  "provider": "connect",
+  "serverListDir": "./serverListTCP",
+  "connect": {
+    "appPath": "/Applications/OpenVPN Connect/OpenVPN Connect.app/Contents/MacOS/OpenVPN Connect"
+  },
+  "openvpn": {
+    "authFile": "./auth.txt",
+    "pidFile": "./.openvpn.pid",
+    "logFile": "./openvpn.log"
+  },
+  "scanner": {
+    "checkUrl": "http://ip-api.com/json",
+    "logsFile": "./logs/scan-results.json",
+    "connectTimeoutMs": 90000,
+    "requestTimeoutMs": 15000,
+    "delayBetweenServersMs": 2000
+  }
+}
