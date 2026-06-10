@@ -1,0 +1,297 @@
+{
+  "startedAt": "2026-06-10T19:28:00.156Z",
+  "finishedAt": null,
+  "status": "running",
+  "total": 150,
+  "completed": 12,
+  "success": 0,
+  "failed": 12,
+  "entries": [
+    {
+      "index": 1,
+      "total": 150,
+      "server": "AD-Andorra la Vella - Virtual-TCP",
+      "filename": "NCVPN-AD-Andorra la Vella - Virtual-TCP.ovpn",
+      "configPath": "/Users/macbook/Documents/Backup/yt_automation/serverListTCP/NCVPN-AD-Andorra la Vella - Virtual-TCP.ovpn",
+      "startedAt": "2026-06-10T19:28:00.157Z",
+      "finishedAt": "2026-06-10T19:28:03.891Z",
+      "status": "error",
+      "connect": {
+        "provider": "openvpn",
+        "profileId": null,
+        "pid": null,
+        "connected": false
+      },
+      "ipCheck": {
+        "ok": false,
+        "status": 0,
+        "body": null
+      },
+      "error": "Authentication failed — check VPN credentials."
+    },
+    {
+      "index": 2,
+      "total": 150,
+      "server": "AE-Dubai-TCP",
+      "filename": "NCVPN-AE-Dubai-TCP.ovpn",
+      "configPath": "/Users/macbook/Documents/Backup/yt_automation/serverListTCP/NCVPN-AE-Dubai-TCP.ovpn",
+      "startedAt": "2026-06-10T19:28:07.978Z",
+      "finishedAt": "2026-06-10T19:28:12.245Z",
+      "status": "error",
+      "connect": {
+        "provider": "openvpn",
+        "profileId": null,
+        "pid": null,
+        "connected": false
+      },
+      "ipCheck": {
+        "ok": false,
+        "status": 0,
+        "body": null
+      },
+      "error": "Authentication failed — check VPN credentials."
+    },
+    {
+      "index": 3,
+      "total": 150,
+      "server": "AL-Tirana-TCP",
+      "filename": "NCVPN-AL-Tirana-TCP.ovpn",
+      "configPath": "/Users/macbook/Documents/Backup/yt_automation/serverListTCP/NCVPN-AL-Tirana-TCP.ovpn",
+      "startedAt": "2026-06-10T19:28:16.325Z",
+      "finishedAt": "2026-06-10T19:28:21.799Z",
+      "status": "error",
+      "connect": {
+        "provider": "openvpn",
+        "profileId": null,
+        "pid": null,
+        "connected": false
+      },
+      "ipCheck": {
+        "ok": false,
+        "status": 0,
+        "body": null
+      },
+      "error": "Authentication failed — check VPN credentials."
+    },
+    {
+      "index": 4,
+      "total": 150,
+      "server": "AM-Yerevan - Virtual-TCP",
+      "filename": "NCVPN-AM-Yerevan - Virtual-TCP.ovpn",
+      "configPath": "/Users/macbook/Documents/Backup/yt_automation/serverListTCP/NCVPN-AM-Yerevan - Virtual-TCP.ovpn",
+      "startedAt": "2026-06-10T19:28:25.857Z",
+      "finishedAt": "2026-06-10T19:28:30.050Z",
+      "status": "error",
+      "connect": {
+        "provider": "openvpn",
+        "profileId": null,
+        "pid": null,
+        "connected": false
+      },
+      "ipCheck": {
+        "ok": false,
+        "status": 0,
+        "body": null
+      },
+      "error": "Authentication failed — check VPN credentials."
+    },
+    {
+      "index": 5,
+      "total": 150,
+      "server": "AR-Buenos Aires-TCP",
+      "filename": "NCVPN-AR-Buenos Aires-TCP.ovpn",
+      "configPath": "/Users/macbook/Documents/Backup/yt_automation/serverListTCP/NCVPN-AR-Buenos Aires-TCP.ovpn",
+      "startedAt": "2026-06-10T19:28:34.098Z",
+      "finishedAt": "2026-06-10T19:28:39.400Z",
+      "status": "error",
+      "connect": {
+        "provider": "openvpn",
+        "profileId": null,
+        "pid": null,
+        "connected": false
+      },
+      "ipCheck": {
+        "ok": false,
+        "status": 0,
+        "body": null
+      },
+      "error": "Authentication failed — check VPN credentials."
+    },
+    {
+      "index": 6,
+      "total": 150,
+      "server": "AT-Vienna-TCP",
+      "filename": "NCVPN-AT-Vienna-TCP.ovpn",
+      "configPath": "/Users/macbook/Documents/Backup/yt_automation/serverListTCP/NCVPN-AT-Vienna-TCP.ovpn",
+      "startedAt": "2026-06-10T19:28:43.448Z",
+      "finishedAt": "2026-06-10T19:28:47.083Z",
+      "status": "error",
+      "connect": {
+        "provider": "openvpn",
+        "profileId": null,
+        "pid": null,
+        "connected": false
+      },
+      "ipCheck": {
+        "ok": false,
+        "status": 0,
+        "body": null
+      },
+      "error": "Authentication failed — check VPN credentials."
+    },
+    {
+      "index": 7,
+      "total": 150,
+      "server": "AU-Adelaide-TCP",
+      "filename": "NCVPN-AU-Adelaide-TCP.ovpn",
+      "configPath": "/Users/macbook/Documents/Backup/yt_automation/serverListTCP/NCVPN-AU-Adelaide-TCP.ovpn",
+      "startedAt": "2026-06-10T19:28:51.129Z",
+      "finishedAt": "2026-06-10T19:28:54.760Z",
+      "status": "error",
+      "connect": {
+        "provider": "openvpn",
+        "profileId": null,
+        "pid": null,
+        "connected": false
+      },
+      "ipCheck": {
+        "ok": false,
+        "status": 0,
+        "body": null
+      },
+      "error": "Authentication failed — check VPN credentials."
+    },
+    {
+      "index": 8,
+      "total": 150,
+      "server": "AU-Brisbane-TCP",
+      "filename": "NCVPN-AU-Brisbane-TCP.ovpn",
+      "configPath": "/Users/macbook/Documents/Backup/yt_automation/serverListTCP/NCVPN-AU-Brisbane-TCP.ovpn",
+      "startedAt": "2026-06-10T19:28:58.812Z",
+      "finishedAt": "2026-06-10T19:29:02.979Z",
+      "status": "error",
+      "connect": {
+        "provider": "openvpn",
+        "profileId": null,
+        "pid": null,
+        "connected": false
+      },
+      "ipCheck": {
+        "ok": false,
+        "status": 0,
+        "body": null
+      },
+      "error": "Authentication failed — check VPN credentials."
+    },
+    {
+      "index": 9,
+      "total": 150,
+      "server": "AU-Melbourne-TCP",
+      "filename": "NCVPN-AU-Melbourne-TCP.ovpn",
+      "configPath": "/Users/macbook/Documents/Backup/yt_automation/serverListTCP/NCVPN-AU-Melbourne-TCP.ovpn",
+      "startedAt": "2026-06-10T19:29:07.025Z",
+      "finishedAt": "2026-06-10T19:29:10.884Z",
+      "status": "error",
+      "connect": {
+        "provider": "openvpn",
+        "profileId": null,
+        "pid": null,
+        "connected": false
+      },
+      "ipCheck": {
+        "ok": false,
+        "status": 0,
+        "body": null
+      },
+      "error": "Authentication failed — check VPN credentials."
+    },
+    {
+      "index": 10,
+      "total": 150,
+      "server": "AU-Perth-TCP",
+      "filename": "NCVPN-AU-Perth-TCP.ovpn",
+      "configPath": "/Users/macbook/Documents/Backup/yt_automation/serverListTCP/NCVPN-AU-Perth-TCP.ovpn",
+      "startedAt": "2026-06-10T19:29:15.003Z",
+      "finishedAt": "2026-06-10T19:29:18.632Z",
+      "status": "error",
+      "connect": {
+        "provider": "openvpn",
+        "profileId": null,
+        "pid": null,
+        "connected": false
+      },
+      "ipCheck": {
+        "ok": false,
+        "status": 0,
+        "body": null
+      },
+      "error": "Authentication failed — check VPN credentials."
+    },
+    {
+      "index": 11,
+      "total": 150,
+      "server": "AU-Sydney-TCP",
+      "filename": "NCVPN-AU-Sydney-TCP.ovpn",
+      "configPath": "/Users/macbook/Documents/Backup/yt_automation/serverListTCP/NCVPN-AU-Sydney-TCP.ovpn",
+      "startedAt": "2026-06-10T19:29:22.678Z",
+      "finishedAt": "2026-06-10T19:29:27.020Z",
+      "status": "error",
+      "connect": {
+        "provider": "openvpn",
+        "profileId": null,
+        "pid": null,
+        "connected": false
+      },
+      "ipCheck": {
+        "ok": false,
+        "status": 0,
+        "body": null
+      },
+      "error": "Authentication failed — check VPN credentials."
+    },
+    {
+      "index": 12,
+      "total": 150,
+      "server": "AZ-Baku - Virtual-TCP",
+      "filename": "NCVPN-AZ-Baku - Virtual-TCP.ovpn",
+      "configPath": "/Users/macbook/Documents/Backup/yt_automation/serverListTCP/NCVPN-AZ-Baku - Virtual-TCP.ovpn",
+      "startedAt": "2026-06-10T19:29:31.197Z",
+      "finishedAt": "2026-06-10T19:29:35.083Z",
+      "status": "error",
+      "connect": {
+        "provider": "openvpn",
+        "profileId": null,
+        "pid": null,
+        "connected": false
+      },
+      "ipCheck": {
+        "ok": false,
+        "status": 0,
+        "body": null
+      },
+      "error": "Authentication failed — check VPN credentials."
+    },
+    {
+      "index": 13,
+      "total": 150,
+      "server": "BA-Sarajevo - Virtual-TCP",
+      "filename": "NCVPN-BA-Sarajevo - Virtual-TCP.ovpn",
+      "configPath": "/Users/macbook/Documents/Backup/yt_automation/serverListTCP/NCVPN-BA-Sarajevo - Virtual-TCP.ovpn",
+      "startedAt": "2026-06-10T19:29:39.126Z",
+      "finishedAt": null,
+      "status": "pending",
+      "connect": {
+        "provider": "openvpn",
+        "profileId": null,
+        "pid": null,
+        "connected": false
+      },
+      "ipCheck": {
+        "ok": false,
+        "status": 0,
+        "body": null
+      },
+      "error": null
+    }
+  ]
+}

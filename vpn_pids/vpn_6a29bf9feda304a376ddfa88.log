@@ -1,0 +1,19 @@
+2026-06-11 01:18:48 OpenVPN 2.7.4 x86_64-apple-darwin23.6.0 [SSL (OpenSSL)] [LZO] [LZ4] [PKCS11] [MH/RECVDA] [AEAD]
+2026-06-11 01:18:48 library versions: OpenSSL 3.6.2 7 Apr 2026, LZO 2.10
+2026-06-11 01:18:48 TCP/UDP: Preserving recently used remote address: [AF_INET6]64:ff9b::cdb9:dd8a:443
+2026-06-11 01:18:48 Socket Buffers: R=[131072->131072] S=[131072->131072]
+2026-06-11 01:18:48 Attempting to establish TCP connection with [AF_INET6]64:ff9b::cdb9:dd8a:443
+2026-06-11 01:18:49 TCP connection established with [AF_INET6]64:ff9b::cdb9:dd8a:443
+2026-06-11 01:18:49 TCPv6_CLIENT link local: (not bound)
+2026-06-11 01:18:49 TCPv6_CLIENT link remote: [AF_INET6]64:ff9b::cdb9:dd8a:443
+2026-06-11 01:18:49 TLS: Initial packet from [AF_INET6]64:ff9b::cdb9:dd8a:443, sid=d97656f7 5e72cebd
+2026-06-11 01:18:49 WARNING: this configuration may cache passwords in memory -- use the auth-nocache option to prevent this
+2026-06-11 01:18:50 VERIFY OK: depth=1, C=US, ST=VPN, L=VPN, O=VPN, OU=VPN, CN=VPN, name=VPN, emailAddress=VPN
+2026-06-11 01:18:50 VERIFY KU OK
+2026-06-11 01:18:50 Validating certificate extended key usage
+2026-06-11 01:18:50 ++ Certificate has EKU (str) TLS Web Server Authentication, expects TLS Web Server Authentication
+2026-06-11 01:18:50 VERIFY EKU OK
+2026-06-11 01:18:50 VERIFY X509NAME OK: C=US, ST=VPN, L=VPN, O=VPN, OU=VPN, CN=dxb-c11.wlvpn.com, emailAddress=VPN
+2026-06-11 01:18:50 VERIFY OK: depth=0, C=US, ST=VPN, L=VPN, O=VPN, OU=VPN, CN=dxb-c11.wlvpn.com, emailAddress=VPN
+2026-06-11 01:18:51 event_wait : Interrupted system call (fd=-1,code=4)
+2026-06-11 01:18:51 SIGTERM[hard,] received, process exiting

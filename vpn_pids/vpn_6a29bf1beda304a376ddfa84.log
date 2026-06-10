@@ -1,0 +1,38 @@
+2026-06-11 01:16:36 OpenVPN 2.7.4 x86_64-apple-darwin23.6.0 [SSL (OpenSSL)] [LZO] [LZ4] [PKCS11] [MH/RECVDA] [AEAD]
+2026-06-11 01:16:36 library versions: OpenSSL 3.6.2 7 Apr 2026, LZO 2.10
+2026-06-11 01:16:36 RESOLVE: Cannot resolve host address: hel-c14.vpn.wlvpn.com:443 (nodename nor servname provided, or not known)
+2026-06-11 01:16:36 RESOLVE: Cannot resolve host address: hel-c14.vpn.wlvpn.com:443 (nodename nor servname provided, or not known)
+2026-06-11 01:16:36 Could not determine IPv4/IPv6 protocol
+2026-06-11 01:16:36 SIGUSR1[soft,Could not determine IPv4/IPv6 protocol] received, process restarting
+2026-06-11 01:16:36 Restart pause, 2 second(s)
+2026-06-11 01:16:39 RESOLVE: Cannot resolve host address: hel-c04.vpn.wlvpn.com:443 (nodename nor servname provided, or not known)
+2026-06-11 01:16:39 RESOLVE: Cannot resolve host address: hel-c04.vpn.wlvpn.com:443 (nodename nor servname provided, or not known)
+2026-06-11 01:16:39 Could not determine IPv4/IPv6 protocol
+2026-06-11 01:16:39 SIGUSR1[soft,Could not determine IPv4/IPv6 protocol] received, process restarting
+2026-06-11 01:16:39 Restart pause, 2 second(s)
+2026-06-11 01:16:41 RESOLVE: Cannot resolve host address: hel-c02.vpn.wlvpn.com:443 (nodename nor servname provided, or not known)
+2026-06-11 01:16:41 RESOLVE: Cannot resolve host address: hel-c02.vpn.wlvpn.com:443 (nodename nor servname provided, or not known)
+2026-06-11 01:16:41 Could not determine IPv4/IPv6 protocol
+2026-06-11 01:16:41 SIGUSR1[soft,Could not determine IPv4/IPv6 protocol] received, process restarting
+2026-06-11 01:16:41 Restart pause, 2 second(s)
+2026-06-11 01:16:43 RESOLVE: Cannot resolve host address: hel-c20.vpn.wlvpn.com:443 (nodename nor servname provided, or not known)
+2026-06-11 01:16:43 RESOLVE: Cannot resolve host address: hel-c20.vpn.wlvpn.com:443 (nodename nor servname provided, or not known)
+2026-06-11 01:16:43 Could not determine IPv4/IPv6 protocol
+2026-06-11 01:16:43 SIGUSR1[soft,Could not determine IPv4/IPv6 protocol] received, process restarting
+2026-06-11 01:16:43 Restart pause, 2 second(s)
+2026-06-11 01:16:46 RESOLVE: Cannot resolve host address: hel-c21.vpn.wlvpn.com:443 (nodename nor servname provided, or not known)
+2026-06-11 01:16:46 RESOLVE: Cannot resolve host address: hel-c21.vpn.wlvpn.com:443 (nodename nor servname provided, or not known)
+2026-06-11 01:16:46 Could not determine IPv4/IPv6 protocol
+2026-06-11 01:16:46 SIGUSR1[soft,Could not determine IPv4/IPv6 protocol] received, process restarting
+2026-06-11 01:16:46 Restart pause, 2 second(s)
+2026-06-11 01:16:49 RESOLVE: Cannot resolve host address: hel-c19.vpn.wlvpn.com:443 (nodename nor servname provided, or not known)
+2026-06-11 01:16:49 RESOLVE: Cannot resolve host address: hel-c19.vpn.wlvpn.com:443 (nodename nor servname provided, or not known)
+2026-06-11 01:16:49 Could not determine IPv4/IPv6 protocol
+2026-06-11 01:16:49 SIGUSR1[soft,Could not determine IPv4/IPv6 protocol] received, process restarting
+2026-06-11 01:16:49 Restart pause, 2 second(s)
+2026-06-11 01:16:51 RESOLVE: Cannot resolve host address: hel-c05.vpn.wlvpn.com:443 (nodename nor servname provided, or not known)
+2026-06-11 01:16:51 RESOLVE: Cannot resolve host address: hel-c05.vpn.wlvpn.com:443 (nodename nor servname provided, or not known)
+2026-06-11 01:16:51 Could not determine IPv4/IPv6 protocol
+2026-06-11 01:16:51 SIGUSR1[soft,Could not determine IPv4/IPv6 protocol] received, process restarting
+2026-06-11 01:16:51 Restart pause, 2 second(s)
+2026-06-11 01:16:51 SIGTERM[hard,init_instance] received, process exiting

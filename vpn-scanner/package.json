@@ -1,0 +1,14 @@
+{
+  "name": "vpn-scanner",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "VPN Server Scanner — loops through OpenVPN configs, tests connectivity, logs results",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "scan": "node main.js --scan",
+    "scan-only": "node main.js --no-dashboard",
+    "clean": "node scripts/clean.js",
+    "cli": "node src/cli.js"
+  }
+}

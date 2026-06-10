@@ -2,6 +2,7 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const VpnProfile = require('../models/VpnProfile');
+const { formatVpnLocation } = require('../utils/vpnHelper');
 
 const OVPN_AUTH_USER = process.env.OVPN_AUTH_USER || '';
 const OVPN_AUTH_PASS = process.env.OVPN_AUTH_PASS || '';
@@ -45,7 +46,7 @@ const saveUploadedConfig = async (file, googleAccountId, userId) => {
 
   // Derive a server location hint from the original filename (best effort)
   const originalName = file.originalname || 'unknown.ovpn';
-  const serverLocation = originalName.replace('.ovpn', '').replace(/[-_]/g, ' ');
+  const serverLocation = formatVpnLocation(originalName);
 
   // Check if a profile already exists for this account
   let vpnProfile = await VpnProfile.findOne({ googleAccount: googleAccountId });

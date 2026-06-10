@@ -663,6 +663,89 @@
       70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(251, 191, 36, 0); }
       100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
     }
+
+    /* ===== PER-ACCOUNT COMMENT ROWS ===== */
+    .comment-accounts-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 14px;
+      margin-bottom: 20px;
+    }
+    .comment-account-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.2s ease;
+      flex-wrap: wrap;
+    }
+    .comment-account-row:hover {
+      border-color: rgba(167, 139, 250, 0.3);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .comment-account-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--purple);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 16px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .comment-account-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .comment-account-info {
+      flex: 1;
+      min-width: 180px;
+    }
+    .comment-account-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .comment-account-email {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+    .comment-account-input-wrap {
+      flex: 2;
+      min-width: 280px;
+    }
+    .comment-account-textarea {
+      width: 100%;
+      min-height: 54px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      resize: vertical;
+      transition: all 0.2s ease;
+    }
+    .comment-account-textarea:focus {
+      border-color: var(--accent);
+      background: rgba(0, 0, 0, 0.3);
+    }
+    .comment-account-textarea::placeholder {
+      color: var(--text-secondary);
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
@@ -730,8 +813,11 @@
         <div class="add-section">
           <h3>➕ Add Google Accounts</h3>
           <p class="subtitle">Enter the Gmail addresses you want to connect, then click "Sign in with Google" for each one.</p>
-          <div class="add-form">
-            <input type="email" id="email-input" placeholder="Enter Gmail address (e.g. channel@gmail.com)" onkeydown="if(event.key==='Enter') addEmailToList()">
+          <div class="add-form" style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <input type="email" id="email-input" placeholder="Enter Gmail address (e.g. channel@gmail.com)" onkeydown="if(event.key==='Enter') addEmailToList()" style="flex: 2; min-width: 200px;">
+            <select id="vpn-select" style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--text-primary); border-radius: 10px; padding: 12px 16px; font-size: 14px; font-family: inherit; outline: none; cursor: pointer; transition: border-color 0.2s;">
+              <option value="">-- Select VPN Config --</option>
+            </select>
             <button class="add-btn" onclick="addEmailToList()">Add</button>
           </div>
           <div class="pending-list" id="pending-list">
@@ -781,16 +867,14 @@
         <!-- Step 2: Comments -->
         <div class="comment-section">
           <h3>✍️ Comments</h3>
-          <p class="subtitle">Enter your comments below — one per line. Each account will randomly pick one to post.</p>
+          <p class="subtitle">Enter a custom comment for each connected account. Only accounts with comments entered will post on this video.</p>
 
-          <div class="comments-editor-label">
-            Comment pool <span class="hint">(one per line)</span>
+          <div class="comment-accounts-container" id="comment-accounts-list">
+            <!-- Render list of accounts with individual inputs dynamically -->
           </div>
-          <textarea class="comments-textarea" id="comments-textarea" placeholder="Great video! Keep it up! 🔥&#10;Very informative, thanks for sharing! 👏&#10;Love this content, subscribed! ❤️&#10;Awesome work, looking forward to more! 💯&#10;This is exactly what I was looking for! 🙌" oninput="updateCommentCount()"></textarea>
-          <div class="comment-count-indicator" id="comment-count-indicator">0 comments entered</div>
 
           <button class="post-comments-btn" id="post-comments-btn" onclick="postComments()">
-            🚀 Post Comments from All Accounts
+            🚀 Post Comments
           </button>
         </div>
 
@@ -866,6 +950,47 @@
     </div>
   </div>
 
+  <!-- ===== BULK SIGNUP MODAL ===== -->
+  <div class="modal-overlay" id="bulk-modal">
+    <div class="modal-card" style="max-width: 500px; background: #121224;">
+      <div class="modal-header">
+        <h3>🚀 Bulk Sign-in Flow</h3>
+        <button class="modal-close" onclick="closeBulkModal()">✕</button>
+      </div>
+      <p class="modal-subtitle" id="bulk-modal-subtitle" style="margin-bottom: 15px;">
+        We will sign in each email address sequentially. The VPN will connect automatically before each sign-in.
+      </p>
+
+      <!-- Toggle Option -->
+      <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+        <input type="checkbox" id="bulk-use-vpn" checked style="width: 16px; height: 16px; cursor: pointer;">
+        <label for="bulk-use-vpn" style="font-size: 13px; color: var(--text-primary); cursor: pointer; font-weight: 500;">Route sign-ins through VPN (Auto-Connect)</label>
+      </div>
+
+      <!-- Queue List -->
+      <div id="bulk-queue-container" style="max-height: 160px; overflow-y: auto; margin-bottom: 20px; background: rgba(255,255,255,0.02); border-radius: 10px; padding: 10px; border: 1px solid var(--border);">
+        <!-- Active and pending queue list rendered here -->
+      </div>
+
+      <!-- Action Area for Active Account -->
+      <div id="bulk-active-container" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 24px;">
+        <div id="bulk-active-email" style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">email@gmail.com</div>
+        <div id="bulk-active-status" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; min-height: 20px;">
+          <div class="spinner"></div> Connecting VPN...
+        </div>
+        <button class="modal-btn-primary" id="bulk-signin-btn" onclick="triggerActiveBulkSignIn()" disabled style="width: 100%; justify-content: center; font-size: 14px; padding: 12px; background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);">
+          🔑 Sign in to Account
+        </button>
+      </div>
+
+      <!-- Actions -->
+      <div class="modal-actions" style="justify-content: space-between; align-items: center;">
+        <button class="modal-btn-secondary" id="bulk-skip-btn" onclick="skipBulkCurrent()" style="color: var(--yellow); border-color: rgba(251, 191, 36, 0.3);">Skip Account</button>
+        <button class="modal-btn-secondary" onclick="closeBulkModal()">Stop & Exit</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const API_BASE = 'http://localhost:5001';
     let JWT_TOKEN = localStorage.getItem('jwt_token');
@@ -874,6 +999,17 @@
 
     // List of emails added by the user, waiting to be signed in
     let pendingEmails = JSON.parse(localStorage.getItem('pending_emails') || '[]');
+
+    // Bulk signup state
+    let bulkQueue = [];
+    let bulkCurrentIndex = -1;
+    let isBulkActive = false;
+    let bulkTempVpnProfileId = null;
+    let bulkGoogleAuthClient = null;
+
+    // Available VPN configuration pool
+    let availableVpnFiles = [];
+    let connectedAccountsList = [];
 
     // Debounce timer for video URL input
     let videoUrlTimer = null;
@@ -913,12 +1049,20 @@
       // Update tab content
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
       document.getElementById(`tab-content-${tab}`).classList.add('active');
+
+      if (tab === 'comments') {
+        renderCommentAccounts();
+      }
     }
 
     // ===== GOOGLE SIGN-IN (Main App Login) =====
     function startGoogleSignIn() {
       if (!GOOGLE_CLIENT_ID) {
         showToast('Google Client ID not configured. Use mock login.', 'error');
+        return;
+      }
+      if (typeof google === 'undefined' || !google.accounts) {
+        showToast('Google Sign-In SDK is not loaded. Please disable ad-blockers/Brave Shield and refresh.', 'error');
         return;
       }
       google.accounts.id.initialize({
@@ -976,6 +1120,7 @@
       document.getElementById('topbar-user-email').textContent = currentUser.email;
       renderPendingList();
       loadConnectedAccounts();
+      loadVpnPoolConfigs();
       checkVpnStatus();
       if (!vpnStatusInterval) {
         vpnStatusInterval = setInterval(checkVpnStatus, 10000);
@@ -999,26 +1144,31 @@
     function addEmailToList() {
       const input = document.getElementById('email-input');
       const email = input.value.trim().toLowerCase();
+      const vpnSelect = document.getElementById('vpn-select');
+      const vpnFile = vpnSelect ? vpnSelect.value : '';
 
       if (!email) return;
       if (!email.includes('@')) {
         showToast('Please enter a valid email address.', 'error');
         return;
       }
-      if (pendingEmails.includes(email)) {
+      
+      const emailList = pendingEmails.map(item => typeof item === 'string' ? item : item.email);
+      if (emailList.includes(email)) {
         showToast('This email is already in the list.', 'error');
         return;
       }
 
-      pendingEmails.push(email);
+      pendingEmails.push({ email, vpnFile });
       localStorage.setItem('pending_emails', JSON.stringify(pendingEmails));
       input.value = '';
+      if (vpnSelect) vpnSelect.value = '';
       renderPendingList();
       showToast(`Added ${email} to list.`, 'success');
     }
 
     function removePendingEmail(email) {
-      pendingEmails = pendingEmails.filter(e => e !== email);
+      pendingEmails = pendingEmails.filter(item => (typeof item === 'string' ? item : item.email) !== email);
       localStorage.setItem('pending_emails', JSON.stringify(pendingEmails));
       renderPendingList();
     }
@@ -1029,23 +1179,40 @@
         container.innerHTML = '';
         return;
       }
-      container.innerHTML = pendingEmails.map(email => `
+
+      const headerHtml = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 14px; margin-top: 10px; flex-wrap: wrap; gap: 10px;">
+          <h4 style="font-size:13px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Pending Queue (${pendingEmails.length})</h4>
+          <button class="add-btn" style="background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); padding: 6px 14px; font-size:12px; border-radius: 8px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);" onclick="startBulkSignIn()">
+            🚀 Start Bulk Sign-in
+          </button>
+        </div>
+      `;
+
+      container.innerHTML = headerHtml + pendingEmails.map(item => {
+        const email = typeof item === 'string' ? item : item.email;
+        const vpnFile = typeof item === 'string' ? '' : item.vpnFile;
+        const vpnDisplay = vpnFile ? `<div style="font-size:11px; color:var(--purple); margin-top:2px; font-weight:500;">🔒 Specific VPN: ${escHtml(formatVpnLocation(vpnFile))}</div>` : '';
+
+        return `
         <div class="pending-card" id="pending-${email.replace(/[^a-z0-9]/g, '_')}">
           <div class="pending-icon">${email.charAt(0).toUpperCase()}</div>
           <div class="pending-info">
             <div class="pending-email">${escHtml(email)}</div>
             <div class="pending-status">⏳ Waiting for Google sign-in</div>
+            ${vpnDisplay}
           </div>
           <div class="pending-actions">
             <button class="signin-btn" onclick="signInForEmail('${escHtml(email)}')">${GOOGLE_SVG} Sign in</button>
             <button class="remove-pending-btn" onclick="removePendingEmail('${escHtml(email)}')">✕</button>
           </div>
         </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     // ===== SIGN IN FOR A SPECIFIC EMAIL (OAuth Code Flow with login_hint) =====
-    function signInForEmail(email) {
+    async function signInForEmail(email) {
       if (!GOOGLE_CLIENT_ID) {
         showToast('GOOGLE_CLIENT_ID not configured. Add it to .env.', 'error');
         return;
@@ -1054,11 +1221,61 @@
       // Update card UI to show loading
       const cardId = 'pending-' + email.replace(/[^a-z0-9]/g, '_');
       const card = document.getElementById(cardId);
+      let statusEl = null;
+      let btn = null;
+
       if (card) {
-        const statusEl = card.querySelector('.pending-status');
-        statusEl.innerHTML = '<div class="spinner"></div> Opening Google sign-in...';
-        const btn = card.querySelector('.signin-btn');
+        statusEl = card.querySelector('.pending-status');
+        statusEl.innerHTML = '<div class="spinner"></div> Connecting to a secure VPN...';
+        btn = card.querySelector('.signin-btn');
         btn.disabled = true;
+      }
+
+      const accountItem = pendingEmails.find(item => (typeof item === 'string' ? item : item.email) === email);
+      const chosenVpnFile = accountItem && typeof accountItem === 'object' ? accountItem.vpnFile : '';
+      let tempVpnProfileId = null;
+
+      try {
+        // Pre-connect to VPN on the server first
+        const vpnRes = await fetch(`${API_BASE}/api/vpn/pre-connect`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${JWT_TOKEN}`,
+          },
+          body: JSON.stringify({ vpnFile: chosenVpnFile })
+        });
+        const vpnData = await vpnRes.json();
+        if (vpnRes.ok && vpnData.tempVpnProfileId) {
+          tempVpnProfileId = vpnData.tempVpnProfileId;
+          showToast(`Connected to VPN: ${vpnData.serverLocation}`, 'info');
+        } else {
+          console.warn('VPN pre-connect failed:', vpnData.message);
+          showToast('Proceeding without VPN...', 'warning');
+        }
+      } catch (err) {
+        console.error('Error during VPN pre-connect:', err);
+        showToast('Proceeding without VPN...', 'warning');
+      }
+
+      if (typeof google === 'undefined' || !google.accounts) {
+        showToast('Google Sign-In SDK is not loaded. Please disable your ad-blocker or Brave Shield and refresh.', 'error');
+        if (statusEl) statusEl.innerHTML = '❌ Google SDK blocked by browser/ad-blocker.';
+        if (btn) btn.disabled = false;
+        
+        if (tempVpnProfileId) {
+          try {
+            await fetch(`${API_BASE}/api/vpn/disconnect`, {
+              method: 'POST',
+              headers: { Authorization: `Bearer ${JWT_TOKEN}` },
+            });
+          } catch (e) {}
+        }
+        return;
+      }
+
+      if (statusEl) {
+        statusEl.innerHTML = '<div class="spinner"></div> Opening Google sign-in...';
       }
 
       const client = google.accounts.oauth2.initCodeClient({
@@ -1069,13 +1286,21 @@
         callback: async (response) => {
           if (response.error) {
             showToast('Google authorization cancelled for ' + email, 'error');
+            // Make sure we disconnect VPN if it was pre-connected
+            if (tempVpnProfileId) {
+              try {
+                await fetch(`${API_BASE}/api/vpn/disconnect`, {
+                  method: 'POST',
+                  headers: { Authorization: `Bearer ${JWT_TOKEN}` },
+                });
+              } catch (e) {}
+            }
             renderPendingList();
             return;
           }
 
           // Update card UI
-          if (card) {
-            const statusEl = card.querySelector('.pending-status');
+          if (card && statusEl) {
             statusEl.innerHTML = '<div class="spinner"></div> Exchanging tokens...';
           }
 
@@ -1086,7 +1311,7 @@
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${JWT_TOKEN}`,
               },
-              body: JSON.stringify({ code: response.code }),
+              body: JSON.stringify({ code: response.code, tempVpnProfileId }),
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.message);
@@ -1096,12 +1321,21 @@
             showToast(`✅ Connected: ${data.email || email}`, 'success');
             loadConnectedAccounts();
 
-            // Auto-open OVPN upload modal for the newly connected account
+            // Auto-open OVPN upload modal for the newly connected account if needed
             if (data.accountId && data.needsVpnConfig) {
               openOvpnModal(data.accountId, data.email || email);
             }
           } catch (e) {
             showToast('Error: ' + e.message, 'error');
+            // Disconnect VPN on signup/exchange error
+            if (tempVpnProfileId) {
+              try {
+                await fetch(`${API_BASE}/api/vpn/disconnect`, {
+                  method: 'POST',
+                  headers: { Authorization: `Bearer ${JWT_TOKEN}` },
+                });
+              } catch (discErr) {}
+            }
             renderPendingList();
           }
         },
@@ -1120,6 +1354,11 @@
           headers: { Authorization: `Bearer ${JWT_TOKEN}` },
         });
         const accounts = await res.json();
+
+        connectedAccountsList = accounts;
+        if (document.getElementById('tab-content-comments').classList.contains('active')) {
+          renderCommentAccounts();
+        }
 
         document.getElementById('connected-count').textContent = accounts.length;
 
@@ -1140,9 +1379,9 @@
           // VPN status badge
           let vpnBadge = '';
           if (hasVpn && isVpnConnected) {
-            vpnBadge = '<span class="account-vpn-status vpn-connected">🔒 VPN Connected</span>';
+            vpnBadge = `<span class="account-vpn-status vpn-connected">🔒 VPN Connected: ${escHtml(formatVpnLocation(vpn.originalFileName))}</span>`;
           } else if (hasVpn) {
-            vpnBadge = `<span class="account-vpn-status vpn-has-config">📄 ${escHtml(vpn.originalFileName)}</span>`;
+            vpnBadge = `<span class="account-vpn-status vpn-has-config">📄 ${escHtml(formatVpnLocation(vpn.originalFileName))}</span>`;
           } else {
             vpnBadge = '<span class="account-vpn-status vpn-no-config">⚠️ No VPN Config</span>';
           }
@@ -1188,7 +1427,7 @@
 
         let msg = 'Active account switched!';
         if (data.vpn) {
-          msg += ` VPN connected: ${data.vpn.originalFileName}`;
+          msg += ` VPN connected: ${formatVpnLocation(data.vpn.originalFileName)}`;
         }
         showToast(msg, 'success');
         loadConnectedAccounts();
@@ -1336,7 +1575,7 @@
       document.getElementById('drop-icon').textContent = '✅';
       document.getElementById('drop-text').textContent = 'File selected!';
 
-      document.getElementById('selected-file-name').textContent = file.name;
+      document.getElementById('selected-file-name').innerHTML = `${escHtml(file.name)} <span style="font-size: 11px; color: var(--purple); font-weight: 500; display: block; margin-top: 2px;">📍 Detected Location: ${escHtml(formatVpnLocation(file.name))}</span>`;
       document.getElementById('selected-file-size').textContent = formatFileSize(file.size);
       document.getElementById('selected-file-info').classList.add('visible');
       document.getElementById('upload-ovpn-btn').disabled = false;
@@ -1374,7 +1613,7 @@
         const data = await res.json();
         if (!res.ok) throw new Error(data.message);
 
-        showToast(`✅ VPN config uploaded: ${ovpnSelectedFile.name}`, 'success');
+        showToast(`✅ VPN config uploaded: ${formatVpnLocation(ovpnSelectedFile.name)}`, 'success');
         closeOvpnModal();
         loadConnectedAccounts();
       } catch (e) {
@@ -1462,20 +1701,45 @@
     }
 
     /**
-     * Updates the comment count indicator below the textarea
+     * Renders a list of connected accounts with individual comment input fields.
      */
-    function updateCommentCount() {
-      const text = document.getElementById('comments-textarea').value.trim();
-      const comments = text ? text.split('\n').filter(line => line.trim() !== '') : [];
-      document.getElementById('comment-count-indicator').textContent = `${comments.length} comment${comments.length !== 1 ? 's' : ''} entered`;
+    function renderCommentAccounts() {
+      const container = document.getElementById('comment-accounts-list');
+      if (!container) return;
+
+      if (!connectedAccountsList || connectedAccountsList.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="padding: 20px 0;">
+            <div class="icon">📺</div>
+            <p>No connected accounts found. Please add and connect Google Accounts first.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = connectedAccountsList.map(acc => {
+        const initial = acc.name ? acc.name.charAt(0).toUpperCase() : '?';
+        return `
+          <div class="comment-account-row">
+            <div class="comment-account-avatar">
+              ${acc.avatar ? `<img src="${acc.avatar}" alt="">` : initial}
+            </div>
+            <div class="comment-account-info">
+              <div class="comment-account-name">${escHtml(acc.name)}</div>
+              <div class="comment-account-email">${escHtml(acc.email)}</div>
+            </div>
+            <div class="comment-account-input-wrap">
+              <textarea class="comment-account-textarea" data-account-id="${acc._id}" placeholder="Type comment for this account..."></textarea>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     /**
-     * Main function: posts comments on the video from all connected accounts
+     * Main function: posts comments on the video from selected connected accounts
      */
     async function postComments() {
       const videoUrl = document.getElementById('video-url-input').value.trim();
-      const commentsText = document.getElementById('comments-textarea').value.trim();
       const btn = document.getElementById('post-comments-btn');
       const progressOverlay = document.getElementById('progress-overlay');
       const resultsSection = document.getElementById('results-section');
@@ -1492,9 +1756,21 @@
         return;
       }
 
-      const comments = commentsText.split('\n').filter(line => line.trim() !== '').map(line => line.trim());
-      if (comments.length === 0) {
-        showToast('Please enter at least one comment.', 'error');
+      // Collect comments per account
+      const accountComments = {};
+      let commentCount = 0;
+      const textareas = document.querySelectorAll('.comment-account-textarea');
+      textareas.forEach(textarea => {
+        const accId = textarea.getAttribute('data-account-id');
+        const text = textarea.value.trim();
+        if (text) {
+          accountComments[accId] = text;
+          commentCount++;
+        }
+      });
+
+      if (commentCount === 0) {
+        showToast('Please enter a comment for at least one account.', 'error');
         return;
       }
 
@@ -1517,7 +1793,7 @@
             'Content-Type': 'application/json',
             Authorization: `Bearer ${JWT_TOKEN}`,
           },
-          body: JSON.stringify({ videoUrl, comments }),
+          body: JSON.stringify({ videoUrl, accountComments }),
         });
 
         document.getElementById('progress-bar').style.width = '90%';
@@ -1540,7 +1816,7 @@
         showToast('Error: ' + e.message, 'error');
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '🚀 Post Comments from All Accounts';
+        btn.innerHTML = '🚀 Post Comments';
       }
     }
 
@@ -1577,6 +1853,32 @@
     }
 
     // ===== UTILS =====
+    function formatVpnLocation(filename) {
+      if (!filename) return '';
+      // Remove .ovpn extension (case insensitive)
+      let name = filename.replace(/\.ovpn$/i, '');
+      // Replace hyphens and underscores with spaces
+      name = name.replace(/[-_]/g, ' ');
+      // Clean up NCVPN prefix
+      if (name.startsWith('NCVPN ')) {
+        name = name.slice(6);
+      }
+      // Clean up VPNGate style names: e.g. "vpngate_219.100.37.5_tcp_443 (1).ovpn" -> "VPN Gate (Japan #5)"
+      if (name.toLowerCase().startsWith('vpngate ')) {
+        name = name.slice(8);
+        const parts = name.split(' ');
+        if (parts[0]) {
+          let location = parts[0];
+          if (location.startsWith('219.100.37.')) {
+            const octets = location.split('.');
+            location = `Japan #${octets[3]}`;
+          }
+          name = `VPN Gate (${location})`;
+        }
+      }
+      return name;
+    }
+
     function parseJwt(token) {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -1599,6 +1901,328 @@
       toast.textContent = msg;
       document.body.appendChild(toast);
       setTimeout(() => toast.remove(), 4000);
+    }
+
+    // ===== BULK SIGNUP QUEUE FUNCTIONS =====
+    function startBulkSignIn() {
+      if (!pendingEmails.length) {
+        showToast('No pending emails in the list.', 'error');
+        return;
+      }
+
+      // Initialize the queue state
+      bulkQueue = pendingEmails.map(item => ({
+        email: typeof item === 'string' ? item : item.email,
+        vpnFile: typeof item === 'string' ? '' : item.vpnFile,
+        status: 'pending', // 'pending' | 'connecting' | 'ready' | 'success' | 'failed'
+        error: null,
+      }));
+      bulkCurrentIndex = 0;
+      isBulkActive = true;
+      bulkTempVpnProfileId = null;
+
+      // Show the modal
+      document.getElementById('bulk-modal').classList.add('visible');
+      
+      // Start processing first item
+      processBulkItem();
+    }
+
+    function closeBulkModal() {
+      if (!isBulkActive) {
+        document.getElementById('bulk-modal').classList.remove('visible');
+        return;
+      }
+
+      if (confirm('Are you sure you want to stop the bulk sign-in? This will disconnect the active VPN.')) {
+        stopBulkFlow();
+      }
+    }
+
+    async function stopBulkFlow() {
+      isBulkActive = false;
+      document.getElementById('bulk-modal').classList.remove('visible');
+      showToast('Bulk sign-in stopped.', 'info');
+      
+      // Ensure we disconnect the VPN
+      try {
+        await fetch(`${API_BASE}/api/vpn/disconnect`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${JWT_TOKEN}` },
+        });
+      } catch (e) {}
+      
+      checkVpnStatus();
+      loadConnectedAccounts();
+    }
+
+    function renderBulkQueue() {
+      const container = document.getElementById('bulk-queue-container');
+      if (!container) return;
+
+      container.innerHTML = bulkQueue.map((item, idx) => {
+        let statusIcon = '⚪';
+        let statusText = 'Pending';
+
+        if (idx === bulkCurrentIndex) {
+          if (item.status === 'connecting') {
+            statusIcon = '<div class="spinner" style="width:12px; height:12px;"></div>';
+            statusText = 'Connecting VPN';
+          } else if (item.status === 'ready') {
+            statusIcon = '🔌';
+            statusText = 'Ready to sign in';
+          }
+        } else if (item.status === 'success') {
+          statusIcon = '✅';
+          statusText = 'Connected';
+        } else if (item.status === 'failed') {
+          statusIcon = '❌';
+          statusText = item.error || 'Failed';
+        }
+
+        const activeStyle = idx === bulkCurrentIndex ? 'border: 1px solid rgba(167, 139, 250, 0.4); background: rgba(167, 139, 250, 0.05);' : '';
+
+        return `
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; margin-bottom:6px; border-radius:8px; font-size:13px; ${activeStyle}">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:14px; display:inline-flex; align-items:center; justify-content:center;">${statusIcon}</span>
+              <span style="font-weight:${idx === bulkCurrentIndex ? '600' : '400'}; color:${idx === bulkCurrentIndex ? 'var(--text-primary)' : 'var(--text-secondary)'};">${escHtml(item.email)}${item.vpnFile ? ` <span style="font-size:10px; color:var(--purple); font-weight:500;">(VPN: ${escHtml(formatVpnLocation(item.vpnFile))})</span>` : ''}</span>
+            </div>
+            <span style="font-size:11px; color:var(--text-secondary);">${statusText}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function processBulkItem() {
+      if (bulkCurrentIndex < 0 || bulkCurrentIndex >= bulkQueue.length) {
+        // Complete bulk signup!
+        isBulkActive = false;
+        document.getElementById('bulk-modal').classList.remove('visible');
+        showToast('🎉 All pending accounts successfully processed!', 'success');
+        checkVpnStatus();
+        loadConnectedAccounts();
+        return;
+      }
+
+      const item = bulkQueue[bulkCurrentIndex];
+      const useVpn = document.getElementById('bulk-use-vpn').checked;
+
+      const emailEl = document.getElementById('bulk-active-email');
+      const statusEl = document.getElementById('bulk-active-status');
+      const signinBtn = document.getElementById('bulk-signin-btn');
+      const skipBtn = document.getElementById('bulk-skip-btn');
+
+      emailEl.textContent = item.email;
+      skipBtn.disabled = false;
+      bulkTempVpnProfileId = null;
+
+      if (!useVpn) {
+        item.status = 'ready';
+        statusEl.innerHTML = `🟢 Ready to sign in over your normal network (VPN Bypassed).`;
+        signinBtn.disabled = false;
+        signinBtn.textContent = `🔑 Sign in to ${item.email}`;
+        renderBulkQueue();
+        return;
+      }
+
+      item.status = 'connecting';
+      renderBulkQueue();
+
+      statusEl.innerHTML = '<div class="spinner"></div> Connecting VPN on the server...';
+      signinBtn.disabled = true;
+      signinBtn.textContent = '🔌 Connecting VPN...';
+
+      try {
+        // 1. Pre-connect VPN
+        const vpnRes = await fetch(`${API_BASE}/api/vpn/pre-connect`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${JWT_TOKEN}`,
+          },
+          body: JSON.stringify({ vpnFile: item.vpnFile })
+        });
+        const vpnData = await vpnRes.json();
+        if (vpnRes.ok && vpnData.tempVpnProfileId) {
+          bulkTempVpnProfileId = vpnData.tempVpnProfileId;
+          item.status = 'ready';
+          statusEl.innerHTML = `✅ VPN Connected! Server: <strong>${escHtml(vpnData.serverLocation)}</strong>`;
+          signinBtn.disabled = false;
+          signinBtn.textContent = `🔑 Sign in to ${item.email}`;
+          showToast(`VPN connected for ${item.email}`, 'success');
+        } else {
+          throw new Error(vpnData.message || 'Failed to connect VPN');
+        }
+      } catch (err) {
+        console.error('VPN Pre-connect error:', err);
+        item.status = 'ready'; // Allow proceeding without VPN if connection failed, or let them skip
+        statusEl.innerHTML = `⚠️ VPN connection failed. Proceeding over your normal network.`;
+        signinBtn.disabled = false;
+        signinBtn.textContent = `🔑 Sign in to ${item.email}`;
+        showToast('Proceeding without VPN...', 'warning');
+      }
+
+      renderBulkQueue();
+    }
+
+    function triggerActiveBulkSignIn() {
+      if (!GOOGLE_CLIENT_ID) {
+        showToast('GOOGLE_CLIENT_ID not configured.', 'error');
+        return;
+      }
+
+      const item = bulkQueue[bulkCurrentIndex];
+      const statusEl = document.getElementById('bulk-active-status');
+      const signinBtn = document.getElementById('bulk-signin-btn');
+      const skipBtn = document.getElementById('bulk-skip-btn');
+
+      if (typeof google === 'undefined' || !google.accounts) {
+        showToast('Google Sign-In SDK is not loaded. Please disable your ad-blocker or Brave Shield and refresh.', 'error');
+        statusEl.innerHTML = '❌ Google SDK blocked by browser/ad-blocker.';
+        signinBtn.disabled = false;
+        signinBtn.textContent = '🔄 Retry';
+        skipBtn.disabled = false;
+        return;
+      }
+
+      statusEl.innerHTML = '<div class="spinner"></div> Opening Google sign-in window...';
+      signinBtn.disabled = true;
+      skipBtn.disabled = true;
+
+      bulkGoogleAuthClient = google.accounts.oauth2.initCodeClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: 'email profile https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.force-ssl',
+        ux_mode: 'popup',
+        login_hint: item.email,
+        callback: async (response) => {
+          if (response.error) {
+            showToast('Google authorization cancelled or failed.', 'error');
+            item.status = 'failed';
+            item.error = 'Cancelled';
+            
+            // Clean up VPN connection
+            if (bulkTempVpnProfileId) {
+              try {
+                await fetch(`${API_BASE}/api/vpn/disconnect`, {
+                  method: 'POST',
+                  headers: { Authorization: `Bearer ${JWT_TOKEN}` },
+                });
+              } catch (e) {}
+              bulkTempVpnProfileId = null;
+            }
+
+            statusEl.innerHTML = `❌ Sign-in cancelled.`;
+            signinBtn.disabled = false;
+            signinBtn.textContent = `🔄 Retry Sign-in`;
+            skipBtn.disabled = false;
+            
+            renderBulkQueue();
+            return;
+          }
+
+          statusEl.innerHTML = '<div class="spinner"></div> Exchanging OAuth tokens and saving account...';
+
+          try {
+            const res = await fetch(`${API_BASE}/api/auth/google/connect`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${JWT_TOKEN}`,
+              },
+              body: JSON.stringify({ code: response.code, tempVpnProfileId: bulkTempVpnProfileId }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message);
+
+            // Successfully connected!
+            item.status = 'success';
+            showToast(`✅ Connected: ${item.email}`, 'success');
+            
+            // Remove from local storage / memory pending list
+            removePendingEmail(item.email);
+            
+            // Advance to next account
+            bulkCurrentIndex++;
+            setTimeout(() => {
+              processBulkItem();
+            }, 1000);
+
+          } catch (e) {
+            showToast('Error: ' + e.message, 'error');
+            item.status = 'failed';
+            item.error = e.message;
+
+            // Disconnect VPN on signup/exchange error
+            if (bulkTempVpnProfileId) {
+              try {
+                await fetch(`${API_BASE}/api/vpn/disconnect`, {
+                  method: 'POST',
+                  headers: { Authorization: `Bearer ${JWT_TOKEN}` },
+                });
+              } catch (discErr) {}
+              bulkTempVpnProfileId = null;
+            }
+
+            statusEl.innerHTML = `❌ Error: ${escHtml(e.message)}`;
+            signinBtn.disabled = false;
+            signinBtn.textContent = `🔄 Retry Sign-in`;
+            skipBtn.disabled = false;
+            renderBulkQueue();
+          }
+        },
+      });
+
+      bulkGoogleAuthClient.requestCode();
+    }
+
+    async function skipBulkCurrent() {
+      if (bulkCurrentIndex < 0 || bulkCurrentIndex >= bulkQueue.length) return;
+
+      const item = bulkQueue[bulkCurrentIndex];
+      item.status = 'failed';
+      item.error = 'Skipped';
+
+      showToast(`Skipped account: ${item.email}`, 'info');
+
+      // Disconnect VPN if it was pre-connected
+      if (bulkTempVpnProfileId) {
+        const skipBtn = document.getElementById('bulk-skip-btn');
+        skipBtn.disabled = true;
+        try {
+          await fetch(`${API_BASE}/api/vpn/disconnect`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${JWT_TOKEN}` },
+          });
+        } catch (e) {}
+        bulkTempVpnProfileId = null;
+      }
+
+      // Advance to next account
+      bulkCurrentIndex++;
+      processBulkItem();
+    }
+
+    async function loadVpnPoolConfigs() {
+      try {
+        const res = await fetch(`${API_BASE}/api/vpn/configs/pool`, {
+          headers: { Authorization: `Bearer ${JWT_TOKEN}` },
+        });
+        if (res.ok) {
+          availableVpnFiles = await res.json();
+          populateVpnSelect();
+        }
+      } catch (e) {
+        console.error('Error loading VPN pool configs:', e);
+      }
+    }
+
+    function populateVpnSelect() {
+      const select = document.getElementById('vpn-select');
+      if (!select) return;
+      
+      select.innerHTML = '<option value="">-- Select VPN Config --</option>' + 
+        availableVpnFiles.map(file => `<option value="${file}">${escHtml(formatVpnLocation(file))}</option>`).join('');
     }
 
     // Boot

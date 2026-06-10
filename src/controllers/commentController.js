@@ -1,6 +1,8 @@
 const GoogleAccount = require('../models/GoogleAccount');
 const { decrypt } = require('../utils/encryption');
 const { postComment } = require('../services/youtubeService');
+const VpnProfile = require('../models/VpnProfile');
+const openvpnService = require('../services/openvpnService');
 
 /**
  * Extracts a YouTube video ID from various URL formats.
@@ -37,16 +39,11 @@ const randomDelay = (minMs = 2000, maxMs = 5000) => {
 // @access  Private
 const postCommentsOnVideo = async (req, res, next) => {
   try {
-    const { videoUrl, comments } = req.body;
+    const { videoUrl, comments, accountComments } = req.body;
 
     if (!videoUrl) {
       res.status(400);
       throw new Error('Please provide a YouTube video URL');
-    }
-
-    if (!comments || !Array.isArray(comments) || comments.length === 0) {
-      res.status(400);
-      throw new Error('Please provide at least one comment');
     }
 
     const videoId = extractVideoId(videoUrl);
@@ -55,36 +52,70 @@ const postCommentsOnVideo = async (req, res, next) => {
       throw new Error('Invalid YouTube URL. Could not extract video ID.');
     }
 
-    // Fetch ALL connected accounts for this user
+    let activeAccountComments = {};
+
+    if (accountComments && typeof accountComments === 'object') {
+      for (const [accId, commentText] of Object.entries(accountComments)) {
+        if (commentText && commentText.trim() !== '') {
+          activeAccountComments[accId] = commentText.trim();
+        }
+      }
+    } else if (comments && Array.isArray(comments) && comments.length > 0) {
+      // Fallback/backward compatibility for global comment pool
+      const allAccounts = await GoogleAccount.find({
+        user: req.user._id,
+        status: 'connected',
+      });
+      const shuffled = [...comments].sort(() => Math.random() - 0.5);
+      let commentPool = [...shuffled];
+      for (const acc of allAccounts) {
+        if (commentPool.length === 0) {
+          commentPool = [...comments].sort(() => Math.random() - 0.5);
+        }
+        activeAccountComments[acc._id.toString()] = commentPool.shift();
+      }
+    }
+
+    const accountIds = Object.keys(activeAccountComments);
+    if (accountIds.length === 0) {
+      res.status(400);
+      throw new Error('Please enter a comment for at least one account');
+    }
+
+    // Fetch accounts matching the IDs
     const accounts = await GoogleAccount.find({
+      _id: { $in: accountIds },
       user: req.user._id,
       status: 'connected',
     });
 
     if (!accounts.length) {
       res.status(400);
-      throw new Error('No connected Google accounts found. Please add and sign in accounts first.');
+      throw new Error('No valid connected Google accounts found for the provided comments.');
     }
-
-    // Shuffle comments and assign unique ones to each account (no duplicates).
-    // If more accounts than comments, cycle through a fresh shuffled copy.
-    const shuffled = [...comments].sort(() => Math.random() - 0.5);
-    let commentPool = [...shuffled];
 
     const results = [];
 
     for (let i = 0; i < accounts.length; i++) {
       const account = accounts[i];
+      const commentText = activeAccountComments[account._id.toString()];
 
-      // Refill the pool with a fresh shuffle if we run out
-      if (commentPool.length === 0) {
-        commentPool = [...comments].sort(() => Math.random() - 0.5);
-      }
-
-      // Take the next unique comment from the pool
-      const commentText = commentPool.shift();
+      let vpnProfile = null;
+      let vpnConnected = false;
 
       try {
+        // Find VPN Profile for the current account
+        vpnProfile = await VpnProfile.findOne({ googleAccount: account._id });
+
+        if (vpnProfile) {
+          console.log(`[postComments] Connecting to VPN for account ${account.email}...`);
+          await openvpnService.disconnectAll();
+          await openvpnService.connect(vpnProfile);
+          vpnConnected = true;
+          // Settle delay
+          await new Promise(r => setTimeout(r, 3000));
+        }
+
         const accessToken = decrypt(account.accessToken);
         const refreshToken = account.refreshToken ? decrypt(account.refreshToken) : null;
 
@@ -106,6 +137,17 @@ const postCommentsOnVideo = async (req, res, next) => {
           status: 'failed',
           error: error.message || 'Unknown error',
         });
+      } finally {
+        if (vpnConnected && vpnProfile) {
+          try {
+            console.log(`[postComments] Disconnecting VPN for account ${account.email}...`);
+            await openvpnService.disconnect(vpnProfile);
+            // Settle teardown
+            await new Promise(r => setTimeout(r, 2000));
+          } catch (vpnDiscError) {
+            console.error('[postComments] VPN disconnect error:', vpnDiscError.message);
+          }
+        }
       }
 
       // Add a random delay between accounts (skip delay after last account)
@@ -126,6 +168,9 @@ const postCommentsOnVideo = async (req, res, next) => {
       results,
     });
   } catch (error) {
+    try {
+      await openvpnService.disconnectAll();
+    } catch {}
     next(error);
   }
 };

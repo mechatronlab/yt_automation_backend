@@ -1,0 +1,7 @@
+2026-06-11 01:33:17 DEPRECATED OPTION: --cipher set to 'AES-256-CBC' but missing in --data-ciphers (DEFAULT). OpenVPN ignores --cipher for cipher negotiations. 
+2026-06-11 01:33:17 OpenVPN 2.7.4 x86_64-apple-darwin23.6.0 [SSL (OpenSSL)] [LZO] [LZ4] [PKCS11] [MH/RECVDA] [AEAD]
+2026-06-11 01:33:17 library versions: OpenSSL 3.6.2 7 Apr 2026, LZO 2.10
+2026-06-11 01:33:17 WARNING: Your certificate has expired!
+2026-06-11 01:33:17 TCP/UDP: Preserving recently used remote address: [AF_INET6]64:ff9b::5e66:331a:443
+2026-06-11 01:33:17 Attempting to establish TCP connection with [AF_INET6]64:ff9b::5e66:331a:443
+2026-06-11 01:33:18 SIGTERM[hard,init_instance] received, process exiting

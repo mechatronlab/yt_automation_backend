@@ -1,0 +1,24 @@
+2026-06-11 01:29:21 OpenVPN 2.7.4 x86_64-apple-darwin23.6.0 [SSL (OpenSSL)] [LZO] [LZ4] [PKCS11] [MH/RECVDA] [AEAD]
+2026-06-11 01:29:21 library versions: OpenSSL 3.6.2 7 Apr 2026, LZO 2.10
+2026-06-11 01:29:22 TCP/UDP: Preserving recently used remote address: [AF_INET6]64:ff9b::b043:5591:443
+2026-06-11 01:29:22 Socket Buffers: R=[131072->131072] S=[131072->131072]
+2026-06-11 01:29:22 Attempting to establish TCP connection with [AF_INET6]64:ff9b::b043:5591:443
+2026-06-11 01:29:22 TCP connection established with [AF_INET6]64:ff9b::b043:5591:443
+2026-06-11 01:29:22 TCPv6_CLIENT link local: (not bound)
+2026-06-11 01:29:22 TCPv6_CLIENT link remote: [AF_INET6]64:ff9b::b043:5591:443
+2026-06-11 01:29:23 TLS: Initial packet from [AF_INET6]64:ff9b::b043:5591:443, sid=76561f7d 4d06a1c8
+2026-06-11 01:29:23 WARNING: this configuration may cache passwords in memory -- use the auth-nocache option to prevent this
+2026-06-11 01:29:23 VERIFY OK: depth=1, C=US, ST=VPN, L=VPN, O=VPN, OU=VPN, CN=VPN, name=VPN, emailAddress=VPN
+2026-06-11 01:29:23 VERIFY KU OK
+2026-06-11 01:29:23 Validating certificate extended key usage
+2026-06-11 01:29:23 ++ Certificate has EKU (str) TLS Web Server Authentication, expects TLS Web Server Authentication
+2026-06-11 01:29:23 VERIFY EKU OK
+2026-06-11 01:29:23 VERIFY X509NAME OK: C=US, ST=VPN, L=VPN, O=VPN, OU=VPN, CN=mcm-c03.wlvpn.com, emailAddress=VPN
+2026-06-11 01:29:23 VERIFY OK: depth=0, C=US, ST=VPN, L=VPN, O=VPN, OU=VPN, CN=mcm-c03.wlvpn.com, emailAddress=VPN
+2026-06-11 01:29:25 Control Channel: TLSv1.3, cipher TLSv1.3 TLS_AES_256_GCM_SHA384, peer certificate: 2048 bits RSA, signature: RSA-SHA256, peer temporary key: 253 bits X25519, peer signing digest/type: rsa_pss_rsae_sha256 RSASSA-PSS, key agreement: x25519
+2026-06-11 01:29:25 [mcm-c03.wlvpn.com] Peer Connection Initiated with [AF_INET6]64:ff9b::b043:5591:443
+2026-06-11 01:29:25 TLS: move_session: dest=TM_ACTIVE src=TM_INITIAL reinit_src=1
+2026-06-11 01:29:25 TLS: tls_multi_process: initial untrusted session promoted to trusted
+2026-06-11 01:29:26 SENT CONTROL [mcm-c03.wlvpn.com]: 'PUSH_REQUEST' (status=1)
+2026-06-11 01:29:26 AUTH: Received control message: AUTH_FAILED
+2026-06-11 01:29:26 SIGTERM[soft,auth-failure] received, process exiting
