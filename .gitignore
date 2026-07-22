@@ -1,0 +1,14 @@
+env
+.env
+.env.*
+!.env.example
+
+node_modules/
+.DS_Store
+__pycache__/
+*.pyc
+
+uploads/
+dist-electron/
+python_script/account.txt
+python_script/last_created_account.json
