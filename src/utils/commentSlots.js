@@ -1,8 +1,8 @@
 'use strict';
 
 const LANGUAGES = ['khasi', 'pnar', 'garo', 'english', 'hindi'];
-const TONES = ['positive', 'negative', 'neutral'];
-const VOICES = ['gen_z', 'millennial', 'gen_x', 'boomer', 'neutral'];
+const TONES = ['positive', 'neutral', 'negative'];
+const VOICES = ['neutral', 'millennial', 'gen_x', 'boomer'];
 
 function shuffle(arr) {
   const copy = [...arr];
@@ -15,20 +15,6 @@ function shuffle(arr) {
 
 function sumDistribution(dist = {}) {
   return Object.values(dist).reduce((sum, value) => sum + (Number(value) || 0), 0);
-}
-
-function buildSlotsFromDistribution(dist = {}, keys = [], total = 0) {
-  const slots = [];
-  keys.forEach((key) => {
-    const count = Math.max(0, parseInt(dist[key], 10) || 0);
-    for (let i = 0; i < count; i += 1) {
-      slots.push(key);
-    }
-  });
-  if (slots.length === total) {
-    return shuffle(slots);
-  }
-  return slots;
 }
 
 function validateLanguageDistribution(dist = {}, totalCount = 0) {
@@ -48,6 +34,20 @@ function validateLanguageDistribution(dist = {}, totalCount = 0) {
   return null;
 }
 
+function validateToneDistribution(dist = {}, totalCount = 0) {
+  const sum = sumDistribution(dist);
+  if (sum !== totalCount) {
+    return `Positive + neutral + negative counts must add up to ${totalCount} (currently ${sum}).`;
+  }
+  for (const [tone, count] of Object.entries(dist)) {
+    if ((count ?? 0) <= 0) continue;
+    if (!TONES.includes(tone)) {
+      return `Unknown tone: ${tone}`;
+    }
+  }
+  return null;
+}
+
 function buildLanguageSlots(languageMix = {}) {
   const slots = [];
   for (const lang of LANGUAGES) {
@@ -61,12 +61,12 @@ function buildLanguageSlots(languageMix = {}) {
 
 function buildToneSlots(filters = {}, totalCount = 10) {
   if (filters.toneMode === 'single' && filters.tone) {
-    return Array.from({ length: totalCount }, () => filters.tone);
+    const tone = TONES.includes(filters.tone) ? filters.tone : 'positive';
+    return Array.from({ length: totalCount }, () => tone);
   }
   const dist = filters.toneMix || filters.toneDistribution || {
-    positive: 4,
-    neutral: 4,
-    negative: 2,
+    positive: totalCount,
+    negative: 0,
   };
   const slots = [];
   for (const tone of TONES) {
@@ -75,28 +75,18 @@ function buildToneSlots(filters = {}, totalCount = 10) {
       slots.push(tone);
     }
   }
-  return shuffle(slots);
+  while (slots.length < totalCount) {
+    slots.push('positive');
+  }
+  return shuffle(slots.slice(0, totalCount));
 }
 
 function buildVoiceSlots(filters = {}, totalCount = 10) {
-  if (filters.voiceMode === 'single' && filters.voice) {
+  // Generational voices removed from product controls — keep output natural/neutral.
+  if (filters.voiceMode === 'single' && filters.voice && VOICES.includes(filters.voice)) {
     return Array.from({ length: totalCount }, () => filters.voice);
   }
-  const dist = filters.voiceMix || filters.voiceDistribution || {
-    gen_z: 4,
-    millennial: 3,
-    gen_x: 2,
-    neutral: 1,
-    boomer: 0,
-  };
-  const slots = [];
-  for (const voice of VOICES) {
-    const count = Math.max(0, parseInt(dist[voice], 10) || 0);
-    for (let i = 0; i < count; i += 1) {
-      slots.push(voice);
-    }
-  }
-  return shuffle(slots);
+  return Array.from({ length: totalCount }, () => 'neutral');
 }
 
 function buildCommentSlots(filters = {}, totalCount = 10) {
@@ -104,23 +94,32 @@ function buildCommentSlots(filters = {}, totalCount = 10) {
   const languages = buildLanguageSlots(filters.languageMix || filters.languageDistribution || {});
   const tones = buildToneSlots(filters, count);
   const voices = buildVoiceSlots(filters, count);
+  const angles = Array.isArray(filters.selectedAngles)
+    ? filters.selectedAngles.map((item) => String(item || '').trim()).filter(Boolean)
+    : [];
   const len = Math.min(languages.length, tones.length, voices.length, count);
   return Array.from({ length: len }, (_, index) => ({
     language: languages[index],
     tone: tones[index] || 'positive',
     voice: voices[index] || 'neutral',
+    angle: angles.length ? angles[index % angles.length] : null,
   }));
 }
 
 function defaultGenerationFilters(totalCount = 10) {
+  const positive = Math.ceil(totalCount / 2);
+  const neutral = Math.max(0, totalCount - positive);
   return {
     commentCount: totalCount,
-    languageMix: { khasi: 5, pnar: 2, garo: 0, english: 3, hindi: 0 },
+    languageMix: { khasi: totalCount, pnar: 0, garo: 0, english: 0, hindi: 0 },
     toneMode: 'mixed',
-    toneMix: { positive: 4, neutral: 4, negative: 2 },
-    voiceMode: 'mixed',
-    voiceMix: { gen_z: 4, millennial: 3, gen_x: 2, neutral: 1, boomer: 0 },
-    textSpeakPercent: 40,
+    toneMix: { positive, neutral, negative: 0 },
+    voiceMode: 'single',
+    voice: 'neutral',
+    voiceMix: { neutral: totalCount },
+    textSpeakPercent: 25,
+    userIntent: '',
+    selectedAngles: [],
   };
 }
 
@@ -130,6 +129,7 @@ module.exports = {
   VOICES,
   sumDistribution,
   validateLanguageDistribution,
+  validateToneDistribution,
   buildLanguageSlots,
   buildCommentSlots,
   defaultGenerationFilters,

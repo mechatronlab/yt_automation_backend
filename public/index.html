@@ -216,6 +216,8 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      min-width: 0;
+      overflow-x: hidden;
     }
 
     .topbar {
@@ -323,6 +325,17 @@
     .dashboard-content {
       flex: 1;
       padding: 28px 32px;
+      max-width: 100%;
+      overflow-x: hidden;
+      box-sizing: border-box;
+    }
+
+    #tab-content-comments,
+    .comments-wizard,
+    #wizard-panel-4 {
+      max-width: 100%;
+      overflow-x: hidden;
+      min-width: 0;
     }
 
     .page-breadcrumb {
@@ -1932,7 +1945,10 @@
       justify-content: space-between;
       position: relative;
       margin-bottom: 24px;
-      padding: 0 40px;
+      padding: 0 12px;
+      max-width: 100%;
+      overflow: hidden;
+      gap: 4px;
     }
     .wizard-stepper::before {
       content: '';
@@ -1988,10 +2004,18 @@
       color: white;
     }
     .wizard-step-label {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       color: var(--text-secondary);
       transition: color 0.3s;
+      max-width: 88px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    @media (max-width: 1100px) {
+      .wizard-step-label { display: none; }
+      .wizard-step { padding: 0 4px; }
     }
     .wizard-step.active .wizard-step-label {
       color: var(--text-primary);
@@ -2341,72 +2365,145 @@
       border-color: var(--accent-border);
     }
 
-    /* Wizard filter step */
+    /* Wizard filter step (Step 3) */
     .wizard-filter-banner {
-      background: rgba(66, 133, 244, 0.08);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: center;
+      background: linear-gradient(135deg, rgba(66, 133, 244, 0.1), rgba(167, 139, 250, 0.06));
       border: 1px solid var(--accent-border);
-      border-radius: 12px;
-      padding: 14px 18px;
-      margin-bottom: 24px;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 22px;
       font-size: 13px;
       color: var(--text-secondary);
-      line-height: 1.5;
+      line-height: 1.45;
     }
     .wizard-filter-banner strong {
       color: var(--text-primary);
     }
-    .wizard-filter-presets {
-      margin-bottom: 28px;
+    .wizard-filter-stat {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
-    .wizard-filter-presets-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      color: var(--text-secondary);
-      margin-bottom: 10px;
+    .wizard-filter-stat-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-hover);
     }
-    .wizard-filter-section {
-      border-top: 1px solid var(--border);
-      padding-top: 24px;
-      margin-top: 24px;
+    .wizard-filter-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
-    .wizard-filter-section:first-of-type {
-      border-top: none;
-      padding-top: 0;
-      margin-top: 0;
+    .wizard-filter-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      background: rgba(255,255,255,0.02);
     }
-    .wizard-filter-section-header {
+    .wizard-filter-card-head {
       display: flex;
       align-items: flex-start;
+      justify-content: space-between;
       gap: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
-    .wizard-filter-section-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: var(--accent-bg);
-      color: var(--accent-hover);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
-      flex-shrink: 0;
-    }
-    .wizard-filter-section-title {
-      font-size: 15px;
-      font-weight: 600;
+    .wizard-filter-card-title {
+      font-size: 14px;
+      font-weight: 650;
       color: var(--text-primary);
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
-    .wizard-filter-section-desc {
+    .wizard-filter-card-desc {
       font-size: 12px;
       color: var(--text-secondary);
       line-height: 1.45;
     }
+    .wizard-filter-card-meta {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    .wizard-smart-angles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .wizard-smart-angles-empty {
+      width: 100%;
+      color: var(--text-secondary);
+      font-size: 13px;
+      padding: 14px;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      text-align: center;
+    }
+    .wizard-angle-chip {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color: var(--text-primary);
+      border-radius: 999px;
+      padding: 8px 13px;
+      font-size: 12.5px;
+      line-height: 1.2;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color .15s ease, background .15s ease, color .15s ease;
+    }
+    .wizard-angle-chip:hover {
+      border-color: var(--accent-hover, #7c9cff);
+    }
+    .wizard-angle-chip.active {
+      background: rgba(66, 133, 244, 0.14);
+      border-color: var(--accent-hover, #4285f4);
+      color: var(--accent-hover, #4285f4);
+      box-shadow: inset 0 0 0 1px rgba(66, 133, 244, 0.15);
+    }
+    .wizard-angle-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .wizard-angle-actions .btn-action-secondary {
+      padding: 7px 10px;
+      font-size: 12px;
+    }
+    .wizard-mix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 10px;
+    }
+    .wizard-mix-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .wizard-mix-field label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .wizard-mix-field input {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.15);
+      color: var(--text-primary);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: inherit;
+      font-size: 14px;
+    }
+    .wizard-mix-field input:focus {
+      outline: none;
+      border-color: var(--accent-hover);
+    }
     .wizard-filter-total {
       font-size: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .wizard-filter-total.valid {
       color: var(--green);
@@ -2414,88 +2511,44 @@
     .wizard-filter-total.invalid {
       color: #f87171;
     }
+    .wizard-sentiment-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .wizard-textspeak-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .wizard-textspeak-value {
+      min-width: 110px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .wizard-filter-presets {
+      display: none;
+    }
+    .wizard-filter-section {
+      display: none;
+    }
     .wizard-mix-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 12px;
+      gap: 10px;
     }
     @media (max-width: 900px) {
       .wizard-mix-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
-    }
-    .wizard-mix-field label {
-      display: block;
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-bottom: 6px;
-    }
-    .wizard-mix-field input {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-      color: var(--text-primary);
-      font-size: 14px;
-      outline: none;
-    }
-    .wizard-mix-field input:focus {
-      border-color: var(--accent);
-    }
-    .wizard-mode-toggle {
-      display: inline-flex;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 3px;
-      margin-bottom: 14px;
-    }
-    .wizard-mode-btn {
-      border: none;
-      background: transparent;
-      color: var(--text-secondary);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 8px 16px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .wizard-mode-btn.active {
-      background: var(--wizard-gradient);
-      color: white;
-      box-shadow: 0 4px 12px var(--accent-glow);
-    }
-    .wizard-count-slider-row {
-      display: flex;
-      align-items: center;
-      gap: 16px;
+      .wizard-sentiment-row {
+        grid-template-columns: 1fr;
+      }
     }
     .wizard-count-slider {
       flex: 1;
       accent-color: var(--accent);
       height: 6px;
-    }
-    .wizard-count-input {
-      width: 72px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-      color: var(--text-primary);
-      font-size: 14px;
-      text-align: center;
-    }
-    .wizard-textspeak-row {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .wizard-textspeak-value {
-      font-size: 13px;
-      color: var(--text-secondary);
-      white-space: nowrap;
     }
     .wizard-generate-footer-meta {
       font-size: 13px;
@@ -2675,6 +2728,8 @@
       border-radius: 16px;
       overflow: hidden;
       margin-bottom: 16px;
+      max-width: 100%;
+      min-width: 0;
     }
     .comment-group-header {
       display: flex;
@@ -2697,6 +2752,10 @@
     .comment-group-info span {
       font-size: 12px;
       color: var(--text-secondary);
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .comment-group-badge {
       font-size: 11px;
@@ -2715,6 +2774,9 @@
       padding: 18px 20px;
       border-bottom: 1px solid var(--border);
       transition: background 0.12s;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
     }
     .comment-item:last-child {
       border-bottom: 0;
@@ -2743,6 +2805,8 @@
       line-height: 1.65;
       color: var(--text-primary);
       margin: 0 0 14px;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
     .comment-row {
       display: flex;
@@ -2750,6 +2814,16 @@
       justify-content: space-between;
       gap: 12px;
       flex-wrap: wrap;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .comment-meta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 0;
+      min-width: 0;
+      max-width: 100%;
     }
     .comment-btn-row {
       display: flex;
@@ -2898,9 +2972,10 @@
     /* Step 3 Stats Row */
     .wizard-stats-row {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 16px;
       margin-bottom: 24px;
+      max-width: 100%;
     }
     .wizard-stat-card {
       background: rgba(255, 255, 255, 0.02);
@@ -3745,74 +3820,80 @@
                 <div class="wizard-input-box">
                   <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
                     <span style="display: inline-flex; width: 28px; height: 28px; border-radius: 8px; background: var(--accent-bg); color: var(--accent-hover); align-items: center; justify-content: center;">⚙️</span>
-                    Configure comment generation
+                    Set filters
                   </h3>
-                  <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
-                    Choose languages, count, and spelling variants before Gemini generates comments.
+                  <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 18px;">
+                    Pick video angles, languages, and sentiment — then generate.
                   </p>
 
                   <div class="wizard-filter-banner" id="wizard-filter-banner">
-                    Generating <strong id="wizard-filter-banner-count">10</strong> comments across
-                    <strong id="wizard-filter-banner-videos">0</strong> video(s) and
-                    <strong id="wizard-filter-banner-accounts">0</strong> account(s) using Gemini AI.
+                    <span class="wizard-filter-stat"><span class="wizard-filter-stat-dot"></span><strong id="wizard-filter-banner-count">10</strong>&nbsp;comments</span>
+                    <span class="wizard-filter-stat"><strong id="wizard-filter-banner-videos">0</strong>&nbsp;video(s)</span>
+                    <span class="wizard-filter-stat"><strong id="wizard-filter-banner-accounts">0</strong>&nbsp;account(s)</span>
                   </div>
 
-                  <div class="wizard-filter-presets">
-                    <div class="wizard-filter-presets-label">QUICK PRESETS</div>
-                    <div class="filter-pills" id="wizard-filter-presets">
-                      <div class="filter-pill" data-preset="gen-z-mix" onclick="applyWizardFilterPreset('gen-z-mix')">Gen Z mix</div>
-                      <div class="filter-pill active" data-preset="balanced" onclick="applyWizardFilterPreset('balanced')">Balanced</div>
-                      <div class="filter-pill" data-preset="khasi-heavy" onclick="applyWizardFilterPreset('khasi-heavy')">Khasi-heavy</div>
-                      <div class="filter-pill" data-preset="all-languages" onclick="applyWizardFilterPreset('all-languages')">All languages</div>
-                      <div class="filter-pill" data-preset="split-evenly" onclick="applyWizardFilterPreset('split-evenly')">Split evenly</div>
-                    </div>
-                  </div>
-
-                  <div class="wizard-filter-section">
-                    <div class="wizard-filter-section-header">
-                      <div class="wizard-filter-section-icon">💬</div>
-                      <div>
-                        <div class="wizard-filter-section-title">How many comments?</div>
-                        <div class="wizard-filter-section-desc">Total comments to generate per video (1–50). Each comment uses one account.</div>
+                  <div class="wizard-filter-stack">
+                    <div class="wizard-filter-card" id="wizard-angles-card">
+                      <div class="wizard-filter-card-head">
+                        <div>
+                          <div class="wizard-filter-card-title">Smart angles</div>
+                          <div class="wizard-filter-card-desc">Tap angles that fit this video. Selected angles steer the comments.</div>
+                          <div class="wizard-filter-card-meta" id="wizard-smart-angles-meta">No video loaded</div>
+                        </div>
+                        <div class="wizard-angle-actions">
+                          <button type="button" class="btn-action-secondary" onclick="clearWizardSmartAngles()" title="Clear selected">Clear</button>
+                          <button type="button" class="btn-action-secondary" id="btn-refresh-smart-angles" onclick="loadWizardSmartAngles({ force: true })">Refresh</button>
+                        </div>
+                      </div>
+                      <div id="wizard-smart-angles" class="wizard-smart-angles">
+                        <div class="wizard-smart-angles-empty">Add a video, then open this step to load angles.</div>
                       </div>
                     </div>
-                    <div class="wizard-count-slider-row">
-                      <input type="range" class="wizard-count-slider" id="wizard-filter-count-slider" min="1" max="50" value="10" oninput="setWizardFilterCount(this.value)">
-                      <input type="number" class="wizard-count-input" id="wizard-filter-count-input" min="1" max="50" value="10" onchange="setWizardFilterCount(this.value)">
-                    </div>
-                  </div>
 
-                  <div class="wizard-filter-section">
-                    <div class="wizard-filter-section-header">
-                      <div class="wizard-filter-section-icon">🌐</div>
-                      <div>
-                        <div class="wizard-filter-section-title">Language mix</div>
-                        <div class="wizard-filter-section-desc">How many comments in each language — must total the comment count above.</div>
+                    <div class="wizard-filter-card">
+                      <div class="wizard-filter-card-head">
+                        <div>
+                          <div class="wizard-filter-card-title">Language mix</div>
+                          <div class="wizard-filter-card-desc">How many comments in each language. Total = sum of counts (1–50).</div>
+                        </div>
+                      </div>
+                      <div class="wizard-filter-total valid" id="wizard-language-total">Total: 10 comments</div>
+                      <div class="wizard-mix-grid">
+                        <div class="wizard-mix-field"><label for="filter-lang-khasi">Khasi</label><input type="number" id="filter-lang-khasi" min="0" max="50" value="10" oninput="updateWizardFilterMix()" onchange="updateWizardFilterMix()"></div>
+                        <div class="wizard-mix-field"><label for="filter-lang-pnar">Pnar</label><input type="number" id="filter-lang-pnar" min="0" max="50" value="0" oninput="updateWizardFilterMix()" onchange="updateWizardFilterMix()"></div>
+                        <div class="wizard-mix-field"><label for="filter-lang-garo">Garo</label><input type="number" id="filter-lang-garo" min="0" max="50" value="0" oninput="updateWizardFilterMix()" onchange="updateWizardFilterMix()"></div>
+                        <div class="wizard-mix-field"><label for="filter-lang-english">English</label><input type="number" id="filter-lang-english" min="0" max="50" value="0" oninput="updateWizardFilterMix()" onchange="updateWizardFilterMix()"></div>
+                        <div class="wizard-mix-field"><label for="filter-lang-hindi">Hindi</label><input type="number" id="filter-lang-hindi" min="0" max="50" value="0" oninput="updateWizardFilterMix()" onchange="updateWizardFilterMix()"></div>
                       </div>
                     </div>
-                    <div class="wizard-filter-total valid" id="wizard-language-total">Language counts must total 10 (10/10)</div>
-                    <div class="wizard-mix-grid">
-                      <div class="wizard-mix-field"><label for="filter-lang-khasi">Khasi</label><input type="number" id="filter-lang-khasi" min="0" max="50" value="5" onchange="updateWizardFilterMix()"></div>
-                      <div class="wizard-mix-field"><label for="filter-lang-pnar">Pnar</label><input type="number" id="filter-lang-pnar" min="0" max="50" value="2" onchange="updateWizardFilterMix()"></div>
-                      <div class="wizard-mix-field"><label for="filter-lang-garo">Garo</label><input type="number" id="filter-lang-garo" min="0" max="50" value="0" onchange="updateWizardFilterMix()"></div>
-                      <div class="wizard-mix-field"><label for="filter-lang-english">English</label><input type="number" id="filter-lang-english" min="0" max="50" value="3" onchange="updateWizardFilterMix()"></div>
-                      <div class="wizard-mix-field"><label for="filter-lang-hindi">Hindi</label><input type="number" id="filter-lang-hindi" min="0" max="50" value="0" onchange="updateWizardFilterMix()"></div>
-                    </div>
-                  </div>
 
-                  <div class="wizard-filter-section">
-                    <div class="wizard-filter-section-header">
-                      <div class="wizard-filter-section-icon">✍️</div>
-                      <div>
-                        <div class="wizard-filter-section-title">Text-speak & shorthand</div>
-                        <div class="wizard-filter-section-desc">Casual shortening applied to some comments — tuned per language. Khasi: nga→ng, kwah→kwh · English: u, rly, prolly · Hindi: nhi, bhot, yr · etc.</div>
+                    <div class="wizard-filter-card">
+                      <div class="wizard-filter-card-head">
+                        <div>
+                          <div class="wizard-filter-card-title">Sentiment</div>
+                          <div class="wizard-filter-card-desc">Positive, neutral, or negative. Must equal your language total.</div>
+                        </div>
+                      </div>
+                      <div class="wizard-filter-total valid" id="wizard-tone-total">Sentiment: 5 positive · 5 neutral · 0 negative</div>
+                      <div class="wizard-sentiment-row">
+                        <div class="wizard-mix-field"><label for="filter-tone-positive">Positive</label><input type="number" id="filter-tone-positive" min="0" max="50" value="5" oninput="updateWizardFilterMix()" onchange="updateWizardFilterMix()"></div>
+                        <div class="wizard-mix-field"><label for="filter-tone-neutral">Neutral</label><input type="number" id="filter-tone-neutral" min="0" max="50" value="5" oninput="updateWizardFilterMix()" onchange="updateWizardFilterMix()"></div>
+                        <div class="wizard-mix-field"><label for="filter-tone-negative">Negative</label><input type="number" id="filter-tone-negative" min="0" max="50" value="0" oninput="updateWizardFilterMix()" onchange="updateWizardFilterMix()"></div>
                       </div>
                     </div>
-                    <div class="wizard-textspeak-row">
-                      <input type="range" class="wizard-count-slider" id="wizard-textspeak-slider" min="0" max="100" value="40" oninput="setWizardTextSpeak(this.value)">
-                      <div class="wizard-textspeak-value"><strong id="wizard-textspeak-percent">40%</strong> of comments</div>
+
+                    <div class="wizard-filter-card">
+                      <div class="wizard-filter-card-head">
+                        <div>
+                          <div class="wizard-filter-card-title">Natural misspellings</div>
+                          <div class="wizard-filter-card-desc">Light typos on English/Hindi comments so they feel human.</div>
+                        </div>
+                      </div>
+                      <div class="wizard-textspeak-row">
+                        <input type="range" class="wizard-count-slider" id="wizard-textspeak-slider" min="0" max="100" value="25" oninput="setWizardTextSpeak(this.value)">
+                        <div class="wizard-textspeak-value"><strong id="wizard-textspeak-percent">25%</strong> of comments</div>
+                      </div>
                     </div>
-                    <p style="font-size: 12px; color: var(--text-secondary); margin: 10px 0 0;">Only 2–5 words change per comment — not everything.</p>
                   </div>
                 </div>
 
@@ -4355,6 +4436,8 @@
     let bulkGoogleAuthClient = null;
 
     let connectedAccountsList = [];
+    // From /api/config/client when WIZARD_MOCK_ACCOUNTS=true — generation testing without linked accounts
+    let WIZARD_MOCK_ACCOUNTS_ENABLED = false;
 
     // Campaigns state
     let selectedExportFormat = 'CSV';
@@ -4524,6 +4607,7 @@
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await apiJson(res);
         GOOGLE_CLIENT_ID = data.googleClientId;
+        WIZARD_MOCK_ACCOUNTS_ENABLED = !!data.wizardMockAccounts;
         apiConfigReady = true;
         initializeGoogleSignInButton();
       } catch (e) {
@@ -5826,13 +5910,19 @@
     let wizardSelectedAccounts = new Set();
     let wizardComments = [];
     let wizardCommentCount = 10;
-    let wizardCommentLanguage = 'english';
+    let wizardCommentLanguage = 'khasi';
     let wizardShowPendingOnly = false;
     let wizardFilters = {
       commentCount: 10,
-      languageMix: { khasi: 5, pnar: 2, garo: 0, english: 3, hindi: 0 },
-      textSpeakPercent: 40,
+      languageMix: { khasi: 10, pnar: 0, garo: 0, english: 0, hindi: 0 },
+      toneMix: { positive: 5, neutral: 5, negative: 0 },
+      textSpeakPercent: 25,
+      selectedAngles: [],
     };
+    let wizardSmartAngles = [];
+    let wizardSmartAnglesVideoUrl = '';
+    let wizardSmartAnglesVideoTitle = '';
+    let wizardSmartAnglesLoading = false;
 
     const WIZARD_LANGUAGE_FIELDS = [
       ['khasi', 'filter-lang-khasi'],
@@ -5840,6 +5930,12 @@
       ['garo', 'filter-lang-garo'],
       ['english', 'filter-lang-english'],
       ['hindi', 'filter-lang-hindi'],
+    ];
+
+    const WIZARD_TONE_FIELDS = [
+      ['positive', 'filter-tone-positive'],
+      ['neutral', 'filter-tone-neutral'],
+      ['negative', 'filter-tone-negative'],
     ];
 
     function getWizardLanguageLabel(language = wizardCommentLanguage) {
@@ -5850,15 +5946,16 @@
       const topLang = Object.entries(mix).sort((a, b) => b[1] - a[1])[0];
       if (!topLang || topLang[1] === 0) return language === 'khasi' ? 'Khasi' : 'English';
       const labels = { khasi: 'Khasi', pnar: 'Pnar', garo: 'Garo', english: 'English', hindi: 'Hindi' };
-      return labels[topLang[0]] || 'English';
+      return labels[topLang[0]] || 'Khasi';
     }
 
     function deriveWizardCommentLanguage() {
       const mix = wizardFilters.languageMix || {};
       const top = Object.entries(mix).sort((a, b) => b[1] - a[1])[0];
-      if (!top || top[0] === 'english' || top[0] === 'hindi') return 'english';
+      if (!top || top[1] === 0) return 'khasi';
       if (top[0] === 'khasi') return 'khasi';
-      return 'english';
+      if (top[0] === 'english' || top[0] === 'hindi') return 'english';
+      return 'khasi';
     }
 
     function readWizardFiltersFromDom() {
@@ -5867,10 +5964,22 @@
         languageMix[key] = Math.max(0, parseInt(document.getElementById(id)?.value, 10) || 0);
       });
 
+      const toneMix = {};
+      WIZARD_TONE_FIELDS.forEach(([key, id]) => {
+        toneMix[key] = Math.max(0, parseInt(document.getElementById(id)?.value, 10) || 0);
+      });
+
+      const langSum = Object.values(languageMix).reduce((a, b) => a + b, 0);
+      wizardCommentCount = Math.max(0, Math.min(50, langSum));
+
+      const textSlider = document.getElementById('wizard-textspeak-slider');
+
       wizardFilters = {
         commentCount: wizardCommentCount,
         languageMix,
-        textSpeakPercent: wizardFilters.textSpeakPercent,
+        toneMix,
+        textSpeakPercent: Math.max(0, Math.min(100, parseInt(textSlider?.value, 10) || wizardFilters.textSpeakPercent || 25)),
+        selectedAngles: Array.isArray(wizardFilters.selectedAngles) ? wizardFilters.selectedAngles : [],
       };
       wizardCommentLanguage = deriveWizardCommentLanguage();
       return wizardFilters;
@@ -5881,16 +5990,15 @@
         const el = document.getElementById(id);
         if (el) el.value = wizardFilters.languageMix[key] ?? 0;
       });
-
-      const countSlider = document.getElementById('wizard-filter-count-slider');
-      const countInput = document.getElementById('wizard-filter-count-input');
-      if (countSlider) countSlider.value = wizardCommentCount;
-      if (countInput) countInput.value = wizardCommentCount;
-
+      WIZARD_TONE_FIELDS.forEach(([key, id]) => {
+        const el = document.getElementById(id);
+        if (el) el.value = wizardFilters.toneMix?.[key] ?? 0;
+      });
       const textSlider = document.getElementById('wizard-textspeak-slider');
-      if (textSlider) textSlider.value = wizardFilters.textSpeakPercent;
       const textPercent = document.getElementById('wizard-textspeak-percent');
-      if (textPercent) textPercent.textContent = `${wizardFilters.textSpeakPercent}%`;
+      if (textSlider) textSlider.value = wizardFilters.textSpeakPercent ?? 25;
+      if (textPercent) textPercent.textContent = `${wizardFilters.textSpeakPercent ?? 25}%`;
+      renderWizardSmartAngles();
     }
 
     function scaleWizardMix(mix, total) {
@@ -5898,6 +6006,15 @@
       const oldTotal = keys.reduce((sum, key) => sum + (mix[key] || 0), 0);
       const next = {};
       if (oldTotal <= 0) {
+        if (keys.includes('positive') || keys.includes('neutral') || keys.includes('negative')) {
+          next.positive = Math.ceil(total / 2);
+          next.neutral = Math.floor(total / 2);
+          next.negative = 0;
+          keys.forEach((key) => {
+            if (next[key] == null) next[key] = 0;
+          });
+          return next;
+        }
         const base = Math.floor(total / keys.length);
         keys.forEach((key, index) => {
           next[key] = index === keys.length - 1 ? total - base * (keys.length - 1) : base;
@@ -5919,22 +6036,41 @@
     function updateWizardFilterTotals() {
       readWizardFiltersFromDom();
       const total = wizardCommentCount;
-
-      const langSum = Object.values(wizardFilters.languageMix).reduce((a, b) => a + b, 0);
+      const toneSum = Object.values(wizardFilters.toneMix || {}).reduce((a, b) => a + b, 0);
+      const positive = wizardFilters.toneMix?.positive || 0;
+      const neutral = wizardFilters.toneMix?.neutral || 0;
+      const negative = wizardFilters.toneMix?.negative || 0;
 
       const langEl = document.getElementById('wizard-language-total');
+      const toneEl = document.getElementById('wizard-tone-total');
       const generateBtn = document.getElementById('btn-step3-generate');
       const footerMeta = document.getElementById('wizard-generate-footer-meta');
 
       if (langEl) {
-        langEl.textContent = `Language counts must total ${total} (${langSum}/${total})`;
-        langEl.className = `wizard-filter-total ${langSum === total ? 'valid' : 'invalid'}`;
+        if (total <= 0) {
+          langEl.textContent = 'Add at least one language count to generate comments';
+          langEl.className = 'wizard-filter-total invalid';
+        } else if (total > 50) {
+          langEl.textContent = `Total is ${total} — max is 50 comments`;
+          langEl.className = 'wizard-filter-total invalid';
+        } else {
+          langEl.textContent = `Total: ${total} comment${total === 1 ? '' : 's'} (from your language mix)`;
+          langEl.className = 'wizard-filter-total valid';
+        }
       }
 
-      const valid = langSum === total;
+      if (toneEl) {
+        const toneOk = total > 0 && toneSum === total;
+        toneEl.textContent = toneOk
+          ? `Sentiment: ${positive} positive · ${neutral} neutral · ${negative} negative`
+          : `Positive + neutral + negative must equal ${total} (now ${toneSum})`;
+        toneEl.className = `wizard-filter-total ${toneOk ? 'valid' : 'invalid'}`;
+      }
+
+      const valid = total >= 1 && total <= 50 && toneSum === total;
       if (generateBtn) {
         generateBtn.disabled = !valid;
-        generateBtn.textContent = `✨ Generate ${total} comment${total === 1 ? '' : 's'}`;
+        generateBtn.textContent = `✨ Generate ${Math.max(total, 0)} comment${total === 1 ? '' : 's'}`;
       }
       if (footerMeta) {
         footerMeta.textContent = `${total} comment${total === 1 ? '' : 's'} · Gemini AI`;
@@ -5955,6 +6091,7 @@
       wizardCommentCount = next;
       wizardFilters.commentCount = next;
       wizardFilters.languageMix = scaleWizardMix(wizardFilters.languageMix, next);
+      wizardFilters.toneMix = scaleWizardMix(wizardFilters.toneMix || { positive: 1, neutral: 1, negative: 0 }, next);
       writeWizardFiltersToDom();
       syncWizardAccountSelection();
       updateWizardFilterTotals();
@@ -5964,8 +6101,24 @@
     }
 
     function updateWizardFilterMix() {
+      const prevTotal = wizardCommentCount;
       readWizardFiltersFromDom();
+      const nextTotal = wizardCommentCount;
+
+      // When language total changes, keep sentiment proportionally aligned.
+      if (nextTotal !== prevTotal && nextTotal > 0) {
+        wizardFilters.toneMix = scaleWizardMix(
+          wizardFilters.toneMix || { positive: 1, neutral: 1, negative: 0 },
+          nextTotal,
+        );
+        writeWizardFiltersToDom();
+      }
+
+      syncWizardAccountSelection();
       updateWizardFilterTotals();
+      if (wizardCurrentStep === 2) {
+        renderChooseAccounts();
+      }
     }
 
     function setWizardTextSpeak(value) {
@@ -5976,46 +6129,120 @@
       if (textPercent) textPercent.textContent = `${wizardFilters.textSpeakPercent}%`;
     }
 
-    function applyWizardFilterPreset(preset) {
-      const total = wizardCommentCount;
-      document.querySelectorAll('#wizard-filter-presets .filter-pill').forEach((pill) => {
-        pill.classList.toggle('active', pill.dataset.preset === preset);
-      });
+    function updateWizardSmartAnglesMeta() {
+      const meta = document.getElementById('wizard-smart-angles-meta');
+      if (!meta) return;
+      const selectedCount = (wizardFilters.selectedAngles || []).length;
+      if (!wizardAddedVideos[0]) {
+        meta.textContent = 'Add a video to load angles';
+        return;
+      }
+      const title = wizardSmartAnglesVideoTitle || wizardAddedVideos[0].title || 'Selected video';
+      const shortTitle = title.length > 48 ? `${title.slice(0, 48)}…` : title;
+      if (wizardSmartAnglesLoading) {
+        meta.textContent = `Loading angles for “${shortTitle}”…`;
+        return;
+      }
+      if (!wizardSmartAngles.length) {
+        meta.textContent = `Video: ${shortTitle}`;
+        return;
+      }
+      meta.textContent = `${selectedCount} selected · ${wizardSmartAngles.length} options · ${shortTitle}`;
+    }
 
-      if (preset === 'gen-z-mix') {
-        wizardFilters = {
-          ...wizardFilters,
-          languageMix: { khasi: 0, pnar: 0, garo: 0, english: total, hindi: 0 },
-          textSpeakPercent: 60,
-        };
-      } else if (preset === 'khasi-heavy') {
-        wizardFilters = {
-          ...wizardFilters,
-          languageMix: scaleWizardMix({ khasi: 7, pnar: 1, garo: 0, english: 2, hindi: 0 }, total),
-          textSpeakPercent: 35,
-        };
-      } else if (preset === 'all-languages') {
-        wizardFilters = {
-          ...wizardFilters,
-          languageMix: scaleWizardMix({ khasi: 1, pnar: 1, garo: 1, english: 1, hindi: 1 }, total),
-          textSpeakPercent: 40,
-        };
-      } else if (preset === 'split-evenly') {
-        wizardFilters = {
-          ...wizardFilters,
-          languageMix: scaleWizardMix({ khasi: 1, pnar: 1, garo: 1, english: 1, hindi: 1 }, total),
-          textSpeakPercent: 30,
-        };
-      } else {
-        wizardFilters = {
-          ...wizardFilters,
-          languageMix: scaleWizardMix({ khasi: 5, pnar: 2, garo: 0, english: 3, hindi: 0 }, total),
-          textSpeakPercent: 40,
-        };
+    function renderWizardSmartAngles() {
+      const container = document.getElementById('wizard-smart-angles');
+      if (!container) return;
+      updateWizardSmartAnglesMeta();
+
+      if (wizardSmartAnglesLoading) {
+        container.innerHTML = `<div class="wizard-smart-angles-empty">Loading angles for this video…</div>`;
+        return;
+      }
+      if (!wizardSmartAngles.length) {
+        container.innerHTML = `<div class="wizard-smart-angles-empty">No angles yet. Click Refresh after adding a video.</div>`;
+        return;
       }
 
-      writeWizardFiltersToDom();
-      updateWizardFilterTotals();
+      const selected = new Set(wizardFilters.selectedAngles || []);
+      container.innerHTML = wizardSmartAngles.map((angle, index) => {
+        const active = selected.has(angle) ? 'active' : '';
+        return `<button type="button" class="wizard-angle-chip ${active}" data-angle-index="${index}">${escHtml(angle)}</button>`;
+      }).join('');
+
+      // Index-based clicks avoid broken handlers when labels contain quotes/apostrophes.
+      container.querySelectorAll('[data-angle-index]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.getAttribute('data-angle-index'));
+          toggleWizardSmartAngleByIndex(idx);
+        });
+      });
+    }
+
+    function toggleWizardSmartAngleByIndex(index) {
+      const angle = wizardSmartAngles[index];
+      if (!angle) return;
+      const current = new Set(wizardFilters.selectedAngles || []);
+      if (current.has(angle)) current.delete(angle);
+      else current.add(angle);
+      wizardFilters.selectedAngles = Array.from(current);
+      renderWizardSmartAngles();
+    }
+
+    function clearWizardSmartAngles() {
+      wizardFilters.selectedAngles = [];
+      renderWizardSmartAngles();
+    }
+
+    async function loadWizardSmartAngles(options = {}) {
+      const video = wizardAddedVideos[0];
+      const container = document.getElementById('wizard-smart-angles');
+      if (!video?.url) {
+        wizardSmartAngles = [];
+        wizardSmartAnglesVideoUrl = '';
+        wizardSmartAnglesVideoTitle = '';
+        wizardFilters.selectedAngles = [];
+        renderWizardSmartAngles();
+        return;
+      }
+      if (!options.force && wizardSmartAnglesVideoUrl === video.url && wizardSmartAngles.length) {
+        renderWizardSmartAngles();
+        return;
+      }
+
+      wizardSmartAnglesLoading = true;
+      wizardSmartAnglesVideoTitle = video.title || '';
+      renderWizardSmartAngles();
+      try {
+        const res = await fetch(`${API_BASE}/api/comments/suggest-angles`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${JWT_TOKEN}`,
+          },
+          body: JSON.stringify({ youtubeUrl: video.url }),
+        });
+        const data = await parseApiResponse(res);
+        if (!res.ok) throw new Error(data.message || 'Failed to load suggestions');
+        wizardSmartAngles = Array.isArray(data.angles)
+          ? data.angles.map((item) => String(item || '').trim()).filter(Boolean)
+          : [];
+        wizardSmartAnglesVideoUrl = video.url;
+        wizardSmartAnglesVideoTitle = data.video?.title || video.title || '';
+        // Keep only selected angles that still exist in the new list.
+        wizardFilters.selectedAngles = (wizardFilters.selectedAngles || [])
+          .filter((angle) => wizardSmartAngles.includes(angle));
+      } catch (error) {
+        console.warn('Smart angles failed:', error);
+        wizardSmartAngles = [];
+        if (container) {
+          container.innerHTML = `<div class="wizard-smart-angles-empty">${escHtml(error.message || 'Could not load suggestions')}</div>`;
+        }
+        showToast(error.message || 'Could not load smart angles', 'warning');
+      } finally {
+        wizardSmartAnglesLoading = false;
+        renderWizardSmartAngles();
+      }
     }
 
     function getWizardGenerationPayload() {
@@ -6026,7 +6253,9 @@
         filters: {
           commentCount: wizardCommentCount,
           languageMix: wizardFilters.languageMix,
+          toneMix: wizardFilters.toneMix,
           textSpeakPercent: wizardFilters.textSpeakPercent,
+          selectedAngles: wizardFilters.selectedAngles || [],
         },
       };
     }
@@ -6060,16 +6289,15 @@
 
     const WIZARD_TONE_LABELS = {
       positive: 'Positive',
-      negative: 'Negative',
       neutral: 'Neutral',
+      negative: 'Negative',
     };
 
     const WIZARD_VOICE_LABELS = {
-      gen_z: 'Gen Z',
-      millennial: 'Millennial',
-      gen_x: 'Gen X',
-      boomer: 'Boomer',
-      neutral: 'Neutral',
+      neutral: 'Natural',
+      millennial: 'Casual',
+      gen_x: 'Dry',
+      boomer: 'Formal',
     };
 
     function formatWizardLanguageLabel(language = 'english') {
@@ -6080,8 +6308,8 @@
       return WIZARD_TONE_LABELS[tone] || 'Positive';
     }
 
-    function formatWizardVoiceLabel(voice = 'neutral') {
-      return WIZARD_VOICE_LABELS[voice] || 'Neutral';
+    function formatWizardVoiceLabel() {
+      return 'Natural';
     }
 
     function getWizardAccountsForBatch() {
@@ -6144,8 +6372,49 @@
       };
     }
 
+    async function refreshWizardMockAccountsFlag() {
+      if (!API_BASE) return WIZARD_MOCK_ACCOUNTS_ENABLED;
+      try {
+        const res = await fetch(`${API_BASE}/api/config/client`);
+        if (!res.ok) return WIZARD_MOCK_ACCOUNTS_ENABLED;
+        const data = await apiJson(res);
+        if (typeof data.wizardMockAccounts === 'boolean') {
+          WIZARD_MOCK_ACCOUNTS_ENABLED = data.wizardMockAccounts;
+        }
+      } catch (e) {
+        console.warn('Could not refresh wizard mock flag:', e);
+      }
+      return WIZARD_MOCK_ACCOUNTS_ENABLED;
+    }
+
+    function buildWizardMockAccounts(count = 10) {
+      const n = Math.max(1, Math.min(50, Number(count) || 10));
+      return Array.from({ length: n }, (_, i) => ({
+        _id: `mock-account-${i + 1}`,
+        id: `mock-account-${i + 1}`,
+        name: `Mock Account ${i + 1}`,
+        email: `mock${i + 1}@test.local`,
+        status: 'connected',
+        isActive: true,
+        youtubeChannel: `UC_MOCK_${i + 1}`,
+        persona: `Mock tester ${i + 1}`,
+        dailyCommentsUsed: 0,
+        dailyMaxComments: 50,
+        isMock: true,
+      }));
+    }
+
     function getWizardAccounts() {
-      return (connectedAccountsList || []).filter((acc) => acc.status === 'connected');
+      const real = (connectedAccountsList || []).filter((acc) => acc.status === 'connected');
+      if (real.length > 0) return real;
+      if (WIZARD_MOCK_ACCOUNTS_ENABLED) {
+        return buildWizardMockAccounts(Math.max(wizardCommentCount, 10));
+      }
+      return [];
+    }
+
+    function isWizardUsingMockAccounts() {
+      return getWizardAccounts().some((acc) => acc.isMock);
     }
 
     function applyWizardAccountFilters(accounts) {
@@ -6399,11 +6668,14 @@
       if (stepNum === 1) {
         renderWizardVideos();
       } else if (stepNum === 2) {
-        syncWizardAccountSelection();
-        renderChooseAccounts();
+        refreshWizardMockAccountsFlag().then(() => {
+          syncWizardAccountSelection();
+          renderChooseAccounts();
+        });
       } else if (stepNum === 3) {
         writeWizardFiltersToDom();
         updateWizardFilterTotals();
+        loadWizardSmartAngles();
       } else if (stepNum === 4) {
         renderWizardReview();
       }
@@ -6437,6 +6709,7 @@
         container.innerHTML = `
           <div style="grid-column: 1/-1; text-align: center; padding: 40px; border: 1px dashed var(--border); border-radius: 12px; color: var(--text-secondary); margin-top: 10px;">
             No connected accounts found. Go to the Accounts tab to link your YouTube channels first.
+            ${WIZARD_MOCK_ACCOUNTS_ENABLED ? '' : '<br><br><span style="font-size:12px;">Or set <code>WIZARD_MOCK_ACCOUNTS=true</code> in .env to test comment generation without accounts.</span>'}
           </div>
         `;
         continueBtn.disabled = true;
@@ -6445,9 +6718,12 @@
 
       syncWizardAccountSelection();
       const batchAccounts = getWizardAccountsForBatch();
+      const usingMocks = isWizardUsingMockAccounts();
 
       if (stepDesc) {
-        stepDesc.textContent = `Showing ${batchAccounts.length} of ${connectedAccounts.length} accounts for ${wizardCommentCount} comment${wizardCommentCount === 1 ? '' : 's'} per video (auto-selected).`;
+        stepDesc.textContent = usingMocks
+          ? `Using ${batchAccounts.length} mock account(s) for generation testing (posting disabled). Set WIZARD_MOCK_ACCOUNTS=false when you link real accounts.`
+          : `Showing ${batchAccounts.length} of ${connectedAccounts.length} accounts for ${wizardCommentCount} comment${wizardCommentCount === 1 ? '' : 's'} per video (auto-selected).`;
       }
 
       if (batchAccounts.length === 0) {
@@ -6518,7 +6794,7 @@
       const originalText = continueBtn.innerHTML;
 
       if (!updateWizardFilterTotals()) {
-        showToast('Filter counts must match your total comment count.', 'error');
+        showToast('Check language and sentiment counts before generating.', 'error');
         return;
       }
 
@@ -6677,9 +6953,8 @@
           <div class="comment-row">
             <div class="comment-meta-badges">
               <span class="comment-meta-badge lang">${escHtml(formatWizardLanguageLabel(c.language))}</span>
-              <span class="comment-meta-badge voice-${escHtml(c.voice || 'neutral')}">${escHtml(formatWizardVoiceLabel(c.voice))}</span>
               <span class="comment-meta-badge tone-${escHtml(c.tone || 'positive')}">${escHtml(formatWizardToneLabel(c.tone))}</span>
-              ${c.hasSpellingErrors ? '<span class="comment-meta-badge txtspk">txtspk</span>' : ''}
+              ${c.hasSpellingErrors ? '<span class="comment-meta-badge txtspk">natural typos</span>' : ''}
               <span class="comment-meta-badge quality">${c.quality || 90}% quality</span>
             </div>
             ${actionHtml}
@@ -6942,6 +7217,11 @@
     }
 
     async function postWizardComments() {
+      if (isWizardUsingMockAccounts() || Array.from(wizardSelectedAccounts).some((id) => String(id).startsWith('mock-'))) {
+        showToast('Mock accounts are for generation testing only. Posting is disabled.', 'error');
+        return;
+      }
+
       const approved = wizardComments.filter((c) => c.status === 'approved');
       if (approved.length === 0) {
         showToast('No comments ready to post.', 'error');
@@ -7145,15 +7425,20 @@
       wizardSelectedAccounts.clear();
       wizardComments = [];
       wizardCommentCount = 10;
-      wizardCommentLanguage = 'english';
+      wizardCommentLanguage = 'khasi';
       wizardShowPendingOnly = false;
       wizardFilters = {
         commentCount: 10,
-        languageMix: { khasi: 5, pnar: 2, garo: 0, english: 3, hindi: 0 },
-        textSpeakPercent: 40,
+        languageMix: { khasi: 10, pnar: 0, garo: 0, english: 0, hindi: 0 },
+        toneMix: { positive: 5, neutral: 5, negative: 0 },
+        textSpeakPercent: 25,
+        selectedAngles: [],
       };
+      wizardSmartAngles = [];
+      wizardSmartAnglesVideoUrl = '';
+      wizardSmartAnglesVideoTitle = '';
       writeWizardFiltersToDom();
-      applyWizardFilterPreset('balanced');
+      updateWizardFilterTotals();
       
       // Hide results, show wizard
       document.getElementById('results-section').classList.remove('visible');

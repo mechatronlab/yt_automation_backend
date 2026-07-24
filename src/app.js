@@ -54,10 +54,13 @@ app.get('/api/health', (req, res) => {
 
 app.get('/api/config/client', (req, res) => {
   const oauth = getGoogleOAuthSetup(req);
+  const mockFlag = String(process.env.WIZARD_MOCK_ACCOUNTS || '').trim().toLowerCase();
   res.json({
     googleClientId: process.env.GOOGLE_CLIENT_ID,
     oauthRedirectUri: oauth.redirectUri,
     googleOAuthSetup: oauth,
+    // Lets the commenting wizard proceed without linked YouTube accounts (generation only).
+    wizardMockAccounts: mockFlag === '1' || mockFlag === 'true' || mockFlag === 'yes',
   });
 });
 

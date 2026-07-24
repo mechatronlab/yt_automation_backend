@@ -4,7 +4,8 @@ const {
   postCommentsOnVideo, 
   generateCommentsFromUrl,
   generateCommentsBatch,
-  regenerateCommentFromUrl, 
+  regenerateCommentFromUrl,
+  suggestCommentAngles,
   searchVideos,
   getDiscoverVideos,
   saveDiscoverVideos,
@@ -23,6 +24,7 @@ router.post('/post', protect, postCommentsOnVideo);
 router.post('/generate-from-url', protect, generateCommentsFromUrl);
 router.post('/generate-batch', protect, generateCommentsBatch);
 router.post('/regenerate', protect, regenerateCommentFromUrl);
+router.post('/suggest-angles', protect, suggestCommentAngles);
 router.post('/search-videos', protect, searchVideos);
 
 // Target / Discover Videos persistence

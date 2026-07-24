@@ -188,11 +188,16 @@ const { generateText, isQuotaExceededError } = require('../services/geminiServic
 const {
   buildCommentSlots,
   validateLanguageDistribution,
+  validateToneDistribution,
   defaultGenerationFilters,
 } = require('../utils/commentSlots');
 const {
-  buildSlotPrompt,
+  buildEnglishDraftPrompt,
+  buildLanguageAdaptPrompt,
+  buildNativeCommentPrompt,
+  buildAngleSuggestionPrompt,
   parseGeminiCommentJson,
+  parseGeminiAnglesJson,
   processGeneratedComments,
 } = require('../utils/commentGeneration');
 const { fetchTranscript } = require("youtube-transcript");
@@ -243,28 +248,29 @@ function normalizeMixCounts(rawMix = {}, keys = [], total = 10) {
 }
 
 function normalizeGenerationFilters(filters = {}, count = 10) {
-  const commentCount = clampCommentCount(count);
-  const defaults = defaultGenerationFilters(commentCount);
   const languageKeys = ['khasi', 'pnar', 'garo', 'english', 'hindi'];
   const toneKeys = ['positive', 'neutral', 'negative'];
-  const voiceKeys = ['gen_z', 'millennial', 'gen_x', 'boomer', 'neutral'];
+
+  const rawLanguageMix = filters.languageMix || {};
+  const languageSum = languageKeys.reduce(
+    (sum, key) => sum + Math.max(0, parseInt(rawLanguageMix[key], 10) || 0),
+    0,
+  );
+  // Prefer the user's language mix total; fall back to explicit count.
+  const commentCount = clampCommentCount(
+    languageSum > 0 ? languageSum : (filters.commentCount ?? count),
+  );
+  const defaults = defaultGenerationFilters(commentCount);
 
   const languageMix = normalizeMixCounts(
-    Object.keys(filters.languageMix || {}).length ? filters.languageMix : defaults.languageMix,
+    Object.keys(rawLanguageMix).length ? rawLanguageMix : defaults.languageMix,
     languageKeys,
     commentCount,
   );
-  const toneMix = normalizeMixCounts(filters.toneMix || defaults.toneMix, toneKeys, commentCount);
-  const voiceMix = normalizeMixCounts(filters.voiceMix || defaults.voiceMix, voiceKeys, commentCount);
-
-  const textSpeakPercent = Math.min(
-    100,
-    Math.max(
-      0,
-      filters.textSpeakPercent != null
-        ? parseInt(filters.textSpeakPercent, 10)
-        : defaults.textSpeakPercent,
-    ),
+  const toneMix = normalizeMixCounts(
+    filters.toneMix || defaults.toneMix,
+    toneKeys,
+    commentCount,
   );
 
   return {
@@ -272,9 +278,22 @@ function normalizeGenerationFilters(filters = {}, count = 10) {
     languageMix,
     toneMode: filters.toneMode || defaults.toneMode,
     toneMix,
-    voiceMode: filters.voiceMode || defaults.voiceMode,
-    voiceMix,
-    textSpeakPercent,
+    voiceMode: 'single',
+    voice: 'neutral',
+    voiceMix: { neutral: commentCount },
+    textSpeakPercent: Math.min(
+      100,
+      Math.max(
+        0,
+        filters.textSpeakPercent != null
+          ? parseInt(filters.textSpeakPercent, 10)
+          : defaults.textSpeakPercent,
+      ),
+    ),
+    userIntent: String(filters.userIntent || '').trim().slice(0, 800),
+    selectedAngles: Array.isArray(filters.selectedAngles)
+      ? filters.selectedAngles.map((item) => String(item || '').trim()).filter(Boolean).slice(0, 8)
+      : [],
   };
 }
 
@@ -292,16 +311,24 @@ function buildFilterPromptRules(filters) {
     .map(([key, value]) => `- Exactly ${value} comment${value === 1 ? "" : "s"} in ${languageLabels[key]}`)
     .join("\n");
 
-  const shorthandCount = Math.round((filters.textSpeakPercent / 100) * filters.commentCount);
+  const toneLines = Object.entries(filters.toneMix || {})
+    .filter(([, value]) => value > 0)
+    .map(([key, value]) => `- Exactly ${value} ${key} comment${value === 1 ? "" : "s"}`)
+    .join("\n");
 
   return `
 Language mix (must match exactly):
 ${languageLines}
 
-Text-speak & shorthand:
-- Apply casual shortening to about ${filters.textSpeakPercent}% of comments (~${shorthandCount} of ${filters.commentCount}).
-- Only shorten 2-5 words per comment — do not rewrite the whole comment.
-- Examples: Khasi nga→ng, kwah→kwh · English u, rly, prolly · Hindi nhi, bhot, yr
+Sentiment mix (must match exactly):
+${toneLines || `- Exactly ${filters.commentCount} positive comments`}
+
+Natural writing:
+- Sound like real YouTube commenters, not AI and not Gen Z slang.
+- Be specific to the video; avoid generic praise or brochure language.
+${filters.userIntent ? `- User guidance: ${filters.userIntent}` : ''}
+${(filters.selectedAngles || []).length ? `- Preferred angles: ${(filters.selectedAngles || []).join('; ')}` : ''}
+- Apply light natural misspellings/shorthand to about ${filters.textSpeakPercent}% of comments.
 `;
 }
 
@@ -362,36 +389,144 @@ async function generateCommentsWithSlots({
   avoidComments = [],
   accountPersona = '',
   spellingErrorRate = 0,
+  userIntent = '',
+  selectedAngles = [],
 }) {
   if (!process.env.GEMINI_API_KEY) {
     throw new Error('Gemini API key is missing.');
   }
 
-  const prompt = buildSlotPrompt({
-    title,
-    description,
-    channelTitle,
-    transcript,
-    slots,
-    accountPersona,
-    avoidComments,
-  });
+  const nativeLangs = new Set(['khasi', 'pnar', 'garo']);
+  const indexed = slots.map((slot, index) => ({ slot, index }));
+  const nativeIndexed = indexed.filter(({ slot }) => nativeLangs.has(slot.language));
+  const otherIndexed = indexed.filter(({ slot }) => !nativeLangs.has(slot.language));
+  const items = new Array(slots.length).fill(null);
 
   try {
-    const text = await generateText(prompt);
-    const items = parseGeminiCommentJson(text);
-    if (items.length < slots.length) {
-      console.warn(`[generateCommentsWithSlots] Gemini returned ${items.length}/${slots.length} comments`);
+    // English / Hindi: draft (+ adapt for Hindi)
+    if (otherIndexed.length > 0) {
+      const otherSlots = otherIndexed.map(({ slot }) => slot);
+      const draftRaw = await generateText(
+        buildEnglishDraftPrompt({
+          title,
+          description,
+          channelTitle,
+          transcript,
+          slots: otherSlots,
+          accountPersona,
+          avoidComments,
+          userIntent,
+          selectedAngles,
+        }),
+        {
+          temperature: 0.7,
+          topP: 0.9,
+          maxOutputTokens: 4096,
+        },
+      );
+      const drafts = parseGeminiCommentJson(draftRaw);
+
+      const needsAdapt = otherSlots.some((slot) => slot.language === 'hindi');
+      let adapted = [];
+      if (needsAdapt) {
+        const runAdapt = async () => parseGeminiCommentJson(
+          await generateText(
+            buildLanguageAdaptPrompt({ title, drafts, slots: otherSlots }),
+            { temperature: 0.45, topP: 0.85, maxOutputTokens: 4096 },
+          ),
+        );
+        try {
+          adapted = await runAdapt();
+        } catch (adaptError) {
+          console.warn(`[generateCommentsWithSlots] Hindi adapt failed, retrying: ${adaptError.message}`);
+          try {
+            adapted = await runAdapt();
+          } catch (retryError) {
+            console.warn(`[generateCommentsWithSlots] Hindi adapt retry failed: ${retryError.message}`);
+            adapted = [];
+          }
+        }
+      }
+
+      otherIndexed.forEach(({ slot, index }, j) => {
+        const draft = drafts[j] || {};
+        const item = adapted[j] || {};
+        const meaningEn = String(item.meaning_en || item.meaningEn || draft.meaning_en || draft.text || '').trim();
+        const text = slot.language === 'english'
+          ? String(item.text || draft.text || meaningEn || '').trim()
+          : String(item.text || '').trim();
+        items[index] = {
+          text,
+          meaning_en: meaningEn,
+          language: slot.language,
+          tone: slot.tone || 'positive',
+          voice: 'neutral',
+        };
+      });
     }
+
+    // Khasi / Pnar / Garo: direct generation (never English→translate — that caused nonsense mixes)
+    if (nativeIndexed.length > 0) {
+      const nativeSlots = nativeIndexed.map(({ slot }) => slot);
+      try {
+        const nativeRaw = await generateText(
+          buildNativeCommentPrompt({
+            title,
+            description,
+            channelTitle,
+            transcript,
+            slots: nativeSlots,
+            accountPersona,
+            avoidComments,
+            userIntent,
+            selectedAngles,
+          }),
+          {
+            temperature: 0.4,
+            topP: 0.8,
+            maxOutputTokens: 4096,
+          },
+        );
+        const nativeItems = parseGeminiCommentJson(nativeRaw);
+        nativeIndexed.forEach(({ slot, index }, j) => {
+          const item = nativeItems[j] || {};
+          items[index] = {
+            text: String(item.text || '').trim(),
+            meaning_en: String(item.meaning_en || item.meaningEn || '').trim(),
+            language: slot.language,
+            tone: slot.tone || item.tone || 'positive',
+            voice: 'neutral',
+          };
+        });
+      } catch (nativeError) {
+        console.warn(`[generateCommentsWithSlots] Native generation failed: ${nativeError.message}`);
+        nativeIndexed.forEach(({ slot, index }) => {
+          items[index] = {
+            text: '',
+            meaning_en: '',
+            language: slot.language,
+            tone: slot.tone || 'positive',
+            voice: 'neutral',
+          };
+        });
+      }
+    }
+
     return {
-      comments: processGeneratedComments(items, slots, spellingErrorRate, title),
+      comments: processGeneratedComments(
+        items.map((item) => item || {}),
+        slots,
+        spellingErrorRate,
+        title,
+        userIntent,
+      ),
       provider: 'gemini',
     };
   } catch (error) {
     console.warn(`[generateCommentsWithSlots] Gemini failed: ${error.message}`);
     throw new Error(
       isQuotaExceededError(error?.cause || error)
-        ? 'Gemini API quota reached. Wait a few minutes, set GEMINI_MODEL=gemini-2.0-flash-lite in .env, or enable billing at ai.google.dev.'
+        ? 'Gemini API quota reached. Wait a few minutes and retry, or enable billing at ai.google.dev.'
         : (error.message || 'Gemini comment generation failed'),
     );
   }
@@ -580,6 +715,8 @@ async function generateComments({
       avoidComments,
       accountPersona,
       spellingErrorRate: generationFilters?.textSpeakPercent ?? 0,
+      userIntent: generationFilters?.userIntent || '',
+      selectedAngles: generationFilters?.selectedAngles || [],
     });
   }
 
@@ -594,6 +731,8 @@ async function generateComments({
       avoidComments,
       accountPersona,
       spellingErrorRate: generationFilters.textSpeakPercent,
+      userIntent: generationFilters.userIntent || '',
+      selectedAngles: generationFilters.selectedAngles || [],
     });
   }
 
@@ -737,13 +876,19 @@ const generateCommentsBatch = async (req, res, next) => {
 
     const commentCount = clampCommentCount(totalCount ?? filters?.commentCount ?? 10);
     const normalizedFilters = normalizeGenerationFilters(filters || {}, commentCount);
-    const langErr = validateLanguageDistribution(normalizedFilters.languageMix, commentCount);
+    const effectiveCount = normalizedFilters.commentCount;
+    const langErr = validateLanguageDistribution(normalizedFilters.languageMix, effectiveCount);
     if (langErr) {
       res.status(400);
       throw new Error(langErr);
     }
+    const toneErr = validateToneDistribution(normalizedFilters.toneMix, effectiveCount);
+    if (toneErr) {
+      res.status(400);
+      throw new Error(toneErr);
+    }
 
-    const slots = buildCommentSlots(normalizedFilters, commentCount);
+    const slots = buildCommentSlots(normalizedFilters, effectiveCount);
     const pairs = videos.flatMap((video) =>
       accounts.map((account) => ({ video, account })),
     );
@@ -789,6 +934,8 @@ const generateCommentsBatch = async (req, res, next) => {
         slots: groupSlots,
         accountPersona: persona,
         spellingErrorRate: normalizedFilters.textSpeakPercent,
+        userIntent: normalizedFilters.userIntent || '',
+        selectedAngles: normalizedFilters.selectedAngles || [],
       });
 
       if (generated.warning) warning = generated.warning;
@@ -821,6 +968,44 @@ const generateCommentsBatch = async (req, res, next) => {
   }
 };
 
+const suggestCommentAngles = async (req, res, next) => {
+  try {
+    const { youtubeUrl } = req.body;
+    const videoId = extractVideoId(youtubeUrl);
+    if (!videoId) {
+      res.status(400);
+      throw new Error('Paste a valid YouTube video URL.');
+    }
+    if (!process.env.GEMINI_API_KEY) {
+      res.status(400);
+      throw new Error('Gemini API key is missing.');
+    }
+
+    const video = await fetchVideoDetails(videoId);
+    const transcript = await fetchVideoTranscript(videoId);
+    const prompt = buildAngleSuggestionPrompt({
+      title: video.title,
+      description: video.description,
+      channelTitle: video.channelTitle,
+      transcript: transcript.text,
+    });
+
+    const text = await generateText(prompt);
+    const angles = parseGeminiAnglesJson(text);
+
+    res.status(200).json({
+      angles,
+      video: {
+        id: video.id,
+        title: video.title,
+        channelTitle: video.channelTitle,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const regenerateCommentFromUrl = async (req, res, next) => {
   try {
     const {
@@ -844,8 +1029,8 @@ const regenerateCommentFromUrl = async (req, res, next) => {
     const slots = singleSlot
       ? [{
           language: singleSlot.language || language || 'english',
-          tone: singleSlot.tone || 'positive',
-          voice: singleSlot.voice || 'neutral',
+          tone: ['negative', 'neutral', 'positive'].includes(singleSlot.tone) ? singleSlot.tone : 'positive',
+          voice: 'neutral',
         }]
       : normalizedFilters
         ? buildCommentSlots(normalizedFilters, 1).slice(0, 1)
@@ -859,7 +1044,9 @@ const regenerateCommentFromUrl = async (req, res, next) => {
       slots,
       avoidComments: Array.isArray(existingComments) ? existingComments : [],
       accountPersona,
-      spellingErrorRate: normalizedFilters?.textSpeakPercent ?? 0,
+      spellingErrorRate: normalizedFilters?.textSpeakPercent ?? 40,
+      userIntent: normalizedFilters?.userIntent || '',
+      selectedAngles: normalizedFilters?.selectedAngles || [],
     });
 
     res.status(200).json({
@@ -1579,6 +1766,7 @@ module.exports = {
   generateCommentsFromUrl,
   generateCommentsBatch,
   regenerateCommentFromUrl,
+  suggestCommentAngles,
   searchVideos,
   getDiscoverVideos,
   saveDiscoverVideos,

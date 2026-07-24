@@ -12,3 +12,23 @@ uploads/
 dist-electron/
 python_script/account.txt
 python_script/last_created_account.json
+python_script/password.txt
+python_script/*.png
+
+# Secrets / credentials
+*service-account*.json
+firebase-service-account.json
+fb_service_account.json
+**/credentials*.json
+*.pem
+*.key
+
+# Local runtime / sessions
+browser_sessions/
+vpn_pids/
+request_debug.log
+*.log
+test_screenshot.png
+
+# Archives / local dumps
+*.zip

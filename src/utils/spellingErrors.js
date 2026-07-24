@@ -1,109 +1,95 @@
 'use strict';
 
+// Mild typos + phone-style short forms. Avoid Gen-Z slang (lol, ngl, no cap, etc.).
 const BASE_VARIANTS = {
-  khasi: {
-    nga: 'ng',
-    kwah: 'kwh',
-    phone: 'fone',
-    kam: 'km',
-    mynta: 'mnta',
-    shwa: 'swa',
-    tip: 'tp',
-    leh: 'le',
-    phi: 'fi',
-    kum: 'km',
-    ban: 'bn',
-    don: 'dn',
-    kyrkieh: 'kyrkie',
-    ieh: 'ie',
-    kumno: 'kmno',
-    kumne: 'kmne',
-    kumta: 'kmta',
-    shisha: 'shsha',
-    shibun: 'shbn',
-    khub: 'khub',
-  },
-  pnar: {
-    nga: 'ng',
-    kwah: 'kwh',
-    phone: 'fone',
-    kam: 'km',
-    mynta: 'mnta',
-    shwa: 'swa',
-    tip: 'tp',
-    leh: 'le',
-    phi: 'fi',
-    uwei: 'uwe',
-    shang: 'shng',
-    khub: 'khub',
-    ym: 'ym',
-    ymleh: 'ymle',
-  },
-  garo: {
-    nga: 'ng',
-    kwah: 'kwh',
-    phone: 'fone',
-    kam: 'km',
-    mynta: 'mnta',
-    tip: 'tp',
-    leh: 'le',
-    chak: 'chk',
-    re: 'r',
-    ba: 'ba',
-    khub: 'khub',
-    sal: 'sal',
-  },
   english: {
+    // Common typos
+    beautiful: 'beautifull',
+    definitely: 'definately',
+    separate: 'seperate',
+    weird: 'wierd',
+    until: 'untill',
+    received: 'recieved',
+    occurred: 'occured',
+    successful: 'succesful',
+    beginning: 'begining',
+    environment: 'enviroment',
+    necessary: 'neccessary',
+    interesting: 'intersting',
+    explanation: 'explaination',
+    comparison: 'comparision',
+    thought: 'thoguht',
+    watching: 'watchng',
+    // Short forms / texting
+    what: 'wht',
+    which: 'wch',
+    when: 'whn',
+    where: 'whr',
+    that: 'tht',
+    this: 'ths',
+    with: 'w',
+    without: 'w/o',
     you: 'u',
     your: 'ur',
-    though: 'tho',
+    youre: 'ure',
+    "you're": 'ure',
+    are: 'r',
     because: 'bc',
+    before: 'b4',
+    about: 'abt',
+    though: 'tho',
+    through: 'thru',
+    people: 'ppl',
+    please: 'pls',
+    thanks: 'thx',
+    thank: 'thx',
+    something: 'smth',
+    someone: 'sm1',
+    anyone: 'any1',
+    everyone: 'every1',
+    nothing: 'nothin',
+    everything: 'everythin',
+    tomorrow: 'tmrw',
+    today: '2day',
+    tonight: '2nite',
     really: 'rly',
     probably: 'prolly',
-    something: 'smth',
-    people: 'ppl',
-    about: 'abt',
-    through: 'thru',
-    before: 'b4',
-    great: 'gr8',
+    going: 'goin',
+    between: 'btwn',
+    should: 'shld',
+    would: 'wld',
+    could: 'cld',
+    have: 'hv',
+    just: 'jst',
+    from: 'frm',
+    them: 'thm',
     okay: 'ok',
-    phone: 'fone',
-    watching: 'watchin',
-    awesome: 'awsome',
-    beautiful: 'beautifull',
-    definitely: 'def',
-    remember: 'rmbr',
-    tonight: '2nite',
-    love: 'luv',
+    right: 'rite',
+    know: 'kno',
   },
   hindi: {
     bahut: 'bhot',
     accha: 'acha',
     achha: 'acha',
     nahi: 'nhi',
-    yaar: 'yr',
-    bilkul: 'bkl',
     phir: 'fir',
     kuch: 'kch',
-    dekh: 'dek',
-    video: 'vidio',
-    mast: 'mst',
-    sach: 'such',
-    kaise: 'kse',
-    kyun: 'kyu',
-    phone: 'fone',
     theek: 'thik',
     samajh: 'smjh',
+    video: 'vidio',
+    kyunki: 'kyuki',
+    mujhe: 'mujhe',
+    aap: 'ap',
+    please: 'pls',
+    thanks: 'thx',
   },
+  // Native languages: keep empty — aggressive shortening often creates gibberish.
+  khasi: {},
+  pnar: {},
+  garo: {},
 };
 
-const VOICE_SWAP_COUNT = {
-  gen_z: [3, 6],
-  millennial: [2, 4],
-  gen_x: [1, 2],
-  boomer: [0, 1],
-  neutral: [1, 3],
-};
+const SWAP_RANGE = [1, 3];
 
 function escapeRegex(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -117,16 +103,16 @@ function preserveCase(original, replacement) {
   return replacement;
 }
 
-function applyCasualShorthand(text, language, voice = 'neutral') {
-  const variants = { ...BASE_VARIANTS[language] };
+function applyCasualShorthand(text, language) {
+  const variants = { ...(BASE_VARIANTS[language] || {}) };
   const entries = Object.entries(variants).filter(
     ([word, typo]) => word.toLowerCase() !== typo.toLowerCase(),
   );
   if (entries.length === 0) return text;
 
-  const [minSwaps, maxSwaps] = VOICE_SWAP_COUNT[voice] || VOICE_SWAP_COUNT.neutral;
+  const [minSwaps, maxSwaps] = SWAP_RANGE;
   const swapCount = minSwaps + Math.floor(Math.random() * (maxSwaps - minSwaps + 1));
-  if (swapCount === 0) return text;
+  if (swapCount <= 0) return text;
 
   const applicable = entries.filter(([word]) => {
     const re = new RegExp(`\\b${escapeRegex(word)}\\b`, 'i');
@@ -146,16 +132,8 @@ function applyCasualShorthand(text, language, voice = 'neutral') {
   return result;
 }
 
-function pickShorthandIndices(total, rate, voice = 'neutral') {
-  const voiceBoost = {
-    gen_z: 1.25,
-    millennial: 1.1,
-    neutral: 1.0,
-    gen_x: 0.7,
-    boomer: 0.4,
-  };
-  const effectiveRate = Math.min(100, rate * (voiceBoost[voice] || 1));
-  const count = Math.round((effectiveRate / 100) * total);
+function pickShorthandIndices(total, rate) {
+  const count = Math.round((Math.min(100, Math.max(0, rate)) / 100) * total);
   const indices = new Set();
   if (count <= 0 || total <= 0) return indices;
 
