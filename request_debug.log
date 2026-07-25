@@ -189665,3 +189665,350 @@ Request Headers: {
 Request Query: {}
 Request Body: undefined
 Response Body: {"isVpnActive":false,"activePids":[],"publicIp":"49.43.106.246","country":"India","city":"Chandigarh","isp":"Reliance Jio Infocomm Limited","currentConnections":[],"connectedProfile":null}
+
+--- [2026-07-25T08:10:16.623Z] GET /status -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzYWZkY2QxYzZkNDJjOGQ0NDAzMWE3MCIsImlhdCI6MTc4NDkwMTkyMCwiZXhwIjoxNzg3NDkzOTIwfQ.ssqTXSwfPOUwzvg8x3v06zVy89qMa_ZI8YXbyIeeE-4",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "accept": "*/*",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-dest": "empty",
+  "referer": "http://127.0.0.1:5003/",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"ac-0gkoQqJCpshBm3Uy77V7FyoEpFU\""
+}
+Request Query: {}
+Request Body: undefined
+Response Body: {"isVpnActive":false,"activePids":[],"publicIp":"106.215.137.205","country":"India","city":"Shillong","isp":"Bharti Airtel","currentConnections":[],"connectedProfile":null}
+
+--- [2026-07-25T08:10:18.070Z] GET / -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "cache-control": "max-age=0",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "upgrade-insecure-requests": "1",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+  "sec-fetch-site": "none",
+  "sec-fetch-mode": "navigate",
+  "sec-fetch-user": "?1",
+  "sec-fetch-dest": "document",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"567e9-19f940b6d57\"",
+  "if-modified-since": "Fri, 24 Jul 2026 12:13:24 GMT"
+}
+Request Query: {}
+Request Body: undefined
+Response Body: undefined
+
+--- [2026-07-25T08:10:18.375Z] GET /api/config/client -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "accept": "*/*",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-dest": "empty",
+  "referer": "http://127.0.0.1:5003/",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"27b-raiMPvQtcNh1zlt6XeWreTr252M\""
+}
+Request Query: {}
+Request Body: undefined
+Response Body: {"googleClientId":"50660503244-vor1vc0e1hri598dbfvvovfd6jtld2ho.apps.googleusercontent.com","oauthRedirectUri":"http://localhost:5003/api/auth/google/oauth-callback","googleOAuthSetup":{"redirectUri":"http://localhost:5003/api/auth/google/oauth-callback","authorizedJavaScriptOrigins":["http://127.0.0.1:5003","http://localhost:5003","https://ytauto.web.app"],"authorizedRedirectUris":["http://localhost:5003/api/auth/google/oauth-callback","http://localhost:5003/api/auth/google/oauth-callback","http://127.0.0.1:5003/api/auth/google/oauth-callback","https://ytauto.web.app/api/auth/google/oauth-callback"]},"wizardMockAccounts":true}
+
+--- [2026-07-25T08:10:47.350Z] GET / -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "cache-control": "max-age=0",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "upgrade-insecure-requests": "1",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+  "sec-fetch-site": "none",
+  "sec-fetch-mode": "navigate",
+  "sec-fetch-user": "?1",
+  "sec-fetch-dest": "document",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"567e9-19f940b6d57\"",
+  "if-modified-since": "Fri, 24 Jul 2026 12:13:24 GMT"
+}
+Request Query: {}
+Request Body: undefined
+Response Body: undefined
+
+--- [2026-07-25T08:10:47.566Z] GET /api/config/client -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "accept": "*/*",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-dest": "empty",
+  "referer": "http://127.0.0.1:5003/",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"27b-raiMPvQtcNh1zlt6XeWreTr252M\""
+}
+Request Query: {}
+Request Body: undefined
+Response Body: {"googleClientId":"50660503244-vor1vc0e1hri598dbfvvovfd6jtld2ho.apps.googleusercontent.com","oauthRedirectUri":"http://localhost:5003/api/auth/google/oauth-callback","googleOAuthSetup":{"redirectUri":"http://localhost:5003/api/auth/google/oauth-callback","authorizedJavaScriptOrigins":["http://127.0.0.1:5003","http://localhost:5003","https://ytauto.web.app"],"authorizedRedirectUris":["http://localhost:5003/api/auth/google/oauth-callback","http://localhost:5003/api/auth/google/oauth-callback","http://127.0.0.1:5003/api/auth/google/oauth-callback","https://ytauto.web.app/api/auth/google/oauth-callback"]},"wizardMockAccounts":true}
+
+--- [2026-07-25T08:10:47.791Z] GET /campaigns -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzYWZkY2QxYzZkNDJjOGQ0NDAzMWE3MCIsImlhdCI6MTc4NDkwMTkyMCwiZXhwIjoxNzg3NDkzOTIwfQ.ssqTXSwfPOUwzvg8x3v06zVy89qMa_ZI8YXbyIeeE-4",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "accept": "*/*",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-dest": "empty",
+  "referer": "http://127.0.0.1:5003/",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"11b9-1EZo8tW3/4uwyYxXFOzYd5ewDpo\""
+}
+Request Query: {}
+Request Body: undefined
+Response Body: [{"_id":"e298e01490e593ca191180a2","name":"Animal Toys cartoon video, gas cylinder  — 7/24/2026 08:25 PM","source":"Single URL Batch","videos":1,"accounts":4,"comments":10,"ready":10,"status":"Failed","details":[{"accountId":"0d114f9428b4e3101cd1843f","email":"adam.6547.code@gmail.com","name":"Adam","text":"this is actually so cute. the lil chuha with the gas cylinder??? my heart. kids will go wild for this.","status":"failed","error":"The comment thread could not be created due to insufficient permissions. The request might not be properly authorized.","commentId":null,"vpnWarning":null},{"accountId":"14030784ac3c5f9e3eebd5ac","email":"ahensanark8323@gmail.com","name":"Ahensana Rajkumar","text":"ok but the fruit and animal toy combo is lowkey genius for tiny humans. luv how simple and engaging it is, fr.","status":"failed","error":"The comment thread could not be created due to insufficient permissions. The request might not be properly authorized.","commentId":null,"vpnWarning":null},{"accountId":"3bfa32baeecac7c89269ba1c","email":"gusion.6547.code@gmail.com","name":"Gusion","text":"It's interesting how many different objects are featured in this video. The baby cooker and karahi bits are pretty distinct compared to the animal toys, makes you wonder about the storyline tbh.","status":"failed","error":"The comment thread could not be created due to insufficient permissions. The request might not be properly authorized.","commentId":null,"vpnWarning":null},{"accountId":"83001b4341b77eba8d05730d","email":"mishramsingh221@gmail.com","name":"Mishram singh","text":"So, we have animal toys, a gas cylinder, and a baby cooker. Quite the eclectic mix for a children's cartoon. One hopes there's a coherent message somewhere in all this.","status":"failed","error":"The comment thread could not be created due to insufficient permissions. The request might not be properly authorized.","commentId":null,"vpnWarning":null}],"accountIds":["0d114f9428b4e3101cd1843f","14030784ac3c5f9e
+
+--- [2026-07-25T08:10:47.736Z] GET /discover-videos -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzYWZkY2QxYzZkNDJjOGQ0NDAzMWE3MCIsImlhdCI6MTc4NDkwMTkyMCwiZXhwIjoxNzg3NDkzOTIwfQ.ssqTXSwfPOUwzvg8x3v06zVy89qMa_ZI8YXbyIeeE-4",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "accept": "*/*",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-dest": "empty",
+  "referer": "http://127.0.0.1:5003/",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"d-BJEMfe4aZMFLb2l07ljM1i6Aeco\""
+}
+Request Query: {}
+Request Body: undefined
+Response Body: {"videos":[]}
+
+--- [2026-07-25T08:10:47.735Z] GET / -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzYWZkY2QxYzZkNDJjOGQ0NDAzMWE3MCIsImlhdCI6MTc4NDkwMTkyMCwiZXhwIjoxNzg3NDkzOTIwfQ.ssqTXSwfPOUwzvg8x3v06zVy89qMa_ZI8YXbyIeeE-4",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "accept": "*/*",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-dest": "empty",
+  "referer": "http://127.0.0.1:5003/",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"3baa-kScFf1cUcLETy25ByhDUP8c/Yxk\""
+}
+Request Query: {}
+Request Body: undefined
+Response Body: [{"_id":"fcbc51891f2e94d674cf9933","googleId":"105425411673315657188","avatar":"https://lh3.googleusercontent.com/a/ACg8ocJyxv4UIXKtjET751JKp9a0nHnZALB-jPpYJtxaq2RSILu-vQ=s96-c","isActive":true,"createdAt":"2026-07-24T15:26:57.176Z","phoneNumber":"","name":"Kestescer Kharpuri","user":"83afdcd1c6d42c8d44031a70","email":"kestescerkharpuri@gmail.com","status":"connected","youtubeChannelTitle":"Kestescer Kharpuri","youtubeChannel":"UCkkQPtPnYo01QRv6qHt6Lsg","updatedAt":"2026-07-24T15:29:54.414Z","vpn":{"hasVpnConfig":false}},{"_id":"950d09a9b5e40efb2c0c8253","googleId":"111795865720034110841","youtubeChannelTitle":"Bantei Cooper","avatar":"https://lh3.googleusercontent.com/a/ACg8ocKsSrJmIxS4GEagF9YXTzHiW9vBsSvPm1W_jj8-lykpiUJwzA=s96-c","isActive":true,"createdAt":"2026-07-24T15:26:22.794Z","phoneNumber":"","youtubeChannel":"UCZehEv07EWIH-SKLbRhb1aA","name":"Bantei Cooper","user":"83afdcd1c6d42c8d44031a70","email":"banteicooper@gmail.com","status":"connected","updatedAt":"2026-07-24T15:26:22.794Z","vpn":{"hasVpnConfig":false}},{"_id":"0d114f9428b4e3101cd1843f","googleId":"116183760031915991639","avatar":"https://lh3.googleusercontent.com/a/ACg8ocJI6_ulZOiuer_eG6FEWtEbyX4tayG9_HNSG1kJwbuG-gxrzA=s96-c","isActive":true,"createdAt":"2026-07-24T14:44:31.516Z","phoneNumber":"","name":"Adam","user":"83afdcd1c6d42c8d44031a70","email":"adam.6547.code@gmail.com","status":"connected","youtubeChannelTitle":"Adam Kharchandi","youtubeChannel":"UClX7H6dbvoYeG_-xeEKi0Xw","campaigns":[{"_id":"04c727e590890bab5c50889e","name":"Animal Toys cartoon video, gas cylinder  — 7/24/2026 08:21 PM","source":"Single URL Batch","videos":1,"accounts":1,"comments":1,"ready":1,"status":"Failed","details":[{"accountId":"0d114f9428b4e3101cd1843f","email":"adam.6547.code@gmail.com","name":"Adam","text":"This title is such a random mashup of words. I'm not really sure what the video is trying to show when it mixes animal toys with gas cylinders and fruits.","status":"failed","error":"Adam has no YouTube cha
+
+--- [2026-07-25T08:10:48.281Z] GET /campaigns -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzYWZkY2QxYzZkNDJjOGQ0NDAzMWE3MCIsImlhdCI6MTc4NDkwMTkyMCwiZXhwIjoxNzg3NDkzOTIwfQ.ssqTXSwfPOUwzvg8x3v06zVy89qMa_ZI8YXbyIeeE-4",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "accept": "*/*",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-dest": "empty",
+  "referer": "http://127.0.0.1:5003/",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"11b9-1EZo8tW3/4uwyYxXFOzYd5ewDpo\""
+}
+Request Query: {}
+Request Body: undefined
+Response Body: [{"_id":"e298e01490e593ca191180a2","name":"Animal Toys cartoon video, gas cylinder  — 7/24/2026 08:25 PM","source":"Single URL Batch","videos":1,"accounts":4,"comments":10,"ready":10,"status":"Failed","details":[{"accountId":"0d114f9428b4e3101cd1843f","email":"adam.6547.code@gmail.com","name":"Adam","text":"this is actually so cute. the lil chuha with the gas cylinder??? my heart. kids will go wild for this.","status":"failed","error":"The comment thread could not be created due to insufficient permissions. The request might not be properly authorized.","commentId":null,"vpnWarning":null},{"accountId":"14030784ac3c5f9e3eebd5ac","email":"ahensanark8323@gmail.com","name":"Ahensana Rajkumar","text":"ok but the fruit and animal toy combo is lowkey genius for tiny humans. luv how simple and engaging it is, fr.","status":"failed","error":"The comment thread could not be created due to insufficient permissions. The request might not be properly authorized.","commentId":null,"vpnWarning":null},{"accountId":"3bfa32baeecac7c89269ba1c","email":"gusion.6547.code@gmail.com","name":"Gusion","text":"It's interesting how many different objects are featured in this video. The baby cooker and karahi bits are pretty distinct compared to the animal toys, makes you wonder about the storyline tbh.","status":"failed","error":"The comment thread could not be created due to insufficient permissions. The request might not be properly authorized.","commentId":null,"vpnWarning":null},{"accountId":"83001b4341b77eba8d05730d","email":"mishramsingh221@gmail.com","name":"Mishram singh","text":"So, we have animal toys, a gas cylinder, and a baby cooker. Quite the eclectic mix for a children's cartoon. One hopes there's a coherent message somewhere in all this.","status":"failed","error":"The comment thread could not be created due to insufficient permissions. The request might not be properly authorized.","commentId":null,"vpnWarning":null}],"accountIds":["0d114f9428b4e3101cd1843f","14030784ac3c5f9e
+
+--- [2026-07-25T08:10:47.794Z] GET /status -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzYWZkY2QxYzZkNDJjOGQ0NDAzMWE3MCIsImlhdCI6MTc4NDkwMTkyMCwiZXhwIjoxNzg3NDkzOTIwfQ.ssqTXSwfPOUwzvg8x3v06zVy89qMa_ZI8YXbyIeeE-4",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "accept": "*/*",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-dest": "empty",
+  "referer": "http://127.0.0.1:5003/",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"ac-0gkoQqJCpshBm3Uy77V7FyoEpFU\""
+}
+Request Query: {}
+Request Body: undefined
+Response Body: {"isVpnActive":false,"activePids":[],"publicIp":"106.215.137.205","country":"India","city":"Shillong","isp":"Bharti Airtel","currentConnections":[],"connectedProfile":null}
+
+--- [2026-07-25T08:10:48.356Z] GET /discover-videos -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzYWZkY2QxYzZkNDJjOGQ0NDAzMWE3MCIsImlhdCI6MTc4NDkwMTkyMCwiZXhwIjoxNzg3NDkzOTIwfQ.ssqTXSwfPOUwzvg8x3v06zVy89qMa_ZI8YXbyIeeE-4",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "accept": "*/*",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-dest": "empty",
+  "referer": "http://127.0.0.1:5003/",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"d-BJEMfe4aZMFLb2l07ljM1i6Aeco\""
+}
+Request Query: {}
+Request Body: undefined
+Response Body: {"videos":[]}
+
+--- [2026-07-25T08:10:48.368Z] GET / -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzYWZkY2QxYzZkNDJjOGQ0NDAzMWE3MCIsImlhdCI6MTc4NDkwMTkyMCwiZXhwIjoxNzg3NDkzOTIwfQ.ssqTXSwfPOUwzvg8x3v06zVy89qMa_ZI8YXbyIeeE-4",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "accept": "*/*",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-dest": "empty",
+  "referer": "http://127.0.0.1:5003/",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"3baa-kScFf1cUcLETy25ByhDUP8c/Yxk\""
+}
+Request Query: {}
+Request Body: undefined
+Response Body: [{"_id":"fcbc51891f2e94d674cf9933","googleId":"105425411673315657188","avatar":"https://lh3.googleusercontent.com/a/ACg8ocJyxv4UIXKtjET751JKp9a0nHnZALB-jPpYJtxaq2RSILu-vQ=s96-c","isActive":true,"createdAt":"2026-07-24T15:26:57.176Z","phoneNumber":"","name":"Kestescer Kharpuri","user":"83afdcd1c6d42c8d44031a70","email":"kestescerkharpuri@gmail.com","status":"connected","youtubeChannelTitle":"Kestescer Kharpuri","youtubeChannel":"UCkkQPtPnYo01QRv6qHt6Lsg","updatedAt":"2026-07-24T15:29:54.414Z","vpn":{"hasVpnConfig":false}},{"_id":"950d09a9b5e40efb2c0c8253","googleId":"111795865720034110841","youtubeChannelTitle":"Bantei Cooper","avatar":"https://lh3.googleusercontent.com/a/ACg8ocKsSrJmIxS4GEagF9YXTzHiW9vBsSvPm1W_jj8-lykpiUJwzA=s96-c","isActive":true,"createdAt":"2026-07-24T15:26:22.794Z","phoneNumber":"","youtubeChannel":"UCZehEv07EWIH-SKLbRhb1aA","name":"Bantei Cooper","user":"83afdcd1c6d42c8d44031a70","email":"banteicooper@gmail.com","status":"connected","updatedAt":"2026-07-24T15:26:22.794Z","vpn":{"hasVpnConfig":false}},{"_id":"0d114f9428b4e3101cd1843f","googleId":"116183760031915991639","avatar":"https://lh3.googleusercontent.com/a/ACg8ocJI6_ulZOiuer_eG6FEWtEbyX4tayG9_HNSG1kJwbuG-gxrzA=s96-c","isActive":true,"createdAt":"2026-07-24T14:44:31.516Z","phoneNumber":"","name":"Adam","user":"83afdcd1c6d42c8d44031a70","email":"adam.6547.code@gmail.com","status":"connected","youtubeChannelTitle":"Adam Kharchandi","youtubeChannel":"UClX7H6dbvoYeG_-xeEKi0Xw","campaigns":[{"_id":"04c727e590890bab5c50889e","name":"Animal Toys cartoon video, gas cylinder  — 7/24/2026 08:21 PM","source":"Single URL Batch","videos":1,"accounts":1,"comments":1,"ready":1,"status":"Failed","details":[{"accountId":"0d114f9428b4e3101cd1843f","email":"adam.6547.code@gmail.com","name":"Adam","text":"This title is such a random mashup of words. I'm not really sure what the video is trying to show when it mixes animal toys with gas cylinders and fruits.","status":"failed","error":"Adam has no YouTube cha
+
+--- [2026-07-25T08:10:49.465Z] GET / -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzYWZkY2QxYzZkNDJjOGQ0NDAzMWE3MCIsImlhdCI6MTc4NDkwMTkyMCwiZXhwIjoxNzg3NDkzOTIwfQ.ssqTXSwfPOUwzvg8x3v06zVy89qMa_ZI8YXbyIeeE-4",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "accept": "*/*",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-dest": "empty",
+  "referer": "http://127.0.0.1:5003/",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"3baa-kScFf1cUcLETy25ByhDUP8c/Yxk\""
+}
+Request Query: {}
+Request Body: undefined
+Response Body: [{"_id":"fcbc51891f2e94d674cf9933","googleId":"105425411673315657188","avatar":"https://lh3.googleusercontent.com/a/ACg8ocJyxv4UIXKtjET751JKp9a0nHnZALB-jPpYJtxaq2RSILu-vQ=s96-c","isActive":true,"createdAt":"2026-07-24T15:26:57.176Z","phoneNumber":"","name":"Kestescer Kharpuri","user":"83afdcd1c6d42c8d44031a70","email":"kestescerkharpuri@gmail.com","status":"connected","youtubeChannelTitle":"Kestescer Kharpuri","youtubeChannel":"UCkkQPtPnYo01QRv6qHt6Lsg","updatedAt":"2026-07-24T15:29:54.414Z","vpn":{"hasVpnConfig":false}},{"_id":"950d09a9b5e40efb2c0c8253","googleId":"111795865720034110841","youtubeChannelTitle":"Bantei Cooper","avatar":"https://lh3.googleusercontent.com/a/ACg8ocKsSrJmIxS4GEagF9YXTzHiW9vBsSvPm1W_jj8-lykpiUJwzA=s96-c","isActive":true,"createdAt":"2026-07-24T15:26:22.794Z","phoneNumber":"","youtubeChannel":"UCZehEv07EWIH-SKLbRhb1aA","name":"Bantei Cooper","user":"83afdcd1c6d42c8d44031a70","email":"banteicooper@gmail.com","status":"connected","updatedAt":"2026-07-24T15:26:22.794Z","vpn":{"hasVpnConfig":false}},{"_id":"0d114f9428b4e3101cd1843f","googleId":"116183760031915991639","avatar":"https://lh3.googleusercontent.com/a/ACg8ocJI6_ulZOiuer_eG6FEWtEbyX4tayG9_HNSG1kJwbuG-gxrzA=s96-c","isActive":true,"createdAt":"2026-07-24T14:44:31.516Z","phoneNumber":"","name":"Adam","user":"83afdcd1c6d42c8d44031a70","email":"adam.6547.code@gmail.com","status":"connected","youtubeChannelTitle":"Adam Kharchandi","youtubeChannel":"UClX7H6dbvoYeG_-xeEKi0Xw","campaigns":[{"_id":"04c727e590890bab5c50889e","name":"Animal Toys cartoon video, gas cylinder  — 7/24/2026 08:21 PM","source":"Single URL Batch","videos":1,"accounts":1,"comments":1,"ready":1,"status":"Failed","details":[{"accountId":"0d114f9428b4e3101cd1843f","email":"adam.6547.code@gmail.com","name":"Adam","text":"This title is such a random mashup of words. I'm not really sure what the video is trying to show when it mixes animal toys with gas cylinders and fruits.","status":"failed","error":"Adam has no YouTube cha
+
+--- [2026-07-25T08:10:58.226Z] GET /status -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzYWZkY2QxYzZkNDJjOGQ0NDAzMWE3MCIsImlhdCI6MTc4NDkwMTkyMCwiZXhwIjoxNzg3NDkzOTIwfQ.ssqTXSwfPOUwzvg8x3v06zVy89qMa_ZI8YXbyIeeE-4",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "accept": "*/*",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-dest": "empty",
+  "referer": "http://127.0.0.1:5003/",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"ac-0gkoQqJCpshBm3Uy77V7FyoEpFU\""
+}
+Request Query: {}
+Request Body: undefined
+Response Body: {"isVpnActive":false,"activePids":[],"publicIp":"106.215.137.205","country":"India","city":"Shillong","isp":"Bharti Airtel","currentConnections":[],"connectedProfile":null}
+
+--- [2026-07-25T08:11:08.231Z] GET /status -> Status: 304
+Request Headers: {
+  "host": "127.0.0.1:5003",
+  "connection": "keep-alive",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzYWZkY2QxYzZkNDJjOGQ0NDAzMWE3MCIsImlhdCI6MTc4NDkwMTkyMCwiZXhwIjoxNzg3NDkzOTIwfQ.ssqTXSwfPOUwzvg8x3v06zVy89qMa_ZI8YXbyIeeE-4",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"8\", \"Chromium\";v=\"150\", \"Google Chrome\";v=\"150\"",
+  "sec-ch-ua-mobile": "?0",
+  "accept": "*/*",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-dest": "empty",
+  "referer": "http://127.0.0.1:5003/",
+  "accept-encoding": "gzip, deflate, br, zstd",
+  "accept-language": "en-US,en;q=0.9",
+  "cookie": "localization=IN; _shopify_y=31826c5c-c864-497b-b81d-9680aeec8c80; _shopify_essential=:AZ90RXgVAAH_L2OOVrPMt-3kMIznT0MKyoHYQK9HcRiffMv-8tVGSDJUhRYcuLgv3lA39BR0jJYLgldWx7b1fHqCz2CR59TOQYxgk6A5A63faCYL8JeKRj64wT4UnCdKv905uoiFtPY2YmDhfUOH7B3gW88q-tZQrpGyTj5QCaZV0_BgkIeI3JbOH4Uw0Pq1pBLYUtLoOSF9SfyVFbSU3xrXMnR0l-DJ3BLA9LtzA8fXaqlEpZxo6_rT00zezMMFMrv5RE5KUzQEqYbHONBF8pZDvFEkZWtjZ9Qu3Ppl2V5NkbLLb-f7SvOXIKZT-exelNM2axqtAkaR3vu2TYUfempYxX_xoQYxz_7SNuHIMNL-Z_efZfNjoisamHvQhljS5lVGnd8OImsCGxSA5JhA5cH_CDhFiaqLi0MDubKjp8ZDZNxVQxMO0ogPky1HSX0r1Ez9dDfsSVqeDvvpoaN8WDb4:; _shopify_analytics=:AZ90SFe_AAEAimnFkpUMWd1Qhk7z2hMJg5QoqRO1-Sz6_wUrjAtUWigPfUoXnOPl8n-MLd5zePuS-BgsH4xJmHXXf-GNIs2Hj9DEZVezoRIk3fNxdZIgLvat6KTYRyLQjoLgddo-qQsNfj44NtmoqXKBgGUrI48:; _shopify_marketing=:AZ90SFfAAAEAj_auWRTY-7ETAsIpy6CWhjl76vmQjFZj-tYxPKth0nAAbKbNtWnF2Cj0zvSeRxXsolbkM26Xe9i6Hg5DbOaVHf9MACkFcCLhPmxsg_QFPWAWC3Gnqcxicplp:; _ga=GA1.1.220105449.1784362327; _clck=1p8sayt%5E2%5Eg7u%5E0%5E2390; popup-enquiry-sections--21427169689794__overlay_enquiry_popup=user_has_closed; _ga_HTZ519XWJ2=GS2.1.s1784362327$o1$g1$t1784364147$j60$l0$h0",
+  "if-none-match": "W/\"ac-0gkoQqJCpshBm3Uy77V7FyoEpFU\""
+}
+Request Query: {}
+Request Body: undefined
+Response Body: {"isVpnActive":false,"activePids":[],"publicIp":"106.215.137.205","country":"India","city":"Shillong","isp":"Bharti Airtel","currentConnections":[],"connectedProfile":null}
