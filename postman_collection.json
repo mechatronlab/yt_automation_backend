@@ -1,0 +1,240 @@
+{
+  "info": {
+    "name": "YT Automation - Auth & Google Accounts",
+    "description": "API endpoints for the Main Auth, Connected Google Accounts, and YouTube Automation.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Google Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"googleId\": \"123456789\",\n  \"email\": \"testuser@example.com\",\n  \"name\": \"Test User\",\n  \"avatar\": \"https://example.com/avatar.png\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5001/api/auth/google",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5001",
+              "path": [
+                "api",
+                "auth",
+                "google"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Connected Google Accounts",
+      "item": [
+        {
+          "name": "Add Account",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer YOUR_JWT_TOKEN"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"googleId\": \"youtube_channel_id_1\",\n  \"email\": \"channel1@example.com\",\n  \"name\": \"My YouTube Channel\",\n  \"accessToken\": \"ya29.a0AfB_by...\",\n  \"refreshToken\": \"1//0eabc...\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5001/api/google-accounts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5001",
+              "path": [
+                "api",
+                "google-accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Accounts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer YOUR_JWT_TOKEN"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5001/api/google-accounts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5001",
+              "path": [
+                "api",
+                "google-accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Set Active Account",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer YOUR_JWT_TOKEN"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5001/api/google-accounts/ACCOUNT_OBJECT_ID_HERE/active",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5001",
+              "path": [
+                "api",
+                "google-accounts",
+                "ACCOUNT_OBJECT_ID_HERE",
+                "active"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Remove Account",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer YOUR_JWT_TOKEN"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5001/api/google-accounts/ACCOUNT_OBJECT_ID_HERE",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5001",
+              "path": [
+                "api",
+                "google-accounts",
+                "ACCOUNT_OBJECT_ID_HERE"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "YouTube API",
+      "item": [
+        {
+          "name": "Get Channel Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer YOUR_JWT_TOKEN"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5001/api/youtube/stats",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5001",
+              "path": [
+                "api",
+                "youtube",
+                "stats"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload Video",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer YOUR_JWT_TOKEN"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "My Automated Video Test",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Uploaded automatically via Node.js API!",
+                  "type": "text"
+                },
+                {
+                  "key": "tags",
+                  "value": "automation,api,test",
+                  "type": "text"
+                },
+                {
+                  "key": "privacyStatus",
+                  "value": "private",
+                  "type": "text"
+                },
+                {
+                  "key": "video",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5001/api/youtube/upload",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5001",
+              "path": [
+                "api",
+                "youtube",
+                "upload"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

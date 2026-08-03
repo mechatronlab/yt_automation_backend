@@ -1,0 +1,10 @@
+node_modules/
+.env
+firebase-service-account.json
+dist-electron/
+.DS_Store
+vpn-scanner/.tmp/
+vpn-scanner/logs/
+vpn_pids/
+browser_sessions/env
+.env
