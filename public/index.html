@@ -3853,6 +3853,25 @@
                     <div class="wizard-filter-card">
                       <div class="wizard-filter-card-head">
                         <div>
+                          <div class="wizard-filter-card-title">Your keywords (optional)</div>
+                          <div class="wizard-filter-card-desc">Comma or space separated. Used to steer what the comments mention.</div>
+                        </div>
+                      </div>
+                      <div class="wizard-user-keywords-row">
+                        <input
+                          type="text"
+                          id="filter-user-keywords"
+                          placeholder="e.g. tutorial, setup, pricing, mistake, tip"
+                          value=""
+                          style="width:100%; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; background: rgba(255,255,255,0.02); color: var(--text-primary);"
+                          oninput="readWizardFiltersFromDom()"
+                        >
+                      </div>
+                    </div>
+
+                    <div class="wizard-filter-card">
+                      <div class="wizard-filter-card-head">
+                        <div>
                           <div class="wizard-filter-card-title">Language mix</div>
                           <div class="wizard-filter-card-desc">How many comments in each language. Total = sum of counts (1–50).</div>
                         </div>
@@ -5917,6 +5936,7 @@
       languageMix: { khasi: 10, pnar: 0, garo: 0, english: 0, hindi: 0 },
       toneMix: { positive: 5, neutral: 5, negative: 0 },
       textSpeakPercent: 25,
+      userKeywords: '',
       selectedAngles: [],
     };
     let wizardSmartAngles = [];
@@ -5979,6 +5999,7 @@
         languageMix,
         toneMix,
         textSpeakPercent: Math.max(0, Math.min(100, parseInt(textSlider?.value, 10) || wizardFilters.textSpeakPercent || 25)),
+        userKeywords: String(document.getElementById('filter-user-keywords')?.value || '').trim().slice(0, 500),
         selectedAngles: Array.isArray(wizardFilters.selectedAngles) ? wizardFilters.selectedAngles : [],
       };
       wizardCommentLanguage = deriveWizardCommentLanguage();
@@ -5998,6 +6019,8 @@
       const textPercent = document.getElementById('wizard-textspeak-percent');
       if (textSlider) textSlider.value = wizardFilters.textSpeakPercent ?? 25;
       if (textPercent) textPercent.textContent = `${wizardFilters.textSpeakPercent ?? 25}%`;
+      const keywordsEl = document.getElementById('filter-user-keywords');
+      if (keywordsEl) keywordsEl.value = wizardFilters.userKeywords ?? '';
       renderWizardSmartAngles();
     }
 
@@ -6140,7 +6163,7 @@
       const title = wizardSmartAnglesVideoTitle || wizardAddedVideos[0].title || 'Selected video';
       const shortTitle = title.length > 48 ? `${title.slice(0, 48)}…` : title;
       if (wizardSmartAnglesLoading) {
-        meta.textContent = `Loading angles for “${shortTitle}”…`;
+        meta.textContent = `Analyzing scenes for “${shortTitle}”… (~10–20s)`;
         return;
       }
       if (!wizardSmartAngles.length) {
@@ -6156,7 +6179,15 @@
       updateWizardSmartAnglesMeta();
 
       if (wizardSmartAnglesLoading) {
-        container.innerHTML = `<div class="wizard-smart-angles-empty">Loading angles for this video…</div>`;
+        container.innerHTML = `<div class="wizard-smart-angles-empty">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="display:inline-flex;width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,0.25);border-top-color:rgba(255,255,255,0.9);animation:spin 0.8s linear infinite;"></span>
+            <div>
+              <div style="font-weight:600;margin-bottom:2px;">Analyzing scenes…</div>
+              <div style="font-size:12px;color:var(--text-secondary);">Finding tap-worthy comment angles (~10–20s)</div>
+            </div>
+          </div>
+        </div>`;
         return;
       }
       if (!wizardSmartAngles.length) {
@@ -6255,6 +6286,7 @@
           languageMix: wizardFilters.languageMix,
           toneMix: wizardFilters.toneMix,
           textSpeakPercent: wizardFilters.textSpeakPercent,
+          userKeywords: wizardFilters.userKeywords,
           selectedAngles: wizardFilters.selectedAngles || [],
         },
       };

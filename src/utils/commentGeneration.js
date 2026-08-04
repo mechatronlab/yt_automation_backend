@@ -109,6 +109,23 @@ function extractTopicHints(...parts) {
   return [...new Set(words)].slice(0, 10);
 }
 
+function extractUserKeywords(userKeywords = '') {
+  const raw = String(userKeywords || '').trim().toLowerCase();
+  if (!raw) return [];
+  // Allow comma/semicolon/space separated keywords.
+  const tokens = raw
+    .split(/[,;\n]+/g)
+    .flatMap((chunk) => chunk.split(/\s+/g))
+    .map((w) => w.trim())
+    .filter(Boolean);
+
+  const words = tokens
+    .map((w) => w.replace(/[^a-z0-9]/gi, ''))
+    .filter((w) => w.length >= 2 && w.length <= 30 && !STOP_WORDS.has(w));
+
+  return [...new Set(words)].slice(0, 12);
+}
+
 const COMMENT_STYLES = [
   'react to one concrete moment or claim from the video',
   'ask a real follow-up question about something said/shown',
@@ -163,9 +180,12 @@ function buildEnglishDraftPrompt({
   avoidComments = [],
   userIntent = '',
   selectedAngles = [],
+  userKeywords = '',
 }) {
   const intent = String(userIntent || '').trim().slice(0, 800);
-  const topicHints = extractTopicHints(title, description, String(transcript).slice(0, 1200));
+  const baseHints = extractTopicHints(title, description, String(transcript).slice(0, 1200));
+  const userKeyHints = extractUserKeywords(userKeywords);
+  const topicHints = [...new Set([...baseHints, ...userKeyHints])].slice(0, 12);
 
   const slotLines = slots
     .map((slot, index) => {
@@ -271,9 +291,12 @@ function buildNativeCommentPrompt({
   avoidComments = [],
   userIntent = '',
   selectedAngles = [],
+  userKeywords = '',
 }) {
   const intent = String(userIntent || '').trim().slice(0, 800);
-  const topicHints = extractTopicHints(title, description, String(transcript).slice(0, 1000));
+  const baseHints = extractTopicHints(title, description, String(transcript).slice(0, 1000));
+  const userKeyHints = extractUserKeywords(userKeywords);
+  const topicHints = [...new Set([...baseHints, ...userKeyHints])].slice(0, 12);
   const hasKhasi = slots.some((slot) => slot.language === 'khasi');
 
   const slotLines = slots

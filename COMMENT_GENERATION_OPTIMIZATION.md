@@ -58,6 +58,7 @@ Track **only** changes related to AI comment generation. Do not log unrelated wo
 | 2026-07-23 | Fix Khasi→English leak; add neutral sentiment | `commentSlots.js`, `commentGeneration.js`, `commentController.js`, `public/index.html` | — | never use EN drafts for native langs; English-body detector; positive/neutral/negative mix |
 | 2026-07-24 | Anti-mid comment quality pass | `commentGeneration.js`, `commentController.js` | — | sharper prompts + style rotation; ban mid filler; punchier fallbacks; draft temp 0.85 / adapt 0.55 |
 | 2026-07-24 | Khasi direct-gen + ban EN/Khasi salad | `commentGeneration.js`, `commentController.js` | — | native langs skip EN→adapt; few-shot Khasi; strict mix + meaning_en sense gates; pure Khasi fallbacks |
+| 2026-08-04 | Add user keywords input + improve smart-angles loader | `public/index.html`, `commentController.js`, `commentGeneration.js` | — | optional `userKeywords` feed is added to prompt topic grounding; loading UI now clearly shows analysis in progress |
 
 ---
 

@@ -291,6 +291,7 @@ function normalizeGenerationFilters(filters = {}, count = 10) {
       ),
     ),
     userIntent: String(filters.userIntent || '').trim().slice(0, 800),
+    userKeywords: String(filters.userKeywords || '').trim().slice(0, 500),
     selectedAngles: Array.isArray(filters.selectedAngles)
       ? filters.selectedAngles.map((item) => String(item || '').trim()).filter(Boolean).slice(0, 8)
       : [],
@@ -327,6 +328,7 @@ Natural writing:
 - Sound like real YouTube commenters, not AI and not Gen Z slang.
 - Be specific to the video; avoid generic praise or brochure language.
 ${filters.userIntent ? `- User guidance: ${filters.userIntent}` : ''}
+${filters.userKeywords ? `- User keywords (optional): ${filters.userKeywords}` : ''}
 ${(filters.selectedAngles || []).length ? `- Preferred angles: ${(filters.selectedAngles || []).join('; ')}` : ''}
 - Apply light natural misspellings/shorthand to about ${filters.textSpeakPercent}% of comments.
 `;
@@ -390,6 +392,7 @@ async function generateCommentsWithSlots({
   accountPersona = '',
   spellingErrorRate = 0,
   userIntent = '',
+  userKeywords = '',
   selectedAngles = [],
 }) {
   if (!process.env.GEMINI_API_KEY) {
@@ -417,6 +420,7 @@ async function generateCommentsWithSlots({
           avoidComments,
           userIntent,
           selectedAngles,
+            userKeywords,
         }),
         {
           temperature: 0.7,
@@ -480,6 +484,7 @@ async function generateCommentsWithSlots({
             avoidComments,
             userIntent,
             selectedAngles,
+            userKeywords,
           }),
           {
             temperature: 0.4,
@@ -716,6 +721,7 @@ async function generateComments({
       accountPersona,
       spellingErrorRate: generationFilters?.textSpeakPercent ?? 0,
       userIntent: generationFilters?.userIntent || '',
+      userKeywords: generationFilters?.userKeywords || '',
       selectedAngles: generationFilters?.selectedAngles || [],
     });
   }
@@ -732,6 +738,7 @@ async function generateComments({
       accountPersona,
       spellingErrorRate: generationFilters.textSpeakPercent,
       userIntent: generationFilters.userIntent || '',
+      userKeywords: generationFilters.userKeywords || '',
       selectedAngles: generationFilters.selectedAngles || [],
     });
   }
@@ -935,6 +942,7 @@ const generateCommentsBatch = async (req, res, next) => {
         accountPersona: persona,
         spellingErrorRate: normalizedFilters.textSpeakPercent,
         userIntent: normalizedFilters.userIntent || '',
+        userKeywords: normalizedFilters.userKeywords || '',
         selectedAngles: normalizedFilters.selectedAngles || [],
       });
 
@@ -1046,6 +1054,7 @@ const regenerateCommentFromUrl = async (req, res, next) => {
       accountPersona,
       spellingErrorRate: normalizedFilters?.textSpeakPercent ?? 40,
       userIntent: normalizedFilters?.userIntent || '',
+      userKeywords: normalizedFilters?.userKeywords || '',
       selectedAngles: normalizedFilters?.selectedAngles || [],
     });
 
