@@ -343,6 +343,7 @@ const startGoogleOAuthConnect = async (req, res, next) => {
     const tempVpnProfileId = (req.query.tempVpnProfileId || '').trim();
     const phoneNumber = (req.query.phoneNumber || '').trim();
 
+    const project = resolveProject(user.projectId);
     const state = signOAuthState({
       flow: 'connect',
       userId: user._id.toString(),
@@ -351,6 +352,7 @@ const startGoogleOAuthConnect = async (req, res, next) => {
       email,
       tempVpnProfileId,
       phoneNumber,
+      projectId: project.id,
     });
 
     const url = buildGoogleAuthUrl({
@@ -358,8 +360,13 @@ const startGoogleOAuthConnect = async (req, res, next) => {
       state,
       scopes: YOUTUBE_SCOPES.split(' '),
       loginHint: email || undefined,
+      // Force consent so Google always shows YouTube permissions
+      // (select_account alone finishes silently if the user already logged in).
       prompt: 'select_account consent',
       accessType: 'offline',
+      includeGrantedScopes: false,
+      clientId: project.clientId,
+      clientSecret: project.clientSecret,
     });
 
     res.redirect(url);
@@ -438,6 +445,8 @@ const completeConnectFromOAuthCode = async (userId, code, redirectUri, options =
     const saved = await exchangeCodeAndSaveAccount(userId, code, {
       redirectUri,
       phoneNumber: (options.phoneNumber || '').trim(),
+      clientId: options.clientId,
+      clientSecret: options.clientSecret,
     });
     const account = await GoogleAccount.findById(saved.accountId);
 
@@ -507,7 +516,12 @@ const oauthCallback = async (req, res, next) => {
       try {
         if (state) returnTo = verifyOAuthState(state).returnTo;
       } catch {}
-      return redirectWithOAuthError(res, returnTo, error);
+      const blocked = String(error).toLowerCase().includes('access_denied')
+        || String(error).toLowerCase().includes('blocked');
+      const message = blocked
+        ? 'Google blocked this new account. Add its Gmail as a Test user in Google Cloud Console → OAuth consent screen (Testing), then try again.'
+        : error;
+      return redirectWithOAuthError(res, returnTo, message);
     }
 
     if (!code || !state) {
@@ -535,9 +549,12 @@ const oauthCallback = async (req, res, next) => {
     }
 
     if (payload.flow === 'connect') {
+      const project = resolveProject(payload.projectId);
       const result = await completeConnectFromOAuthCode(payload.userId, code, redirectUri, {
         tempVpnProfileId: payload.tempVpnProfileId,
         phoneNumber: payload.phoneNumber,
+        clientId: project.clientId,
+        clientSecret: project.clientSecret,
       });
       return redirectWithOAuthPayload(res, payload.returnTo, {
         connect: result,

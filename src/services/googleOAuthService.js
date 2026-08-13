@@ -42,11 +42,12 @@ const lookupScriptPhoneForEmail = (email) => {
   return '';
 };
 
+// Commenting + channel list. Do not include youtube.upload here — it is a
+// restricted scope and Google blocks NEW accounts on unverified apps.
 const YOUTUBE_SCOPES = [
+  'openid',
   'email',
   'profile',
-  'https://www.googleapis.com/auth/youtube.readonly',
-  'https://www.googleapis.com/auth/youtube.upload',
   'https://www.googleapis.com/auth/youtube.force-ssl',
 ].join(' ');
 
@@ -75,10 +76,12 @@ const exchangeCodeAndSaveAccount = async (userId, code, options = {}) => {
   }
 
   const redirectUri = options.redirectUri || 'postmessage';
+  const clientId = options.clientId || process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = options.clientSecret || process.env.GOOGLE_CLIENT_SECRET;
 
   const oAuth2Client = new OAuth2Client(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
+    clientId,
+    clientSecret,
     redirectUri
   );
 

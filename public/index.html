@@ -2246,6 +2246,37 @@
       background: rgba(66, 133, 244, 0.05);
       box-shadow: 0 0 15px var(--accent-glow);
     }
+    .account-select-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.25);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 12px;
+      color: transparent;
+      transition: all 0.15s ease;
+    }
+    .account-select-card.selected .account-select-check {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+    .account-select-badge-muted {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.06);
+      vertical-align: middle;
+    }
     .account-select-card-header {
       display: flex;
       align-items: center;
@@ -3807,8 +3838,10 @@
                       <input type="text" id="account-search-field" placeholder="Search accounts..." oninput="filterChooseAccounts()">
                     </div>
 
-                    <div style="display: flex; align-items: center; gap: 14px;">
-                      <button class="btn-action-secondary" onclick="autoSelectAccounts()">🤖 Re-pick accounts</button>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                      <button class="btn-action-secondary" onclick="selectAllAccounts()">✓ Select all</button>
+                      <button class="btn-action-secondary" onclick="unselectAllAccounts()">✕ Unselect all</button>
+                      <button class="btn-action-secondary" onclick="autoSelectAccounts()">🤖 Re-pick</button>
                     </div>
                   </div>
 
@@ -3843,7 +3876,7 @@
                   </p>
 
                   <div class="wizard-filter-banner" id="wizard-filter-banner">
-                    Generating <strong id="wizard-filter-banner-count">10</strong> comments across
+                    Generating <strong id="wizard-filter-banner-count">100</strong> comments across
                     <strong id="wizard-filter-banner-videos">0</strong> video(s) and
                     <strong id="wizard-filter-banner-accounts">0</strong> account(s) using Gemini AI.
                   </div>
@@ -3891,8 +3924,8 @@
                       </div>
                     </div>
                     <div class="wizard-count-slider-row">
-                      <input type="range" class="wizard-count-slider" id="wizard-filter-count-slider" min="1" max="50" value="10" oninput="setWizardFilterCount(this.value)">
-                      <input type="number" class="wizard-count-input" id="wizard-filter-count-input" min="1" max="50" value="10" onchange="setWizardFilterCount(this.value)">
+                      <input type="range" class="wizard-count-slider" id="wizard-filter-count-slider" min="1" max="100" value="100" oninput="setWizardFilterCount(this.value)">
+                      <input type="number" class="wizard-count-input" id="wizard-filter-count-input" min="1" max="100" value="100" onchange="setWizardFilterCount(this.value)">
                     </div>
                   </div>
 
@@ -3904,13 +3937,13 @@
                         <div class="wizard-filter-section-desc">How many comments in each language — must total the comment count above.</div>
                       </div>
                     </div>
-                    <div class="wizard-filter-total valid" id="wizard-language-total">Language counts must total 10 (10/10)</div>
+                    <div class="wizard-filter-total valid" id="wizard-language-total">Language counts must total 100 (100/100)</div>
                     <div class="wizard-mix-grid">
-                      <div class="wizard-mix-field"><label for="filter-lang-khasi">Khasi</label><input type="number" id="filter-lang-khasi" min="0" max="50" value="5" onchange="updateWizardFilterMix()"></div>
-                      <div class="wizard-mix-field"><label for="filter-lang-pnar">Pnar</label><input type="number" id="filter-lang-pnar" min="0" max="50" value="2" onchange="updateWizardFilterMix()"></div>
-                      <div class="wizard-mix-field"><label for="filter-lang-garo">Garo</label><input type="number" id="filter-lang-garo" min="0" max="50" value="0" onchange="updateWizardFilterMix()"></div>
-                      <div class="wizard-mix-field"><label for="filter-lang-english">English</label><input type="number" id="filter-lang-english" min="0" max="50" value="3" onchange="updateWizardFilterMix()"></div>
-                      <div class="wizard-mix-field"><label for="filter-lang-hindi">Hindi</label><input type="number" id="filter-lang-hindi" min="0" max="50" value="0" onchange="updateWizardFilterMix()"></div>
+                      <div class="wizard-mix-field"><label for="filter-lang-khasi">Khasi</label><input type="number" id="filter-lang-khasi" min="0" max="100" value="50" onchange="updateWizardFilterMix()"></div>
+                      <div class="wizard-mix-field"><label for="filter-lang-pnar">Pnar</label><input type="number" id="filter-lang-pnar" min="0" max="100" value="20" onchange="updateWizardFilterMix()"></div>
+                      <div class="wizard-mix-field"><label for="filter-lang-garo">Garo</label><input type="number" id="filter-lang-garo" min="0" max="100" value="0" onchange="updateWizardFilterMix()"></div>
+                      <div class="wizard-mix-field"><label for="filter-lang-english">English</label><input type="number" id="filter-lang-english" min="0" max="100" value="30" onchange="updateWizardFilterMix()"></div>
+                      <div class="wizard-mix-field"><label for="filter-lang-hindi">Hindi</label><input type="number" id="filter-lang-hindi" min="0" max="100" value="0" onchange="updateWizardFilterMix()"></div>
                     </div>
                   </div>
 
@@ -4005,7 +4038,11 @@
                   <strong>Posting comments...</strong><br>
                   Waiting 30s–3 min between each comment to look more natural.
                 </div>
-                <div class="progress-bar-container">
+                <div class="progress-meta" id="progress-meta" style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;font-size:12px;color:var(--text-secondary);">
+                  <span id="progress-count">0 / 0 comments</span>
+                  <strong id="progress-percent" style="color:var(--accent-hover);font-size:14px;">0%</strong>
+                </div>
+                <div class="progress-bar-container" style="margin-top:8px;height:10px;">
                   <div class="progress-bar" id="progress-bar"></div>
                 </div>
               </div>
@@ -4450,15 +4487,58 @@
   </div>
 
   <script>
-    function getDefaultApiBase() {
-      const host = window.location.hostname;
-      if (host.endsWith('.web.app') || host.endsWith('.firebaseapp.com')) {
-        return '';
-      }
-      return window.location.origin;
+    // Direct Cloud Function URL — Hosting rewrites hard-timeout at ~60s.
+    // Use only for long-running comment generate/post; normal API uses same-origin.
+    const CLOUD_FUNCTIONS_API_BASE = 'https://us-central1-ytautomation-2fae5.cloudfunctions.net/api';
+
+    function isFirebaseHosting() {
+      const h = window.location.hostname || '';
+      return h.endsWith('.web.app') || h.endsWith('.firebaseapp.com');
     }
 
-    let API_BASE = localStorage.getItem('backend_api_url') || getDefaultApiBase();
+    function getDefaultApiBase() {
+      const { protocol, origin, hostname } = window.location;
+      // Same-origin Hosting rewrite — most reliable in the browser (no CORS to cloudfunctions.net)
+      if (isFirebaseHosting()) {
+        return origin.replace(/\/$/, '');
+      }
+      // Local server / Electron
+      if (protocol === 'http:' || protocol === 'https:') {
+        return origin.replace(/\/$/, '');
+      }
+      if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return 'http://127.0.0.1:5003';
+      }
+      return 'http://localhost:5003';
+    }
+
+    /** Long Gemini / YouTube posting jobs — bypass Hosting 60s timeout when possible */
+    function getLongRunningApiBase() {
+      if (localStorage.getItem('backend_api_url')) {
+        return API_BASE;
+      }
+      if (isFirebaseHosting()) {
+        return CLOUD_FUNCTIONS_API_BASE;
+      }
+      return API_BASE;
+    }
+
+    function normalizeApiBase(url) {
+      if (!url) return '';
+      return String(url).trim().replace(/\/$/, '');
+    }
+
+    // Older builds saved the Cloud Function URL as the default API base; that
+    // causes "Failed to fetch" in some browsers. Prefer same-origin Hosting.
+    (function clearStaleCloudFunctionsApiBase() {
+      const saved = normalizeApiBase(localStorage.getItem('backend_api_url'));
+      if (saved && saved === normalizeApiBase(CLOUD_FUNCTIONS_API_BASE)) {
+        localStorage.removeItem('backend_api_url');
+      }
+    })();
+
+    // Prefer saved override (tunnel), otherwise same-origin hosting / localhost
+    let API_BASE = normalizeApiBase(localStorage.getItem('backend_api_url')) || getDefaultApiBase();
     let apiConfigReady = false;
     let JWT_TOKEN = localStorage.getItem('jwt_token');
 
@@ -4590,7 +4670,8 @@
       history.replaceState(null, '', window.location.pathname + window.location.search);
 
       if (oauthError) {
-        showToast(`Google sign-in failed: ${oauthError}`, 'error');
+        const decodedError = decodeURIComponent(oauthError.replace(/\+/g, ' '));
+        showToast(`Google sign-in failed: ${decodedError}`, 'error');
         return { type: 'error' };
       }
 
@@ -4687,11 +4768,6 @@
     async function init() {
       const oauthReturn = consumeOAuthHash();
 
-      if (!API_BASE) {
-        showBackendConfigError('No backend URL configured. Paste your tunnel URL (e.g. https://xxxx.loca.lt) or use http://localhost:5003 locally.');
-        return;
-      }
-
       try {
         const res = await fetch(`${API_BASE}/api/config/client`);
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
@@ -4754,15 +4830,12 @@
               <strong style="display: block; margin-bottom: 4px;">Connection Error</strong>
               ${extraMessage ? `<br><span style="color:#fca5a5">${escHtml(String(extraMessage))}</span><br>` : ''}
               Cannot connect to backend at <code>${API_BASE || '(not set)'}</code>.<br>
-              ${window.location.hostname.includes('web.app') || window.location.hostname.includes('firebaseapp.com')
-                ? 'The UI is deployed on Firebase Hosting, but the <strong>API (Cloud Functions)</strong> is not live yet.<br><br>'
-                  + '<strong>Fix:</strong> Upgrade project <code>login-7972e</code> to the <a href="https://console.firebase.google.com/project/login-7972e/usage/details" target="_blank" rel="noopener" style="color:#60a5fa">Blaze plan</a>, then run:<br>'
-                  + '<code style="display:block;margin:8px 0;padding:8px;background:rgba(0,0,0,0.3);border-radius:6px;text-align:left">./scripts/set-firebase-secrets.sh<br>npm run deploy</code>'
-                  + 'Or point this page to a running local/tunnel backend below.<br>'
+              ${isFirebaseHosting()
+                ? 'Live site should use this Hosting URL for API calls. Click <strong>Reset</strong> to clear a stale custom API URL, then reload.<br>'
                 : window.location.protocol === 'https:'
-                  ? 'If using Firebase, deploy functions with <code>npm run deploy</code>.<br>'
-                  : ''}
-              For local dev run <code>npm start</code> at <a href="http://localhost:5003" style="color: #60a5fa; text-decoration: underline; font-weight: 600;">http://localhost:5003</a>, or set a custom API URL below.
+                  ? 'If using Firebase, deploy with <code>npm run deploy</code>.<br>'
+                  : 'Start the local API with <code>npm start</code>, then reload.<br>'}
+              Local API: <a href="http://localhost:5003" style="color: #60a5fa; text-decoration: underline; font-weight: 600;">http://localhost:5003</a>. You can also paste a tunnel URL below.
               
               <div style="margin-top: 12px; font-weight: 600; font-size: 11px; text-transform: uppercase; color: #a1a1aa; letter-spacing: 0.5px; text-align: left; margin-bottom: 4px;">Configure Backend API URL:</div>
               <div style="display: flex; gap: 6px; justify-content: center; align-items: center;">
@@ -4776,7 +4849,7 @@
     }
 
     window.saveCustomApiUrl = function() {
-      const val = document.getElementById('custom-api-input').value.trim();
+      const val = normalizeApiBase(document.getElementById('custom-api-input').value);
       if (val) {
         localStorage.setItem('backend_api_url', val);
         window.location.reload();
@@ -6028,13 +6101,15 @@
     let wizardCurrentStep = 1;
     let wizardAddedVideos = [];
     let wizardSelectedAccounts = new Set();
+    /** IDs locked when leaving step 2 — used for generate/post so step 3 filter changes cannot re-pick accounts */
+    let wizardConfirmedAccountIds = null;
     let wizardComments = [];
-    let wizardCommentCount = 10;
+    let wizardCommentCount = 100;
     let wizardCommentLanguage = 'english';
     let wizardShowPendingOnly = false;
     let wizardFilters = {
-      commentCount: 10,
-      languageMix: { khasi: 5, pnar: 2, garo: 0, english: 3, hindi: 0 },
+      commentCount: 100,
+      languageMix: { khasi: 50, pnar: 20, garo: 0, english: 30, hindi: 0 },
       textSpeakPercent: 40,
       keyword: '',
     };
@@ -6167,18 +6242,26 @@
       const bannerAccounts = document.getElementById('wizard-filter-banner-accounts');
       if (bannerCount) bannerCount.textContent = total;
       if (bannerVideos) bannerVideos.textContent = wizardAddedVideos.length;
-      if (bannerAccounts) bannerAccounts.textContent = wizardSelectedAccounts.size;
+      if (bannerAccounts) {
+        bannerAccounts.textContent = getActiveWizardAccountIdSet().size;
+      }
 
       return valid;
     }
 
+    function getActiveWizardAccountIdSet() {
+      if (wizardConfirmedAccountIds && wizardConfirmedAccountIds.length && wizardCurrentStep >= 3) {
+        return new Set(wizardConfirmedAccountIds.map(String));
+      }
+      return wizardSelectedAccounts;
+    }
+
     function setWizardFilterCount(value) {
-      const next = Math.max(1, Math.min(50, Number(value) || 10));
+      const next = Math.max(1, Math.min(100, Number(value) || 100));
       wizardCommentCount = next;
       wizardFilters.commentCount = next;
       wizardFilters.languageMix = scaleWizardMix(wizardFilters.languageMix, next);
       writeWizardFiltersToDom();
-      syncWizardAccountSelection();
       updateWizardFilterTotals();
       if (wizardCurrentStep === 2) {
         renderChooseAccounts();
@@ -6353,6 +6436,13 @@
       getWizardAccountsForBatch().forEach((acc) => {
         wizardSelectedAccounts.add(acc._id.toString());
       });
+    }
+
+    function getSelectedWizardAccounts() {
+      const activeIds = getActiveWizardAccountIdSet();
+      return getWizardAccounts()
+        .map(getEnhancedAccountData)
+        .filter((acc) => activeIds.has(acc._id.toString()));
     }
 
     function getEnhancedAccountData(acc) {
@@ -6624,7 +6714,10 @@
       if (stepNum === 1) {
         renderWizardVideos();
       } else if (stepNum === 2) {
-        syncWizardAccountSelection();
+        wizardConfirmedAccountIds = null;
+        if (wizardSelectedAccounts.size === 0) {
+          syncWizardAccountSelection();
+        }
         renderChooseAccounts();
       } else if (stepNum === 3) {
         writeWizardFiltersToDom();
@@ -6657,6 +6750,7 @@
       const continueBtn = document.getElementById('btn-step2-continue');
       const stepDesc = document.getElementById('wizard-accounts-step-desc');
       const connectedAccounts = getWizardAccounts();
+      const visibleAccounts = getOrderedWizardAccounts();
 
       if (!connectedAccounts.length) {
         container.innerHTML = `
@@ -6668,40 +6762,51 @@
         return;
       }
 
-      syncWizardAccountSelection();
-      const batchAccounts = getWizardAccountsForBatch();
+      // Drop selections for accounts that are no longer connected
+      const validIds = new Set(connectedAccounts.map((acc) => acc._id.toString()));
+      wizardSelectedAccounts = new Set(
+        [...wizardSelectedAccounts].filter((id) => validIds.has(id))
+      );
+
+      const selectedAccounts = getSelectedWizardAccounts();
+      const selectedCount = selectedAccounts.length;
 
       if (stepDesc) {
-        stepDesc.textContent = `Showing ${batchAccounts.length} of ${connectedAccounts.length} accounts for ${wizardCommentCount} comment${wizardCommentCount === 1 ? '' : 's'} per video (auto-selected).`;
+        stepDesc.textContent = `${selectedCount} of ${connectedAccounts.length} account${connectedAccounts.length === 1 ? '' : 's'} selected for ${wizardCommentCount} comment${wizardCommentCount === 1 ? '' : 's'} per video. Click a card to select or unselect.`;
       }
 
-      if (batchAccounts.length === 0) {
+      if (visibleAccounts.length === 0) {
         container.innerHTML = `
           <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);">
-            No accounts match your search/filter. Try clearing the search or lowering the comment count.
+            No accounts match your search/filter. Try clearing the search.
           </div>
         `;
         continueBtn.disabled = true;
         return;
       }
 
-      container.innerHTML = batchAccounts.map((acc) => {
+      container.innerHTML = visibleAccounts.map((acc) => {
+        const id = acc._id.toString();
+        const isSelected = wizardSelectedAccounts.has(id);
         const initial = acc.name ? acc.name.charAt(0).toUpperCase() : '?';
         const gmail = acc.email || '';
         const currentChannel = acc.youtubeChannelTitle || acc.youtubeChannel || 'No channel selected';
         const hasChannel = !!acc.youtubeChannel;
 
         return `
-          <div class="account-select-card selected" style="cursor: default; ${!hasChannel ? 'border-color: rgba(251,191,36,0.45);' : ''}">
+          <div class="account-select-card ${isSelected ? 'selected' : ''}" style="${!hasChannel ? 'border-color: rgba(251,191,36,0.45);' : ''}" onclick="toggleAccountSelection('${id}')">
             <div class="status-dot-indicator ${acc.statusColor}"></div>
             <div class="account-select-card-header">
+              <div class="account-select-check" aria-hidden="true">✓</div>
               <div class="account-select-avatar">
                 ${acc.avatar ? `<img src="${acc.avatar}" alt="">` : initial}
               </div>
               <div class="account-select-info">
                 <div class="account-select-name">
                   ${escHtml(acc.name)}
-                  <span class="account-select-badge-purple">Auto-selected</span>
+                  ${isSelected
+                    ? '<span class="account-select-badge-purple">Selected</span>'
+                    : '<span class="account-select-badge-muted">Not selected</span>'}
                 </div>
                 <div class="account-select-handle" style="font-size:12px;color:var(--text-secondary);margin-top:2px;">
                   📧 ${escHtml(gmail)}
@@ -6714,23 +6819,23 @@
                 <span style="color: var(--text-primary); font-weight: 500;">${acc.usedCount}/${acc.totalLimit} used - ${acc.totalLimit - acc.usedCount} left</span>
               </div>
 
-              <div style="margin-top: 10px; padding: 10px 12px; background: rgba(255,255,255,0.03); border: 1px solid ${hasChannel ? 'var(--border)' : 'rgba(251,191,36,0.4)'}; border-radius: 8px;">
+              <div style="margin-top: 10px; padding: 10px 12px; background: rgba(255,255,255,0.03); border: 1px solid ${hasChannel ? 'var(--border)' : 'rgba(251,191,36,0.4)'}; border-radius: 8px;" onclick="event.stopPropagation()">
                 <div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
                   <span>📺 Comment via YouTube channel</span>
-                  <button type="button" onclick="openChannelSelectorModal('${acc._id}')" style="background: none; border: none; color: var(--accent); font-size: 11px; cursor: pointer; font-weight: 600;">
+                  <button type="button" onclick="event.stopPropagation(); openChannelSelectorModal('${id}')" style="background: none; border: none; color: var(--accent); font-size: 11px; cursor: pointer; font-weight: 600;">
                     ${hasChannel ? '✏️ Change' : '➕ Select channel'}
                   </button>
                 </div>
                 <div style="font-size: 13px; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
                   <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: ${hasChannel ? 'var(--green)' : 'var(--yellow)'};"></span>
-                  <span id="card-channel-title-${acc._id}">${escHtml(currentChannel)}</span>
+                  <span id="card-channel-title-${id}">${escHtml(currentChannel)}</span>
                 </div>
                 <div style="font-size: 11px; color: var(--text-secondary); margin-top: 6px;">
                   Gmail: <strong style="color:var(--text-primary);">${escHtml(gmail)}</strong>
                 </div>
               </div>
 
-              ${!hasChannel ? `
+              ${!hasChannel && isSelected ? `
                 <div class="needs-review-alert" style="margin-top: 8px;">
                   ⚠️ Choose a YouTube channel for this Gmail before continuing — comments post via that channel.
                 </div>
@@ -6740,17 +6845,15 @@
         `;
       }).join('');
 
-      const missingChannel = batchAccounts.filter((acc) => !acc.youtubeChannel);
-      continueBtn.disabled = batchAccounts.length === 0 || missingChannel.length > 0;
+      const missingChannel = selectedAccounts.filter((acc) => !acc.youtubeChannel);
+      continueBtn.disabled = selectedCount === 0 || missingChannel.length > 0;
       if (missingChannel.length > 0 && stepDesc) {
-        stepDesc.textContent = `Select a YouTube channel for ${missingChannel.length} account(s) before continuing. Comments post via the chosen channel.`;
+        stepDesc.textContent = `Select a YouTube channel for ${missingChannel.length} selected account(s) before continuing.`;
       }
     }
 
     function continueFromAccountStep() {
-      const selected = getWizardAccountsForBatch().filter((acc) =>
-        wizardSelectedAccounts.has(acc._id.toString())
-      );
+      const selected = getSelectedWizardAccounts();
       if (!selected.length) {
         showToast('Select at least one account.', 'error');
         return;
@@ -6764,16 +6867,32 @@
         openChannelSelectorModal(missing[0]._id);
         return;
       }
+      wizardConfirmedAccountIds = selected.map((acc) => acc._id.toString());
       goToStep(3);
     }
 
     function toggleAccountSelection(id) {
+      const key = String(id);
+      if (wizardSelectedAccounts.has(key)) {
+        wizardSelectedAccounts.delete(key);
+      } else {
+        wizardSelectedAccounts.add(key);
+      }
       renderChooseAccounts();
     }
 
     function selectAllAccounts() {
-      syncWizardAccountSelection();
+      getOrderedWizardAccounts().forEach((acc) => {
+        wizardSelectedAccounts.add(acc._id.toString());
+      });
       renderChooseAccounts();
+      showToast(`Selected ${wizardSelectedAccounts.size} account(s).`, 'success');
+    }
+
+    function unselectAllAccounts() {
+      wizardSelectedAccounts.clear();
+      renderChooseAccounts();
+      showToast('All accounts unselected.', 'info');
     }
 
     function autoSelectAccounts() {
@@ -6928,9 +7047,7 @@
 
       try {
         const payload = getWizardGenerationPayload();
-        const selectedAccounts = getWizardAccountsForBatch().filter((acc) =>
-          wizardSelectedAccounts.has(acc._id.toString())
-        );
+        const selectedAccounts = getSelectedWizardAccounts();
 
         if (selectedAccounts.length === 0) {
           throw new Error('Select at least one account before generating comments.');
@@ -6942,7 +7059,7 @@
           );
         }
 
-        const res = await fetch(`${API_BASE}/api/comments/generate-batch`, {
+        const res = await fetch(`${getLongRunningApiBase()}/api/comments/generate-batch`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -7436,7 +7553,7 @@
 
       // Save initial campaign record in DB
       let campaignId = null;
-      const selectedAccountIds = Array.from(wizardSelectedAccounts);
+      const selectedAccountIds = Array.from(getActiveWizardAccountIdSet());
       const participantIds = selectedAccountIds.length
         ? selectedAccountIds
         : [...new Set(approved.map((c) => c.accountId).filter(Boolean))];
@@ -7490,29 +7607,202 @@
       const overlay = document.getElementById('progress-overlay');
       const progressBar = document.getElementById('progress-bar');
       const progressText = document.getElementById('progress-text');
-      
-      overlay.classList.add('visible');
-      progressBar.style.width = '5%';
-      
+      const progressCount = document.getElementById('progress-count');
+      const progressPercent = document.getElementById('progress-percent');
+
       let allResults = [];
       const videoUrls = Object.keys(groups);
       const totalSteps = videoUrls.length;
+      const totalCommentsGlobal = approved.length;
+      let completedCommentsGlobal = 0;
+
+      const setPostProgress = ({
+        percent = 0,
+        done = completedCommentsGlobal,
+        total = totalCommentsGlobal,
+        titleHtml = '',
+      } = {}) => {
+        const pct = Math.max(0, Math.min(100, Math.round(percent)));
+        if (progressBar) progressBar.style.width = `${pct}%`;
+        if (progressPercent) progressPercent.textContent = `${pct}%`;
+        if (progressCount) progressCount.textContent = `${done} / ${total} comments`;
+        if (titleHtml && progressText) progressText.innerHTML = titleHtml;
+      };
+
+      const readNdjsonPostStream = async (res, { videoIndex, videoTotal, videoTitle, jobCount, onResult }) => {
+        const contentType = res.headers.get('content-type') || '';
+        if (!res.ok) {
+          const errBody = await res.text();
+          let message = `API request failed (${res.status})`;
+          try {
+            const parsed = JSON.parse(errBody);
+            if (parsed.message) message = parsed.message;
+          } catch (_) {
+            if (errBody) message = errBody.slice(0, 200);
+          }
+          throw new Error(message);
+        }
+
+        // Backward compatible: older servers still return JSON
+        if (!contentType.includes('ndjson') && !contentType.includes('stream')) {
+          const data = await res.json();
+          if (Array.isArray(data.results)) {
+            data.results.forEach((result) => onResult(result));
+            completedCommentsGlobal += data.results.length;
+            setPostProgress({
+              percent: totalCommentsGlobal
+                ? Math.round((completedCommentsGlobal / totalCommentsGlobal) * 100)
+                : 100,
+              done: completedCommentsGlobal,
+              total: totalCommentsGlobal,
+              titleHtml: `
+                <strong>Finished video ${videoIndex}/${videoTotal}</strong><br>
+                "${escHtml(videoTitle)}"<br>
+                ${data.successful || 0}/${jobCount} posted
+              `,
+            });
+          }
+          return data;
+        }
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let finalPayload = null;
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+
+          for (const rawLine of lines) {
+            const line = rawLine.trim();
+            if (!line) continue;
+            let event;
+            try {
+              event = JSON.parse(line);
+            } catch (_) {
+              continue;
+            }
+
+            if (event.type === 'start') {
+              setPostProgress({
+                percent: totalCommentsGlobal
+                  ? Math.round((completedCommentsGlobal / totalCommentsGlobal) * 100)
+                  : 0,
+                done: completedCommentsGlobal,
+                total: totalCommentsGlobal,
+                titleHtml: `
+                  <strong>Posting comments for video ${videoIndex}/${videoTotal}</strong><br>
+                  "${escHtml(videoTitle)}"<br>
+                  ${event.message || `${jobCount} comments · live progress`}
+                `,
+              });
+            } else if (event.type === 'posting' || event.type === 'vpn') {
+              const localDone = Math.max(0, (event.index || 1) - 1);
+              const globalDone = completedCommentsGlobal + localDone;
+              const pct = totalCommentsGlobal
+                ? Math.round((globalDone / totalCommentsGlobal) * 100)
+                : (event.percent || 0);
+              setPostProgress({
+                percent: pct,
+                done: globalDone,
+                total: totalCommentsGlobal,
+                titleHtml: `
+                  <strong>Video ${videoIndex}/${videoTotal} · Comment ${event.index}/${event.total}</strong><br>
+                  "${escHtml(videoTitle)}"<br>
+                  ${escHtml(event.message || 'Posting...')}
+                `,
+              });
+            } else if (event.type === 'comment') {
+              if (event.result) onResult(event.result);
+              const globalDone = completedCommentsGlobal + (event.done || event.index || 0);
+              const pct = totalCommentsGlobal
+                ? Math.round((globalDone / totalCommentsGlobal) * 100)
+                : (event.percent || 0);
+              setPostProgress({
+                percent: pct,
+                done: globalDone,
+                total: totalCommentsGlobal,
+                titleHtml: `
+                  <strong>Video ${videoIndex}/${videoTotal} · ${event.done || event.index}/${event.total} done</strong><br>
+                  "${escHtml(videoTitle)}"<br>
+                  ${escHtml(event.message || '')}<br>
+                  <span style="color:var(--text-secondary)">${event.successful || 0} ok · ${event.failed || 0} failed</span>
+                `,
+              });
+            } else if (event.type === 'waiting') {
+              const globalDone = completedCommentsGlobal + (event.index || 0);
+              const pct = totalCommentsGlobal
+                ? Math.round((globalDone / totalCommentsGlobal) * 100)
+                : (event.percent || 0);
+              setPostProgress({
+                percent: pct,
+                done: globalDone,
+                total: totalCommentsGlobal,
+                titleHtml: `
+                  <strong>Video ${videoIndex}/${videoTotal} · Waiting before next comment</strong><br>
+                  "${escHtml(videoTitle)}"<br>
+                  ${escHtml(event.message || `Waiting ${event.gapLabel || ''}...`)}
+                `,
+              });
+            } else if (event.type === 'done') {
+              finalPayload = event;
+              if (Array.isArray(event.results)) {
+                // results already pushed via comment events; keep final counts only
+              }
+              completedCommentsGlobal += event.total || jobCount;
+              setPostProgress({
+                percent: totalCommentsGlobal
+                  ? Math.round((completedCommentsGlobal / totalCommentsGlobal) * 100)
+                  : 100,
+                done: completedCommentsGlobal,
+                total: totalCommentsGlobal,
+                titleHtml: `
+                  <strong>Finished video ${videoIndex}/${videoTotal}</strong><br>
+                  "${escHtml(videoTitle)}"<br>
+                  ${event.successful || 0}/${event.total || jobCount} posted
+                `,
+              });
+            } else if (event.type === 'error') {
+              throw new Error(event.message || 'Posting failed');
+            }
+          }
+        }
+
+        if (buffer.trim()) {
+          try {
+            const event = JSON.parse(buffer.trim());
+            if (event.type === 'done') finalPayload = event;
+            if (event.type === 'error') throw new Error(event.message || 'Posting failed');
+          } catch (err) {
+            if (err.message && !err.message.includes('JSON')) throw err;
+          }
+        }
+
+        return finalPayload || { results: [] };
+      };
+
+      overlay.classList.add('visible');
+      setPostProgress({
+        percent: 0,
+        done: 0,
+        total: totalCommentsGlobal,
+        titleHtml: `
+          <strong>Preparing to post...</strong><br>
+          ${totalCommentsGlobal} comment${totalCommentsGlobal === 1 ? '' : 's'} across ${totalSteps} video${totalSteps === 1 ? '' : 's'}
+        `,
+      });
 
       for (let i = 0; i < totalSteps; i++) {
         const url = videoUrls[i];
         const group = groups[url];
-        
-        progressText.innerHTML = `
-          <strong>Posting comments for video ${i + 1}/${totalSteps}</strong><br>
-          "${escHtml(group.title)}"<br>
-          ${group.jobs.length} comments · gap 30s / 40s / 50s / 1–3 min between each
-        `;
-        
-        const stepProgressStart = 5 + (i / totalSteps) * 90;
-        progressBar.style.width = `${stepProgressStart}%`;
+        const beforeCount = allResults.length;
 
         try {
-          const res = await fetch(`${API_BASE}/api/comments/post`, {
+          const res = await fetch(`${getLongRunningApiBase()}/api/comments/post`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -7524,16 +7814,19 @@
             })
           });
 
-          const data = await res.json();
-          if (res.ok && data.results) {
-            allResults = allResults.concat(data.results);
-            progressText.innerHTML = `
-              <strong>Finished video ${i + 1}/${totalSteps}</strong><br>
-              "${escHtml(group.title)}"<br>
-              ${data.successful || 0}/${group.jobs.length} posted (with 30s–3 min gaps)
-            `;
-          } else {
-            // Treat as failed for the jobs in this group
+          await readNdjsonPostStream(res, {
+            videoIndex: i + 1,
+            videoTotal: totalSteps,
+            videoTitle: group.title,
+            jobCount: group.jobs.length,
+            onResult: (result) => {
+              allResults.push(result);
+            },
+          });
+
+          // If stream sent no per-comment events, fill failures for missing jobs
+          const received = allResults.length - beforeCount;
+          if (received === 0) {
             group.jobs.forEach((job) => {
               const acc = connectedAccountsList.find(a => a._id.toString() === String(job.accountId));
               allResults.push({
@@ -7542,29 +7835,49 @@
                 name: acc ? acc.name : 'Unknown Channel',
                 comment: job.comment,
                 status: 'failed',
-                error: data.message || 'API request failed'
+                error: 'No response from posting API',
               });
             });
+            completedCommentsGlobal = Math.max(completedCommentsGlobal, beforeCount + group.jobs.length);
           }
         } catch (err) {
-          // Network error/catch failed for the group
-          Object.entries(group.comments).forEach(([accId, commentText]) => {
-            const acc = connectedAccountsList.find(a => a._id.toString() === accId);
+          const already = allResults.length - beforeCount;
+          group.jobs.slice(already).forEach((job) => {
+            const acc = connectedAccountsList.find(a => a._id.toString() === String(job.accountId));
             allResults.push({
-              accountId: accId,
+              accountId: job.accountId,
               email: acc ? acc.email : 'unknown',
               name: acc ? acc.name : 'Unknown Channel',
-              comment: commentText,
+              comment: job.comment,
               status: 'failed',
-              error: err.message || 'Network posting error'
+              error: err.message || 'Network posting error',
             });
           });
+          completedCommentsGlobal = Math.max(completedCommentsGlobal, beforeCount + group.jobs.length);
+          setPostProgress({
+            percent: totalCommentsGlobal
+              ? Math.round((completedCommentsGlobal / totalCommentsGlobal) * 100)
+              : 0,
+            done: completedCommentsGlobal,
+            total: totalCommentsGlobal,
+            titleHtml: `
+              <strong>Error on video ${i + 1}/${totalSteps}</strong><br>
+              "${escHtml(group.title)}"<br>
+              ${escHtml(err.message || 'Posting failed')}
+            `,
+          });
         }
-        
-        progressBar.style.width = `${5 + ((i + 1) / totalSteps) * 90}%`;
       }
 
-      progressBar.style.width = '100%';
+      setPostProgress({
+        percent: 100,
+        done: totalCommentsGlobal,
+        total: totalCommentsGlobal,
+        titleHtml: `
+          <strong>All comments processed</strong><br>
+          ${allResults.filter((r) => r.status === 'success').length} succeeded · ${allResults.filter((r) => r.status === 'failed').length} failed
+        `,
+      });
       
       setTimeout(async () => {
         overlay.classList.remove('visible');
@@ -7632,13 +7945,14 @@
       wizardAddedVideos = [];
       saveWizardVideosToDb();
       wizardSelectedAccounts.clear();
+      wizardConfirmedAccountIds = null;
       wizardComments = [];
-      wizardCommentCount = 10;
+      wizardCommentCount = 100;
       wizardCommentLanguage = 'english';
       wizardShowPendingOnly = false;
       wizardFilters = {
-        commentCount: 10,
-        languageMix: { khasi: 5, pnar: 2, garo: 0, english: 3, hindi: 0 },
+        commentCount: 100,
+        languageMix: { khasi: 50, pnar: 20, garo: 0, english: 30, hindi: 0 },
         textSpeakPercent: 40,
         keyword: '',
       };

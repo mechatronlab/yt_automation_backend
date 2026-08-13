@@ -112,14 +112,30 @@ function buildCommentSlots(filters = {}, totalCount = 10) {
   }));
 }
 
-function defaultGenerationFilters(totalCount = 10) {
+function defaultGenerationFilters(totalCount = 100) {
+  const scale = (parts) => {
+    const sum = Object.values(parts).reduce((a, b) => a + b, 0) || 1;
+    const scaled = {};
+    let used = 0;
+    const keys = Object.keys(parts);
+    keys.forEach((key, index) => {
+      if (index === keys.length - 1) {
+        scaled[key] = Math.max(0, totalCount - used);
+      } else {
+        scaled[key] = Math.round((parts[key] / sum) * totalCount);
+        used += scaled[key];
+      }
+    });
+    return scaled;
+  };
+
   return {
     commentCount: totalCount,
-    languageMix: { khasi: 5, pnar: 2, garo: 0, english: 3, hindi: 0 },
+    languageMix: scale({ khasi: 5, pnar: 2, garo: 0, english: 3, hindi: 0 }),
     toneMode: 'mixed',
-    toneMix: { positive: 4, neutral: 4, negative: 2 },
+    toneMix: scale({ positive: 4, neutral: 4, negative: 2 }),
     voiceMode: 'mixed',
-    voiceMix: { gen_z: 4, millennial: 3, gen_x: 2, neutral: 1, boomer: 0 },
+    voiceMix: scale({ gen_z: 4, millennial: 3, gen_x: 2, neutral: 1, boomer: 0 }),
     textSpeakPercent: 40,
   };
 }

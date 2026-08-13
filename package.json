@@ -15,9 +15,11 @@
     "build:linux": "electron-builder --linux",
     "build": "electron-builder --win --mac",
     "prepare:firebase": "node scripts/prepare-firebase-deploy.js",
-    "deploy": "npm run prepare:firebase && firebase deploy",
-    "deploy:hosting": "firebase deploy --only hosting",
-    "deploy:functions": "npm run prepare:firebase && firebase deploy --only functions",
+    "deploy": "npm run prepare:firebase && firebase deploy --only hosting,functions",
+    "deploy:hosting": "firebase deploy --only hosting:app",
+    "deploy:legal": "firebase deploy --only hosting:legal",
+    "deploy:functions": "npm run prepare:firebase && firebase deploy --only functions:api",
+    "deploy:all": "npm run prepare:firebase && firebase deploy",
     "check:firebase": "node scripts/check-firebase-credentials.js"
   },
   "dependencies": {

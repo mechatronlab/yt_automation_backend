@@ -46,4 +46,6 @@ set_secret YOUTUBE_API_KEY "$(get_env YOUTUBE_API_KEY)"
 set_secret FIVESIM_API_KEY "$(get_env FIVESIM_API_KEY)"
 set_secret PUBLIC_BASE_URL "https://ytautomation-2fae5.web.app"
 
-echo "Done. Enable Firestore + Storage in Firebase Console for project ytautomation-2fae5."
+echo "Done. Prefer bundling via npm run prepare:firebase (copies .env into functions/)."
+echo "Enable Firestore + Storage in Firebase Console for project ytautomation-2fae5."
+echo "Deploy the single API function: npm run deploy:functions"

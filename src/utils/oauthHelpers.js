@@ -2,8 +2,10 @@
 
 const crypto = require('crypto');
 const { OAuth2Client } = require('google-auth-library');
+const { isCloudRuntime } = require('./runtime');
 
 const CALLBACK_PATH = '/api/auth/google/oauth-callback';
+const PRODUCTION_HOSTING_ORIGIN = 'https://ytautomation-2fae5.web.app';
 
 const normalizeOAuthHost = (host) => {
   if (!host) return host;
@@ -13,7 +15,27 @@ const normalizeOAuthHost = (host) => {
   return host;
 };
 
+const isUnusableRedirectHost = (value = '') =>
+  /localhost|127\.0\.0\.1|cloudfunctions\.net|0\.0\.0\.0/.test(value);
+
+/**
+ * Stable OAuth callback URL.
+ * On Cloud Functions the request Host is cloudfunctions.net — never use that as redirect_uri.
+ * Multi-project clients (Project 1/2/3) must all register this same URI.
+ */
 const getOAuthRedirectUri = (req) => {
+  if (isCloudRuntime()) {
+    const explicit = (process.env.OAUTH_REDIRECT_URI || '').trim();
+    if (explicit && !isUnusableRedirectHost(explicit)) {
+      return explicit;
+    }
+    const envBase = (process.env.PUBLIC_BASE_URL || '').trim().replace(/\/$/, '');
+    if (envBase && !isUnusableRedirectHost(envBase)) {
+      return `${envBase}${CALLBACK_PATH}`;
+    }
+    return `${PRODUCTION_HOSTING_ORIGIN}${CALLBACK_PATH}`;
+  }
+
   const explicit = (process.env.OAUTH_REDIRECT_URI || '').trim();
   if (explicit) {
     return explicit;
@@ -25,7 +47,7 @@ const getOAuthRedirectUri = (req) => {
     const host = normalizeOAuthHost(
       (req.get('x-forwarded-host') || req.get('host') || '').split(',')[0].trim()
     );
-    if (host && !host.startsWith('0.0.0.0')) {
+    if (host && !host.startsWith('0.0.0.0') && !host.includes('cloudfunctions.net')) {
       return `${proto}://${host}${CALLBACK_PATH}`;
     }
   }
@@ -50,6 +72,9 @@ const getAllowedReturnOrigins = () => {
     `http://localhost:${port}`,
     `http://127.0.0.1:${port}`,
     'https://ytauto.web.app',
+    'https://ytauto01.web.app',
+    'https://ytauto01.firebaseapp.com',
+    'https://ytautomation-2fae5.web.app',
     'https://login-7972e.web.app',
     'https://login-7972e.firebaseapp.com',
   ];
@@ -122,6 +147,7 @@ const buildGoogleAuthUrl = ({
   accessType = 'online',
   clientId,
   clientSecret,
+  includeGrantedScopes = true,
 }) => {
   const client = new OAuth2Client(
     clientId || process.env.GOOGLE_CLIENT_ID,
@@ -136,7 +162,7 @@ const buildGoogleAuthUrl = ({
     redirect_uri: redirectUri,
     login_hint: loginHint || undefined,
     prompt: prompt || 'select_account consent',
-    include_granted_scopes: true,
+    include_granted_scopes: includeGrantedScopes,
   });
 };
 
@@ -159,6 +185,8 @@ const getGoogleOAuthSetup = (req) => {
     `http://127.0.0.1:${port}`,
     `http://localhost:${port}`,
     'https://ytauto.web.app',
+    'https://ytauto01.web.app',
+    'https://ytautomation-2fae5.web.app',
     ...(process.env.PUBLIC_BASE_URL ? [process.env.PUBLIC_BASE_URL.trim().replace(/\/$/, '')] : []),
     redirectUri.replace(/\/api\/auth\/google\/oauth-callback$/, ''),
   ])];
@@ -171,6 +199,8 @@ const getGoogleOAuthSetup = (req) => {
       `http://localhost:${port}${CALLBACK_PATH}`,
       `http://127.0.0.1:${port}${CALLBACK_PATH}`,
       'https://ytauto.web.app/api/auth/google/oauth-callback',
+      'https://ytauto01.web.app/api/auth/google/oauth-callback',
+      'https://ytautomation-2fae5.web.app/api/auth/google/oauth-callback',
     ],
   };
 };

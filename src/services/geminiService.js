@@ -13,8 +13,13 @@ const UNAVAILABLE_MODELS = new Set([
 ]);
 
 const DEFAULT_MODEL_CHAIN = [
-  'gemini-2.0-flash-lite',
+  'gemini-flash-lite-latest',
+  'gemini-3.5-flash-lite',
+  'gemini-flash-latest',
+  'gemini-3.1-flash-lite',
+  'gemini-3.5-flash',
   'gemini-2.5-flash-lite',
+  'gemini-2.0-flash-lite',
   'gemini-2.0-flash',
   'gemini-2.5-flash',
 ];
@@ -79,10 +84,10 @@ const parseRetryAfterSeconds = (error) => {
 const formatGeminiError = (error) => {
   const message = getErrorMessage(error);
   if (isQuotaExceededError(error)) {
-    return 'Gemini API quota reached. Wait a few minutes, set GEMINI_MODEL=gemini-2.0-flash-lite in .env, or enable billing at ai.google.dev.';
+    return 'Gemini API quota reached. Wait a few minutes, set GEMINI_MODEL=gemini-flash-lite-latest in .env, or enable billing at ai.google.dev.';
   }
   if (isModelNotFoundError(error)) {
-    return 'Configured Gemini model is not available. Set GEMINI_MODEL=gemini-2.0-flash-lite in .env and restart the server.';
+    return 'Configured Gemini model is not available for this API key. Set GEMINI_MODEL=gemini-flash-lite-latest in .env and restart the server.';
   }
   if (message.includes('503') || message.includes('high demand')) {
     return 'Gemini is temporarily overloaded. Please try again in a minute.';

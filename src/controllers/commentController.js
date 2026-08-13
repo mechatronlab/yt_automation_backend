@@ -63,9 +63,17 @@ const waitCommentGap = async (label = 'next comment') => {
 };
 
 // @desc    Post comments on a YouTube video from all connected accounts
+//          Streams NDJSON progress events so the UI can update per comment.
 // @route   POST /api/comments/post
 // @access  Private
 const postCommentsOnVideo = async (req, res, next) => {
+  let streaming = false;
+
+  const writeEvent = (payload) => {
+    if (!streaming || res.writableEnded) return;
+    res.write(`${JSON.stringify(payload)}\n`);
+  };
+
   try {
     const { videoUrl, comments, accountComments, commentJobs } = req.body;
 
@@ -97,7 +105,6 @@ const postCommentsOnVideo = async (req, res, next) => {
         }
       }
     } else if (comments && Array.isArray(comments) && comments.length > 0) {
-      // Fallback/backward compatibility for global comment pool
       const allAccounts = await GoogleAccount.find({
         user: req.user._id,
         status: 'connected',
@@ -134,23 +141,76 @@ const postCommentsOnVideo = async (req, res, next) => {
 
     const accountById = new Map(accounts.map((acc) => [acc._id.toString(), acc]));
     const results = [];
+    const total = jobs.length;
+
+    res.status(200);
+    res.setHeader('Content-Type', 'application/x-ndjson; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache, no-transform');
+    res.setHeader('X-Accel-Buffering', 'no');
+    if (typeof res.flushHeaders === 'function') res.flushHeaders();
+    streaming = true;
+
+    writeEvent({
+      type: 'start',
+      videoId,
+      total,
+      percent: 0,
+      message: `Posting ${total} comment${total === 1 ? '' : 's'}...`,
+    });
 
     for (let i = 0; i < jobs.length; i++) {
       const job = jobs[i];
       const account = accountById.get(job.accountId);
       const commentText = job.comment;
+      const index = i + 1;
+
+      writeEvent({
+        type: 'posting',
+        index,
+        total,
+        percent: Math.round(((index - 1) / total) * 100),
+        accountId: job.accountId,
+        email: account?.email || '',
+        name: account?.name || '',
+        comment: commentText,
+        message: account
+          ? `Posting comment ${index}/${total} as ${account.email}...`
+          : `Skipping comment ${index}/${total} (account missing)...`,
+      });
 
       if (!account) {
-        results.push({
+        const failedResult = {
           accountId: job.accountId,
           email: '',
           name: '',
           comment: commentText,
           status: 'failed',
           error: 'Account not found or not connected',
+        };
+        results.push(failedResult);
+        writeEvent({
+          type: 'comment',
+          index,
+          total,
+          percent: Math.round((index / total) * 100),
+          done: index,
+          successful: results.filter((r) => r.status === 'success').length,
+          failed: results.filter((r) => r.status === 'failed').length,
+          result: failedResult,
+          message: `Failed ${index}/${total}: account not found`,
         });
         if (i < jobs.length - 1) {
-          await waitCommentGap(`comment ${i + 2}/${jobs.length}`);
+          const gapMs = await waitCommentGap(`comment ${i + 2}/${jobs.length}`);
+          writeEvent({
+            type: 'waiting',
+            index,
+            total,
+            percent: Math.round((index / total) * 100),
+            nextIndex: index + 1,
+            gapMs,
+            gapLabel: formatGapLabel(gapMs),
+            message: `Waiting ${formatGapLabel(gapMs)} before comment ${index + 1}/${total}...`,
+          });
         }
         continue;
       }
@@ -158,12 +218,21 @@ const postCommentsOnVideo = async (req, res, next) => {
       let vpnProfile = null;
       let vpnConnected = false;
       let vpnWarning = null;
+      let result;
 
       try {
         vpnProfile = await VpnProfile.findOne({ googleAccount: account._id });
 
         if (vpnProfile) {
           console.log(`[postComments] Connecting to VPN for account ${account.email}...`);
+          writeEvent({
+            type: 'vpn',
+            index,
+            total,
+            percent: Math.round(((index - 1) / total) * 100),
+            email: account.email,
+            message: `Connecting VPN for ${account.email}...`,
+          });
           try {
             await openvpnService.disconnectAll();
             await openvpnService.connect(vpnProfile);
@@ -178,7 +247,7 @@ const postCommentsOnVideo = async (req, res, next) => {
         console.log(`[postComments] Posting comment ${i + 1}/${jobs.length} as ${account.email}`);
         const posted = await postCommentForAccount(account, videoId, commentText);
 
-        const successResult = {
+        result = {
           accountId: account._id,
           email: account.email,
           name: account.name,
@@ -190,18 +259,17 @@ const postCommentsOnVideo = async (req, res, next) => {
           videoUrl: `https://www.youtube.com/watch?v=${videoId}`,
         };
         if (vpnWarning) {
-          successResult.vpnWarning = vpnWarning;
+          result.vpnWarning = vpnWarning;
         }
-        results.push(successResult);
       } catch (error) {
-        results.push({
+        result = {
           accountId: account._id,
           email: account.email,
           name: account.name,
           comment: commentText,
           status: 'failed',
           error: error.message || 'Unknown error',
-        });
+        };
       } finally {
         if (vpnConnected && vpnProfile) {
           try {
@@ -214,30 +282,67 @@ const postCommentsOnVideo = async (req, res, next) => {
         }
       }
 
-      // Human-like gap between comments: 30s / 40s / 50s / 1–3 min
+      results.push(result);
+      writeEvent({
+        type: 'comment',
+        index,
+        total,
+        percent: Math.round((index / total) * 100),
+        done: index,
+        successful: results.filter((r) => r.status === 'success').length,
+        failed: results.filter((r) => r.status === 'failed').length,
+        result,
+        message: result.status === 'success'
+          ? `Posted ${index}/${total} as ${result.email}`
+          : `Failed ${index}/${total} as ${result.email}: ${result.error || 'error'}`,
+      });
+
       if (i < jobs.length - 1) {
         const gapMs = await waitCommentGap(`comment ${i + 2}/${jobs.length}`);
-        results[results.length - 1].nextGapMs = gapMs;
-        results[results.length - 1].nextGapLabel = formatGapLabel(gapMs);
+        result.nextGapMs = gapMs;
+        result.nextGapLabel = formatGapLabel(gapMs);
+        writeEvent({
+          type: 'waiting',
+          index,
+          total,
+          percent: Math.round((index / total) * 100),
+          nextIndex: index + 1,
+          gapMs,
+          gapLabel: formatGapLabel(gapMs),
+          message: `Waiting ${formatGapLabel(gapMs)} before comment ${index + 1}/${total}...`,
+        });
       }
     }
 
     const successful = results.filter((r) => r.status === 'success').length;
     const failed = results.filter((r) => r.status === 'failed').length;
 
-    res.status(200).json({
-      message: `Commenting complete. ${successful} succeeded, ${failed} failed.`,
+    writeEvent({
+      type: 'done',
       videoId,
-      total: jobs.length,
+      total,
       successful,
       failed,
+      percent: 100,
       commentGapOptions: COMMENT_GAP_SECONDS,
       results,
+      message: `Commenting complete. ${successful} succeeded, ${failed} failed.`,
     });
+    res.end();
   } catch (error) {
     try {
       await openvpnService.disconnectAll();
-    } catch {}
+    } catch (_) {
+      // ignore cleanup errors
+    }
+
+    if (streaming && !res.writableEnded) {
+      writeEvent({
+        type: 'error',
+        message: error.message || 'Unknown error',
+      });
+      return res.end();
+    }
     next(error);
   }
 };
@@ -256,11 +361,11 @@ const {
 const { fetchTranscript } = require("youtube-transcript");
 
 const maxTranscriptCharacters = 14000;
-const maxCommentCount = 50;
+const maxCommentCount = 100;
 
 function clampCommentCount(value) {
   const count = parseInt(value, 10);
-  if (isNaN(count)) return 10;
+  if (isNaN(count)) return 100;
   return Math.min(Math.max(count, 1), maxCommentCount);
 }
 
@@ -300,7 +405,7 @@ function normalizeMixCounts(rawMix = {}, keys = [], total = 10) {
   return scaled;
 }
 
-function normalizeGenerationFilters(filters = {}, count = 10) {
+function normalizeGenerationFilters(filters = {}, count = 100) {
   const commentCount = clampCommentCount(count);
   const defaults = defaultGenerationFilters(commentCount);
   const languageKeys = ['khasi', 'pnar', 'garo', 'english', 'hindi'];
@@ -452,7 +557,7 @@ async function generateCommentsWithSlots({
     console.warn(`[generateCommentsWithSlots] Gemini failed: ${error.message}`);
     throw new Error(
       isQuotaExceededError(error?.cause || error)
-        ? 'Gemini API quota reached. Wait a few minutes, set GEMINI_MODEL=gemini-2.0-flash-lite in .env, or enable billing at ai.google.dev.'
+        ? 'Gemini API quota reached. Wait a few minutes, set GEMINI_MODEL=gemini-flash-lite-latest in .env, or enable billing at ai.google.dev.'
         : (error.message || 'Gemini comment generation failed'),
     );
   }
@@ -636,7 +741,7 @@ async function generateComments({
   description,
   channelTitle,
   transcript = "",
-  count = 10,
+  count = 100,
   avoidComments = [],
   language = "english",
   filters = null,
@@ -683,25 +788,25 @@ async function generateComments({
   }
 
   const languageRules = generationFilters
-    ? `
+  ? `
 - Follow the language mix exactly — each comment must use its assigned language naturally.
 - For Khasi, Pnar, and Garo comments, use realistic native phrasing (light English mixing is fine).
 - For Hindi comments, use natural Hinglish where it fits YouTube comment culture.
 `
-    : commentLanguage === "khasi"
-      ? `
+  : commentLanguage === "khasi"
+    ? `
 - Generate the comments in natural Khasi as much as possible.
 - It is okay to use common Khasi-English mixed phrasing if that sounds more realistic.
 - Translate the meaning of the title, description, and transcript before writing the comments.
 - Keep the comments readable for Khasi speakers and avoid overly formal textbook phrasing.
 `
-      : `
+    : `
 - Generate the comments in natural English.
 `;
 
-  const filterRules = generationFilters ? buildFilterPromptRules(generationFilters) : "";
+const filterRules = generationFilters ? buildFilterPromptRules(generationFilters) : "";
 
-  const prompt = `
+const prompt = `
 Generate exactly ${commentCount} realistic YouTube comment${commentCount === 1 ? "" : "s"} related to this video.
 
 Video title: ${title}
@@ -817,7 +922,7 @@ const generateCommentsBatch = async (req, res, next) => {
       throw new Error('Select at least one account.');
     }
 
-    const commentCount = clampCommentCount(totalCount ?? filters?.commentCount ?? 10);
+    const commentCount = clampCommentCount(totalCount ?? filters?.commentCount ?? 100);
     const normalizedFilters = normalizeGenerationFilters(
       { ...(filters || {}), keyword: keyword || filters?.keyword || '' },
       commentCount,

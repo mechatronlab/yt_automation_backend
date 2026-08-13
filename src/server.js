@@ -1,5 +1,6 @@
 const { getEnvPath } = require('./utils/appPaths');
 require('dotenv').config({ path: getEnvPath(), override: true });
+require('./config/envDefaults').applyEnvDefaults({ cloud: false });
 
 const app = require('./app');
 const connectDB = require('./config/db');

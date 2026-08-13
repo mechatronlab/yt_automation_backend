@@ -2,11 +2,15 @@
 
 const path = require('path');
 const fs = require('fs');
+const { isCloudRuntime } = require('./runtime');
 
 const getAppRoot = () => process.env.YT_APP_ROOT || path.resolve(__dirname, '../..');
 
 const getUserDataDir = () => {
-  const dir = process.env.YT_USER_DATA || getAppRoot();
+  // Cloud Functions / Cloud Run filesystem is read-only except /tmp.
+  const dir =
+    process.env.YT_USER_DATA
+    || (isCloudRuntime() ? path.join('/tmp', 'yt_automation') : getAppRoot());
   for (const sub of ['uploads/ovpn', 'uploads', 'vpn_pids', 'browser_sessions']) {
     fs.mkdirSync(path.join(dir, sub), { recursive: true });
   }

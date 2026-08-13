@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "ytautomation-2fae5"
+  },
+  "targets": {
+    "ytautomation-2fae5": {
+      "hosting": {
+        "app": [
+          "ytautomation-2fae5"
+        ],
+        "legal": [
+          "ytauto01"
+        ]
+      }
+    }
   }
 }
