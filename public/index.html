@@ -135,21 +135,6 @@
       color: #fff;
     }
 
-    .login-divider {
-      display: flex; align-items: center; gap: 12px;
-      margin: 24px 0; color: var(--text-secondary); font-size: 12px;
-    }
-    .login-divider::before, .login-divider::after {
-      content: ''; flex: 1; height: 1px; background: var(--border);
-    }
-
-    .mock-btn {
-      background: transparent; color: var(--text-secondary); border: 1px solid var(--border);
-      border-radius: 10px; padding: 10px 20px; font-size: 13px; cursor: pointer;
-      font-family: inherit; transition: all 0.2s;
-    }
-    .mock-btn:hover { color: var(--text-primary); border-color: var(--accent); }
-
     /* ===== DASHBOARD ===== */
     #dashboard-section { display: none; }
 
@@ -264,6 +249,8 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      min-width: 0;
+      overflow-x: hidden;
     }
 
     .topbar {
@@ -365,7 +352,7 @@
     }
 
     /* ===== DASHBOARD CONTENT ===== */
-    .tab-content { display: none; animation: fadeUp 0.35s ease; }
+    .tab-content { display: none; animation: fadeUp 0.35s ease; overflow-x: hidden; }
     .tab-content.active { display: block; }
 
     .dashboard-content {
@@ -1971,23 +1958,31 @@
       display: flex;
       flex-direction: column;
       gap: 24px;
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: hidden;
     }
 
     /* Stepper */
     .wizard-stepper {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       align-items: center;
-      justify-content: space-between;
       position: relative;
       margin-bottom: 24px;
-      padding: 0 40px;
+      padding: 0 20px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      overflow: hidden;
     }
     .wizard-stepper::before {
       content: '';
       position: absolute;
       top: 16px;
-      left: 60px;
-      right: 60px;
+      left: 40px;
+      right: 40px;
       height: 2px;
       background: rgba(255, 255, 255, 0.08);
       z-index: 0;
@@ -1995,7 +1990,7 @@
     .stepper-progress-line {
       position: absolute;
       top: 16px;
-      left: 60px;
+      left: 40px;
       height: 2px;
       background: var(--green);
       z-index: 0;
@@ -2005,10 +2000,12 @@
     .wizard-step {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 12px;
       z-index: 1;
       background: var(--bg-primary);
-      padding: 0 12px;
+      padding: 0 8px;
+      min-width: 0;
     }
     .wizard-step-circle {
       width: 34px;
@@ -2040,6 +2037,29 @@
       font-weight: 500;
       color: var(--text-secondary);
       transition: color 0.3s;
+      min-width: 0;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .wizard-stepper {
+        padding: 0 8px;
+      }
+      .wizard-stepper::before {
+        left: 25px;
+        right: 25px;
+      }
+      .stepper-progress-line {
+        left: 25px;
+      }
+      .wizard-step {
+        gap: 6px;
+        padding: 0 4px;
+      }
+      .wizard-step-label {
+        font-size: 11px;
+        line-height: 1.2;
+      }
     }
     .wizard-step.active .wizard-step-label {
       color: var(--text-primary);
@@ -2743,8 +2763,9 @@
     .comment-meta-badges {
       display: flex;
       flex-wrap: wrap;
+      align-items: center;
       gap: 6px;
-      margin-top: 10px;
+      min-width: 0;
     }
     .comment-meta-badge {
       display: inline-flex;
@@ -2934,8 +2955,12 @@
       font-weight: 600;
     }
     .comment-group-info span {
+      display: block;
       font-size: 12px;
       color: var(--text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .comment-group-badge {
       font-size: 11px;
@@ -2946,6 +2971,7 @@
       border: 1px solid var(--border);
       color: var(--text-secondary);
       white-space: nowrap;
+      flex-shrink: 0;
     }
     .comment-list-inner {
       display: grid;
@@ -2954,6 +2980,8 @@
       padding: 18px 20px;
       border-bottom: 1px solid var(--border);
       transition: background 0.12s;
+      min-width: 0;
+      overflow-wrap: anywhere;
     }
     .comment-item:last-child {
       border-bottom: 0;
@@ -2982,6 +3010,8 @@
       line-height: 1.65;
       color: var(--text-primary);
       margin: 0 0 14px;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
     .comment-row {
       display: flex;
@@ -2989,6 +3019,7 @@
       justify-content: space-between;
       gap: 12px;
       flex-wrap: wrap;
+      min-width: 0;
     }
     .comment-btn-row {
       display: flex;
@@ -3137,7 +3168,7 @@
     /* Step 3 Stats Row */
     .wizard-stats-row {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
       margin-bottom: 24px;
     }
@@ -3416,10 +3447,6 @@
 
       <!-- Official Google Sign-In Button -->
       <div id="google-signin-btn-container"></div>
-
-      <div class="login-divider">or test without Google</div>
-
-      <button class="mock-btn" onclick="mockLogin()">Use Mock Account</button>
     </div>
   </div>
 
@@ -4023,7 +4050,9 @@
                       oninput="updateWizardFilterTotals()"
                     ></textarea>
                     <div class="wizard-keyword-meta">
-                      <span id="wizard-keyword-hint">Required</span>
+                      <span id="wizard-keyword-hint">
+                        Required · Same text on every comment? Use <strong>generate only long live vpp</strong>
+                      </span>
                       <span id="wizard-keyword-count">0 / 500</span>
                     </div>
                   </div>
@@ -5047,16 +5076,6 @@
         email: payload.email,
         name: payload.name,
         avatar: payload.picture,
-      });
-    }
-
-    function mockLogin() {
-      const id = Date.now().toString();
-      loginToBackend({
-        googleId: id,
-        email: `admin_${id}@gmail.com`,
-        name: 'Admin User',
-        avatar: '',
       });
     }
 
@@ -6288,7 +6307,9 @@
       if (panelTone) panelTone.hidden = isDirections;
       if (noteDir) noteDir.style.display = isDirections ? 'block' : 'none';
       if (noteCtx) noteCtx.style.display = isDirections ? 'none' : 'block';
-      if (hint) hint.textContent = 'Required';
+      if (hint) {
+        hint.innerHTML = 'Required · Same text on every comment? Use <strong>generate only long live vpp</strong>';
+      }
 
       WIZARD_TONE_FIELDS.forEach(([, id]) => {
         const el = document.getElementById(id);
@@ -6828,7 +6849,8 @@
       const progressLine = document.getElementById('stepper-progress-line');
       if (progressLine) {
         const percent = ((stepNum - 1) / 3) * 100;
-        progressLine.style.width = `${percent}%`;
+        const edgeInset = window.innerWidth <= 900 ? 50 : 80;
+        progressLine.style.width = `calc((100% - ${edgeInset}px) * ${percent / 100})`;
       }
 
       if (stepNum === 1) {
@@ -7195,9 +7217,7 @@
               title: video.title,
               id: video.id,
             })),
-            accounts: testBypass && getSelectedWizardAccounts().length === 0
-              ? []
-              : selectedAccounts.map((acc) => ({
+            accounts: selectedAccounts.map((acc) => ({
               _id: acc._id,
               id: acc._id.toString(),
               name: acc.name,

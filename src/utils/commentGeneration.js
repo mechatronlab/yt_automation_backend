@@ -797,32 +797,34 @@ function deAiPolish(text = '') {
 
 /**
  * If the user asked for one fixed phrase on every comment, extract that phrase.
- * Example: "only generate long live k party for all the comments" → "long live k party"
+ * Documented formats (kept narrow on purpose):
+ *   generate only long live vpp
+ *   only generate long live vpp
+ *   exact: long live vpp
  */
 function extractExactPhraseFromDirections(keyword = '') {
-  const raw = String(keyword || '').trim();
+  const raw = String(keyword || '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .replace(/\s*,\s*/g, ', ');
   if (!raw) return null;
 
   const patterns = [
-    /^only\s+generate\s+(.+?)\s+for\s+all(?:\s+the)?\s+comments?\.?$/i,
-    /^generate\s+only\s+(.+?)\s+for\s+all(?:\s+the)?\s+comments?\.?$/i,
-    /^only\s+(?:use|write|post|say|comment)\s+(.+?)\s+for\s+all(?:\s+the)?\s+comments?\.?$/i,
-    /^(?:for\s+)?all(?:\s+the)?\s+comments?\s+(?:should\s+be|must\s+be|exactly(?:\s+be)?|just)\s*:?\s*(.+)$/i,
-    /^use\s+(?:this\s+)?(?:exact\s+)?(?:text|phrase|comment)\s+(?:for\s+all(?:\s+the)?\s+comments?\s*)?[:=]?\s*["']?(.+?)["']?$/i,
-    /^exactly\s*[:=]\s*["']?(.+?)["']?$/i,
-    /^only\s*[:=]\s*["'](.+)["']\s*$/i,
+    /^generate\s+only\s+(.+)$/i,
+    /^only\s+generate\s+(.+)$/i,
+    /^exact\s*:\s*(.+)$/i,
   ];
 
   for (const re of patterns) {
     const match = raw.match(re);
-    if (!match || !match[1]) continue;
+    if (!match?.[1]) continue;
     const phrase = match[1]
       .trim()
-      .replace(/^["']|["']$/g, '')
-      .replace(/\s+for\s+all(?:\s+the)?\s+comments?\.?$/i, '')
+      .replace(/^["'`]+|["'`]+$/g, '')
       .trim();
     if (phrase) return phrase;
   }
+
   return null;
 }
 
