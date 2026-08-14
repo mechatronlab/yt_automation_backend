@@ -1,26 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const { isCloudRuntime } = require('../utils/runtime');
-
-// TEMP TEST BYPASS — remove after comment-generation testing.
-const isTestGenerateBypassEnabled = () =>
-  !isCloudRuntime()
-  && String(process.env.ALLOW_TEST_GENERATE_WITHOUT_ACCOUNTS || '').trim() === '1';
-
-const getTestStubUser = () => ({
-  _id: 'test-user',
-  id: 'test-user',
-  name: 'Test User',
-  email: 'test@local.dev',
-});
 
 const protect = async (req, res, next) => {
-  // TEMP TEST BYPASS — allow generation without Firebase login.
-  if (isTestGenerateBypassEnabled()) {
-    req.user = getTestStubUser();
-    return next();
-  }
-
   let token;
 
   if (

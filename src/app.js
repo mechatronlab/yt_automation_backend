@@ -66,17 +66,12 @@ app.get('/api/health', (req, res) => {
 app.get('/api/config/client', (req, res) => {
   const oauth = getGoogleOAuthSetup(req);
   const { getPublicProjects, getDefaultProjectId } = require('./config/projects');
-  // TEMP TEST BYPASS — remove after comment-generation testing.
-  const testGenerateBypass =
-    !isCloudRuntime()
-    && String(process.env.ALLOW_TEST_GENERATE_WITHOUT_ACCOUNTS || '').trim() === '1';
   res.json({
     googleClientId: process.env.GOOGLE_CLIENT_ID,
     oauthRedirectUri: oauth.redirectUri,
     googleOAuthSetup: oauth,
     projects: getPublicProjects(),
     defaultProjectId: getDefaultProjectId(),
-    testGenerateBypass,
   });
 });
 

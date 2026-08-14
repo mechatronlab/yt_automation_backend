@@ -1174,21 +1174,6 @@ const generateCommentsFromUrl = async (req, res, next) => {
   }
 };
 
-// TEMP TEST BYPASS — remove after comment-generation testing.
-// Enable with ALLOW_TEST_GENERATE_WITHOUT_ACCOUNTS=1 in local .env only.
-const isTestGenerateWithoutAccountsEnabled = () =>
-  String(process.env.ALLOW_TEST_GENERATE_WITHOUT_ACCOUNTS || '').trim() === '1';
-
-const getTestStubAccounts = () => ([
-  {
-    _id: 'test-account-1',
-    id: 'test-account-1',
-    name: 'Test Commenter',
-    email: 'test.commenter@example.com',
-    persona: 'Local test commenter',
-  },
-]);
-
 const generateCommentsBatch = async (req, res, next) => {
   try {
     const {
@@ -1205,17 +1190,9 @@ const generateCommentsBatch = async (req, res, next) => {
       throw new Error('Add at least one video URL.');
     }
 
-    let effectiveAccounts = Array.isArray(accounts) ? accounts : [];
-    let usedTestAccountBypass = false;
-    if (effectiveAccounts.length === 0) {
-      if (!isTestGenerateWithoutAccountsEnabled()) {
-        res.status(400);
-        throw new Error('Select at least one account.');
-      }
-      // TEMP TEST BYPASS — remove after comment-generation testing.
-      effectiveAccounts = getTestStubAccounts();
-      usedTestAccountBypass = true;
-      console.warn('[TEST BYPASS] generate-batch running without linked accounts');
+    if (!Array.isArray(accounts) || accounts.length === 0) {
+      res.status(400);
+      throw new Error('Select at least one account.');
     }
 
     const commentCount = clampCommentCount(totalCount ?? filters?.commentCount ?? 100);
@@ -1232,7 +1209,7 @@ const generateCommentsBatch = async (req, res, next) => {
 
     const slots = buildCommentSlots(normalizedFilters, commentCount);
     const pairs = videos.flatMap((video) =>
-      effectiveAccounts.map((account) => ({ video, account })),
+      accounts.map((account) => ({ video, account })),
     );
 
     const assignments = slots.map((slot, index) => ({
@@ -1303,8 +1280,6 @@ const generateCommentsBatch = async (req, res, next) => {
       filters: normalizedFilters,
       languageProvider: provider,
       warning,
-      // TEMP TEST BYPASS — remove after comment-generation testing.
-      testAccountBypass: usedTestAccountBypass || undefined,
     });
   } catch (error) {
     next(error);

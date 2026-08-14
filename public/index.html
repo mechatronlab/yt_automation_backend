@@ -4870,16 +4870,6 @@
         if (!SELECTED_PROJECT_ID || !AUTH_PROJECTS.some(p => p.id === SELECTED_PROJECT_ID)) {
           SELECTED_PROJECT_ID = DEFAULT_PROJECT_ID;
         }
-        // TEMP TEST BYPASS — remove after comment-generation testing.
-        if (data.testGenerateBypass) {
-          localStorage.setItem('COMMENT_GEN_TEST_BYPASS', '1');
-          if (!JWT_TOKEN || !currentUser) {
-            JWT_TOKEN = 'test-bypass-token';
-            currentUser = { _id: 'test-user', name: 'Test User', email: 'test@local.dev' };
-            localStorage.setItem('jwt_token', JWT_TOKEN);
-            localStorage.setItem('user', JSON.stringify(currentUser));
-          }
-        }
         apiConfigReady = true;
         initializeGoogleSignInButton();
       } catch (e) {
@@ -4916,10 +4906,6 @@
 
       if (apiConfigReady && JWT_TOKEN && currentUser) {
         showDashboard();
-        // TEMP TEST BYPASS — remove after comment-generation testing.
-        if (isCommentGenTestBypassEnabled()) {
-          showToast('Test mode: Firebase/login bypassed for comment generation.', 'warning');
-        }
         checkVpnStatus();
         if (!vpnStatusInterval) {
           vpnStatusInterval = setInterval(checkVpnStatus, 10000);
@@ -5382,46 +5368,6 @@
       const isAccountsTabActive = () =>
         document.getElementById('tab-content-accounts')?.classList.contains('active');
 
-      // TEMP TEST BYPASS — remove after comment-generation testing.
-      const getMockTestAccounts = () => ([
-        {
-          _id: 'mock-account-1',
-          email: 'mock.alpha@example.com',
-          name: 'Mock Alpha',
-          status: 'connected',
-          isActive: true,
-          youtubeChannel: 'UC_mock_alpha_channel',
-          youtubeChannelTitle: 'Mock Alpha Channel',
-          persona: 'Casual viewer',
-          dailyCommentsUsed: 0,
-          vpn: { hasVpnConfig: false },
-        },
-        {
-          _id: 'mock-account-2',
-          email: 'mock.beta@example.com',
-          name: 'Mock Beta',
-          status: 'connected',
-          isActive: true,
-          youtubeChannel: 'UC_mock_beta_channel',
-          youtubeChannelTitle: 'Mock Beta Channel',
-          persona: 'Curious commenter',
-          dailyCommentsUsed: 0,
-          vpn: { hasVpnConfig: false },
-        },
-        {
-          _id: 'mock-account-3',
-          email: 'mock.gamma@example.com',
-          name: 'Mock Gamma',
-          status: 'connected',
-          isActive: false,
-          youtubeChannel: 'UC_mock_gamma_channel',
-          youtubeChannelTitle: 'Mock Gamma Channel',
-          persona: 'Skeptical viewer',
-          dailyCommentsUsed: 0,
-          vpn: { hasVpnConfig: false },
-        },
-      ]);
-
       if (container && isAccountsTabActive()) {
         container.innerHTML = '<div style="text-align:center;padding:40px;"><div class="spinner"></div></div>';
       }
@@ -5431,11 +5377,7 @@
           headers: { Authorization: `Bearer ${JWT_TOKEN}` },
         });
         let accounts = await res.json();
-        if (!Array.isArray(accounts) || accounts.length === 0) {
-          // TEMP TEST BYPASS — remove after comment-generation testing.
-          if (isCommentGenTestBypassEnabled()) accounts = getMockTestAccounts();
-          else accounts = [];
-        }
+        if (!Array.isArray(accounts)) accounts = [];
 
         connectedAccountsList = accounts;
         updateAccountsStatCards(accounts);
@@ -5455,18 +5397,6 @@
         }
 
       } catch (e) {
-        // TEMP TEST BYPASS — remove after comment-generation testing.
-        if (isCommentGenTestBypassEnabled()) {
-          connectedAccountsList = getMockTestAccounts();
-          updateAccountsStatCards(connectedAccountsList);
-          if (document.getElementById('tab-content-comments').classList.contains('active')) {
-            renderCommentAccounts();
-          }
-          if (isAccountsTabActive() && container) {
-            renderAccountsList(connectedAccountsList);
-          }
-          return;
-        }
         if (container && isAccountsTabActive()) {
           container.innerHTML = '<div class="empty-state"><p>Failed to load accounts.</p></div>';
         }
@@ -7036,36 +6966,14 @@
       }).join('');
 
       const missingChannel = selectedAccounts.filter((acc) => !acc.youtubeChannel);
-      // TEMP TEST BYPASS — remove after comment-generation testing.
-      continueBtn.disabled = isCommentGenTestBypassEnabled()
-        ? false
-        : (selectedCount === 0 || missingChannel.length > 0);
-      if (missingChannel.length > 0 && stepDesc && !isCommentGenTestBypassEnabled()) {
+      continueBtn.disabled = selectedCount === 0 || missingChannel.length > 0;
+      if (missingChannel.length > 0 && stepDesc) {
         stepDesc.textContent = `Select a YouTube channel for ${missingChannel.length} selected account(s) before continuing.`;
-      }
-    }
-
-    // TEMP TEST BYPASS — remove after comment-generation testing.
-    // Enable in browser console: localStorage.setItem('COMMENT_GEN_TEST_BYPASS','1')
-    // Disable: localStorage.removeItem('COMMENT_GEN_TEST_BYPASS')
-    function isCommentGenTestBypassEnabled() {
-      try {
-        return localStorage.getItem('COMMENT_GEN_TEST_BYPASS') === '1'
-          || new URLSearchParams(window.location.search).get('testGenerate') === '1';
-      } catch (_) {
-        return false;
       }
     }
 
     function continueFromAccountStep() {
       const selected = getSelectedWizardAccounts();
-      // TEMP TEST BYPASS — remove after comment-generation testing.
-      if (!selected.length && isCommentGenTestBypassEnabled()) {
-        wizardConfirmedAccountIds = [];
-        showToast('Test bypass: generating without linked accounts.', 'warning');
-        goToStep(3);
-        return;
-      }
       if (!selected.length) {
         showToast('Select at least one account.', 'error');
         return;
@@ -7263,22 +7171,12 @@
 
       try {
         const payload = getWizardGenerationPayload();
-        let selectedAccounts = getSelectedWizardAccounts();
-        // TEMP TEST BYPASS — remove after comment-generation testing.
-        const testBypass = isCommentGenTestBypassEnabled();
-        if (selectedAccounts.length === 0 && testBypass) {
-          selectedAccounts = [{
-            _id: 'test-account-1',
-            name: 'Test Commenter',
-            email: 'test.commenter@example.com',
-            persona: 'Local test commenter',
-            youtubeChannel: 'test-channel',
-          }];
-        } else if (selectedAccounts.length === 0) {
+        const selectedAccounts = getSelectedWizardAccounts();
+        if (selectedAccounts.length === 0) {
           throw new Error('Select at least one account before generating comments.');
         }
         const noChannel = selectedAccounts.filter((acc) => !acc.youtubeChannel);
-        if (noChannel.length && !testBypass) {
+        if (noChannel.length) {
           throw new Error(
             `Select a YouTube channel for: ${noChannel.map((a) => a.email || a.name).join(', ')}`
           );

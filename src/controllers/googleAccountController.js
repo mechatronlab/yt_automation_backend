@@ -56,58 +56,6 @@ const addAccount = async (req, res, next) => {
 // @access  Private
 const getAccounts = async (req, res, next) => {
   try {
-    // TEMP TEST BYPASS — remove after comment-generation testing.
-    const { isCloudRuntime } = require('../utils/runtime');
-    const testBypass =
-      !isCloudRuntime()
-      && String(process.env.ALLOW_TEST_GENERATE_WITHOUT_ACCOUNTS || '').trim() === '1';
-    if (testBypass) {
-      return res.status(200).json([
-        {
-          _id: 'mock-account-1',
-          googleId: 'mock-google-1',
-          email: 'mock.alpha@example.com',
-          name: 'Mock Alpha',
-          avatar: '',
-          status: 'connected',
-          isActive: true,
-          youtubeChannel: 'UC_mock_alpha_channel',
-          youtubeChannelTitle: 'Mock Alpha Channel',
-          persona: 'Casual viewer',
-          dailyCommentsUsed: 0,
-          vpn: { hasVpnConfig: false },
-        },
-        {
-          _id: 'mock-account-2',
-          googleId: 'mock-google-2',
-          email: 'mock.beta@example.com',
-          name: 'Mock Beta',
-          avatar: '',
-          status: 'connected',
-          isActive: true,
-          youtubeChannel: 'UC_mock_beta_channel',
-          youtubeChannelTitle: 'Mock Beta Channel',
-          persona: 'Curious commenter',
-          dailyCommentsUsed: 0,
-          vpn: { hasVpnConfig: false },
-        },
-        {
-          _id: 'mock-account-3',
-          googleId: 'mock-google-3',
-          email: 'mock.gamma@example.com',
-          name: 'Mock Gamma',
-          avatar: '',
-          status: 'connected',
-          isActive: false,
-          youtubeChannel: 'UC_mock_gamma_channel',
-          youtubeChannelTitle: 'Mock Gamma Channel',
-          persona: 'Skeptical viewer',
-          dailyCommentsUsed: 0,
-          vpn: { hasVpnConfig: false },
-        },
-      ]);
-    }
-
     // Exclude tokens when sending data to the frontend
     const accounts = await GoogleAccount.find({ user: req.user._id })
       .select('-accessToken -refreshToken')
