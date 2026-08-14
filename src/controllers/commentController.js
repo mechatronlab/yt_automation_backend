@@ -355,8 +355,24 @@ const {
 } = require('../utils/commentSlots');
 const {
   buildSlotPrompt,
+  buildEnglishDraftPrompt,
+  buildLanguageAdaptPrompt,
   parseGeminiCommentJson,
   processGeneratedComments,
+  extractExactPhraseFromDirections,
+  buildExactPhraseComments,
+  looksMostlyEnglish,
+  looksBrokenMeghalaya,
+  meghalayaEnglishOveruse,
+  buildMeghalayaTightenPrompt,
+  findRepetitiveIndices,
+  buildVariationPrompt,
+  meaningLooksRelated,
+  draftFollowsDirections,
+  draftFightsDirectionSentiment,
+  inferDirectionSentiment,
+  buildDirectionsRepairPrompt,
+  MEGHALAYA_LANGS,
 } = require('../utils/commentGeneration');
 const { fetchTranscript } = require("youtube-transcript");
 
@@ -409,37 +425,39 @@ function normalizeGenerationFilters(filters = {}, count = 100) {
   const commentCount = clampCommentCount(count);
   const defaults = defaultGenerationFilters(commentCount);
   const languageKeys = ['khasi', 'pnar', 'garo', 'english', 'hindi'];
-  const toneKeys = ['positive', 'neutral', 'negative'];
   const voiceKeys = ['gen_z', 'millennial', 'gen_x', 'boomer', 'neutral'];
+  const keyword = String(filters.keyword || '').trim().slice(0, 500);
 
   const languageMix = normalizeMixCounts(
     Object.keys(filters.languageMix || {}).length ? filters.languageMix : defaults.languageMix,
     languageKeys,
     commentCount,
   );
-  const toneMix = normalizeMixCounts(filters.toneMix || defaults.toneMix, toneKeys, commentCount);
+  // Directions-first is the only supported workflow. Sentiment comes from
+  // the directions, never from a positive/neutral/negative distribution.
+  const toneMix = { positive: 0, neutral: commentCount, negative: 0 };
   const voiceMix = normalizeMixCounts(filters.voiceMix || defaults.voiceMix, voiceKeys, commentCount);
 
-  const textSpeakPercent = Math.min(
-    100,
-    Math.max(
-      0,
-      filters.textSpeakPercent != null
-        ? parseInt(filters.textSpeakPercent, 10)
-        : defaults.textSpeakPercent,
-    ),
-  );
+  // Kept at one conservative level so generated text stays readable.
+  const textSpeakPercent = 25;
 
   return {
     commentCount,
     languageMix,
-    toneMode: filters.toneMode || defaults.toneMode,
+    toneMode: 'ignored',
     toneMix,
     voiceMode: filters.voiceMode || defaults.voiceMode,
     voiceMix,
     textSpeakPercent,
-    keyword: String(filters.keyword || '').trim().slice(0, 500),
+    keyword,
+    toneIgnored: true,
   };
+}
+
+function requireGenerationDirections(filters, res) {
+  if (String(filters?.keyword || '').trim()) return;
+  res.status(400);
+  throw new Error('Add directions before generating comments. Video-context-only generation is no longer available.');
 }
 
 function buildFilterPromptRules(filters) {
@@ -528,38 +546,291 @@ async function generateCommentsWithSlots({
   spellingErrorRate = 0,
   keyword = '',
 }) {
+  const exactPhrase = extractExactPhraseFromDirections(keyword);
+  if (exactPhrase) {
+    return {
+      comments: buildExactPhraseComments(slots, exactPhrase),
+      provider: 'exact-phrase',
+    };
+  }
+
   if (!process.env.GEMINI_API_KEY) {
     throw new Error('Gemini API key is missing.');
   }
 
-  const prompt = buildSlotPrompt({
-    title,
-    description,
-    channelTitle,
-    transcript,
-    slots,
-    accountPersona,
-    avoidComments,
-    keyword,
-  });
+  const hasDirections = Boolean(String(keyword || '').trim());
+  const directionTone = hasDirections ? inferDirectionSentiment(keyword) : null;
+  const draftOptions = hasDirections
+    ? { temperature: 0.45, topP: 0.8, tier: 'draft' }
+    : { temperature: 0.7, topP: 0.9, tier: 'draft' };
+  const adaptOptions = { temperature: 0.3, topP: 0.75, tier: 'adapt' };
 
   try {
-    const text = await generateText(prompt);
-    const items = parseGeminiCommentJson(text);
-    if (items.length < slots.length) {
-      console.warn(`[generateCommentsWithSlots] Gemini returned ${items.length}/${slots.length} comments`);
+    const draftPrompt = buildEnglishDraftPrompt({
+      title,
+      description,
+      channelTitle,
+      transcript,
+      slots,
+      accountPersona,
+      avoidComments,
+      keyword,
+    });
+    const draftRaw = await generateText(draftPrompt, draftOptions);
+    const drafts = parseGeminiCommentJson(draftRaw);
+
+    // Drafts must stay English. If the model leaked another language, keep a usable English fallback.
+    let items = slots.map((slot, index) => {
+      const draft = drafts[index] || {};
+      let text = String(draft.text || '').trim();
+      if (!text || !looksMostlyEnglish(text)) {
+        text = hasDirections
+          ? String(keyword).trim().slice(0, 120)
+          : `the part about ${String(title).split(/[:\-–|]/)[0].trim().slice(0, 40)} actually stood out`;
+      }
+      return {
+        text,
+        meaning_en: text,
+        // Mode 1: tone label follows direction intent only — never the UI tone mix.
+        tone: hasDirections ? (directionTone || 'neutral') : (draft.tone || slot.tone || 'positive'),
+        language: 'english',
+        voice: 'neutral',
+      };
+    });
+
+    // Mode 1: enforce that drafts actually carry out the directions AND match sentiment.
+    if (hasDirections) {
+      const strayIndexes = items
+        .map((item, index) => (
+          draftFollowsDirections(item.text, keyword) && !draftFightsDirectionSentiment(item.text, keyword)
+            ? -1
+            : index
+        ))
+        .filter((index) => index >= 0);
+
+      if (strayIndexes.length) {
+        console.warn(`[generateCommentsWithSlots] ${strayIndexes.length}/${items.length} drafts ignored directions/sentiment — repairing`);
+        try {
+          const repairRaw = await generateText(
+            buildDirectionsRepairPrompt({ keyword, title, count: strayIndexes.length }),
+            { temperature: 0.3, topP: 0.75, tier: 'draft' },
+          );
+          const repaired = parseGeminiCommentJson(repairRaw);
+          strayIndexes.forEach((slotIndex, i) => {
+            const text = String(repaired[i]?.text || '').trim();
+            if (
+              text
+              && looksMostlyEnglish(text)
+              && draftFollowsDirections(text, keyword)
+              && !draftFightsDirectionSentiment(text, keyword)
+            ) {
+              items[slotIndex] = {
+                ...items[slotIndex],
+                text,
+                meaning_en: text,
+                tone: directionTone || 'neutral',
+              };
+            }
+          });
+        } catch (repairError) {
+          console.warn(`[generateCommentsWithSlots] directions repair failed: ${repairError.message}`);
+        }
+      }
     }
+
+    const needsAdapt = slots.some((slot) => (slot.language || 'english') !== 'english');
+    if (needsAdapt) {
+      const adaptPrompt = buildLanguageAdaptPrompt({
+        title,
+        drafts: items,
+        slots,
+        keyword,
+      });
+      const adaptRaw = await generateText(adaptPrompt, adaptOptions);
+      const adapted = parseGeminiCommentJson(adaptRaw);
+      const englishDrafts = items;
+      items = slots.map((slot, index) => {
+        const row = adapted[index] || {};
+        const fallback = items[index] || {};
+        const language = slot.language || 'english';
+        const adaptedText = String(row.text || '').trim();
+        const meaningEn = String(row.meaning_en || '').trim();
+
+        if (language === 'english') {
+          return {
+            text: fallback.text,
+            meaning_en: fallback.meaning_en || fallback.text,
+            tone: hasDirections ? (directionTone || 'neutral') : (fallback.tone || slot.tone || 'positive'),
+            language: 'english',
+            voice: 'neutral',
+          };
+        }
+
+        let text = adaptedText;
+        let finalLanguage = language;
+
+        if (MEGHALAYA_LANGS.has(language)) {
+          const broken = !text || looksBrokenMeghalaya(text);
+          const meaningOk = !meaningEn || meaningLooksRelated(fallback.text, meaningEn);
+          const sentimentOk = !hasDirections || !draftFightsDirectionSentiment(meaningEn || text, keyword);
+          // Prefer postable English over fake/broken/wrong-sentiment Khasi.
+          if (broken || !meaningOk || !sentimentOk) {
+            text = fallback.text;
+            finalLanguage = 'english';
+          }
+        } else if (!text) {
+          text = fallback.text;
+          finalLanguage = 'english';
+        }
+
+        return {
+          text,
+          meaning_en: meaningEn || fallback.meaning_en || fallback.text || '',
+          tone: hasDirections
+            ? (directionTone || 'neutral')
+            : (row.tone || fallback.tone || slot.tone || 'positive'),
+          language: finalLanguage,
+          voice: 'neutral',
+        };
+      });
+
+      // Local-language comments that kept everyday English words get one tightening pass.
+      const tightenTargets = items.reduce((acc, item, index) => {
+        if (!MEGHALAYA_LANGS.has(item.language)) return acc;
+        const offenders = meghalayaEnglishOveruse(item.text);
+        if (offenders) {
+          acc.push({
+            index,
+            language: item.language,
+            text: item.text,
+            offenders,
+            meaning: item.meaning_en || englishDrafts[index]?.text || '',
+          });
+        }
+        return acc;
+      }, []);
+
+      if (tightenTargets.length > 0) {
+        console.log(`[generateCommentsWithSlots] ${tightenTargets.length}/${slots.length} local comments too English — tightening`);
+        try {
+          const tightenRaw = await generateText(
+            buildMeghalayaTightenPrompt({ entries: tightenTargets }),
+            { temperature: 0.25, topP: 0.75, tier: 'adapt' },
+          );
+          const tightened = parseGeminiCommentJson(tightenRaw);
+          tightenTargets.forEach((target, order) => {
+            const row = tightened[order] || {};
+            const text = String(row.text || '').trim();
+            const meaningEn = String(row.meaning_en || '').trim();
+            const englishDraft = englishDrafts[target.index]?.text || '';
+            const usable = text
+              && !looksBrokenMeghalaya(text)
+              && !meghalayaEnglishOveruse(text)
+              && (!meaningEn || meaningLooksRelated(target.meaning || englishDraft, meaningEn))
+              && (!hasDirections || !draftFightsDirectionSentiment(meaningEn || text, keyword));
+
+            if (usable) {
+              items[target.index] = {
+                ...items[target.index],
+                text,
+                meaning_en: meaningEn || items[target.index].meaning_en,
+              };
+            } else if (englishDraft) {
+              items[target.index] = {
+                ...items[target.index],
+                text: englishDraft,
+                meaning_en: englishDraft,
+                language: 'english',
+              };
+            }
+          });
+        } catch (tightenError) {
+          console.warn(`[generateCommentsWithSlots] tighten pass failed: ${tightenError.message}`);
+        }
+      }
+    } else {
+      items = items.map((item, index) => ({
+        ...item,
+        language: slots[index]?.language || 'english',
+      }));
+    }
+
+    // A batch of near-identical comments reads like a bot, so rewrite the echoes.
+    const repeatIndices = findRepetitiveIndices(items);
+    if (repeatIndices.length > 0) {
+      console.log(`[generateCommentsWithSlots] ${repeatIndices.length}/${items.length} comments repeated each other — varying`);
+      try {
+        const entries = repeatIndices.map((index) => ({
+          index,
+          language: items[index].language || 'english',
+          text: items[index].text,
+          meaning: items[index].meaning_en || items[index].text,
+          avoid: items
+            .filter((_, i) => i !== index && !repeatIndices.includes(i))
+            .slice(0, 3)
+            .map((item) => item.text),
+        }));
+        const needsLocalAdapt = entries.some((entry) => MEGHALAYA_LANGS.has(entry.language));
+        const variedRaw = await generateText(
+          buildVariationPrompt({ entries, keyword, title }),
+          {
+            temperature: 0.7,
+            topP: 0.9,
+            tier: needsLocalAdapt ? 'adapt' : 'draft',
+          },
+        );
+        const varied = parseGeminiCommentJson(variedRaw);
+        entries.forEach((entry, order) => {
+          const row = varied[order] || {};
+          const text = String(row.text || '').trim();
+          const meaningEn = String(row.meaning_en || '').trim();
+          if (!text) return;
+          const localOk = !MEGHALAYA_LANGS.has(entry.language)
+            || (!looksBrokenMeghalaya(text) && !meghalayaEnglishOveruse(text));
+          const sentimentOk = !hasDirections || !draftFightsDirectionSentiment(meaningEn || text, keyword);
+          if (localOk && sentimentOk) {
+            items[entry.index] = {
+              ...items[entry.index],
+              text,
+              meaning_en: meaningEn || items[entry.index].meaning_en,
+            };
+          }
+        });
+      } catch (variationError) {
+        console.warn(`[generateCommentsWithSlots] variation pass failed: ${variationError.message}`);
+      }
+    }
+
     return {
       comments: processGeneratedComments(items, slots, spellingErrorRate, title, keyword),
-      provider: 'gemini',
+      provider: hasDirections ? 'gemini-directions' : 'gemini-video',
     };
   } catch (error) {
     console.warn(`[generateCommentsWithSlots] Gemini failed: ${error.message}`);
-    throw new Error(
-      isQuotaExceededError(error?.cause || error)
-        ? 'Gemini API quota reached. Wait a few minutes, set GEMINI_MODEL=gemini-flash-lite-latest in .env, or enable billing at ai.google.dev.'
-        : (error.message || 'Gemini comment generation failed'),
-    );
+    try {
+      const prompt = buildSlotPrompt({
+        title,
+        description,
+        channelTitle,
+        transcript,
+        slots,
+        accountPersona,
+        avoidComments,
+        keyword,
+      });
+      const text = await generateText(prompt, draftOptions);
+      const items = parseGeminiCommentJson(text);
+      return {
+        comments: processGeneratedComments(items, slots, spellingErrorRate, title, keyword),
+        provider: 'gemini-fallback',
+      };
+    } catch (fallbackError) {
+      throw new Error(
+        isQuotaExceededError(error?.cause || error) || isQuotaExceededError(fallbackError?.cause || fallbackError)
+          ? 'Gemini API quota reached. Wait a few minutes, set GEMINI_MODEL=gemini-flash-lite-latest in .env, or enable billing at ai.google.dev.'
+          : (error.message || 'Gemini comment generation failed'),
+      );
+    }
   }
 }
 
@@ -858,6 +1129,7 @@ const generateCommentsFromUrl = async (req, res, next) => {
     const videoId = extractVideoId(youtubeUrl);
     const commentCount = clampCommentCount(count);
     const normalizedFilters = filters ? normalizeGenerationFilters(filters, commentCount) : null;
+    requireGenerationDirections(normalizedFilters, res);
 
     if (!videoId) {
       res.status(400);
@@ -902,6 +1174,21 @@ const generateCommentsFromUrl = async (req, res, next) => {
   }
 };
 
+// TEMP TEST BYPASS — remove after comment-generation testing.
+// Enable with ALLOW_TEST_GENERATE_WITHOUT_ACCOUNTS=1 in local .env only.
+const isTestGenerateWithoutAccountsEnabled = () =>
+  String(process.env.ALLOW_TEST_GENERATE_WITHOUT_ACCOUNTS || '').trim() === '1';
+
+const getTestStubAccounts = () => ([
+  {
+    _id: 'test-account-1',
+    id: 'test-account-1',
+    name: 'Test Commenter',
+    email: 'test.commenter@example.com',
+    persona: 'Local test commenter',
+  },
+]);
+
 const generateCommentsBatch = async (req, res, next) => {
   try {
     const {
@@ -917,9 +1204,18 @@ const generateCommentsBatch = async (req, res, next) => {
       res.status(400);
       throw new Error('Add at least one video URL.');
     }
-    if (!Array.isArray(accounts) || accounts.length === 0) {
-      res.status(400);
-      throw new Error('Select at least one account.');
+
+    let effectiveAccounts = Array.isArray(accounts) ? accounts : [];
+    let usedTestAccountBypass = false;
+    if (effectiveAccounts.length === 0) {
+      if (!isTestGenerateWithoutAccountsEnabled()) {
+        res.status(400);
+        throw new Error('Select at least one account.');
+      }
+      // TEMP TEST BYPASS — remove after comment-generation testing.
+      effectiveAccounts = getTestStubAccounts();
+      usedTestAccountBypass = true;
+      console.warn('[TEST BYPASS] generate-batch running without linked accounts');
     }
 
     const commentCount = clampCommentCount(totalCount ?? filters?.commentCount ?? 100);
@@ -927,6 +1223,7 @@ const generateCommentsBatch = async (req, res, next) => {
       { ...(filters || {}), keyword: keyword || filters?.keyword || '' },
       commentCount,
     );
+    requireGenerationDirections(normalizedFilters, res);
     const langErr = validateLanguageDistribution(normalizedFilters.languageMix, commentCount);
     if (langErr) {
       res.status(400);
@@ -935,7 +1232,7 @@ const generateCommentsBatch = async (req, res, next) => {
 
     const slots = buildCommentSlots(normalizedFilters, commentCount);
     const pairs = videos.flatMap((video) =>
-      accounts.map((account) => ({ video, account })),
+      effectiveAccounts.map((account) => ({ video, account })),
     );
 
     const assignments = slots.map((slot, index) => ({
@@ -1006,6 +1303,8 @@ const generateCommentsBatch = async (req, res, next) => {
       filters: normalizedFilters,
       languageProvider: provider,
       warning,
+      // TEMP TEST BYPASS — remove after comment-generation testing.
+      testAccountBypass: usedTestAccountBypass || undefined,
     });
   } catch (error) {
     next(error);
@@ -1032,6 +1331,7 @@ const regenerateCommentFromUrl = async (req, res, next) => {
     const video = await fetchVideoDetails(videoId);
     const transcript = await fetchVideoTranscript(videoId);
     const normalizedFilters = filters ? normalizeGenerationFilters(filters, 1) : null;
+    requireGenerationDirections(normalizedFilters, res);
     const slots = singleSlot
       ? [{
           language: singleSlot.language || language || 'english',

@@ -12,26 +12,58 @@ const UNAVAILABLE_MODELS = new Set([
   'gemini-1.5-pro-latest',
 ]);
 
-const DEFAULT_MODEL_CHAIN = [
+// Free-tier friendly: Flash-Lite for English drafts, Flash for Khasi/Pnar/Garo.
+const DEFAULT_DRAFT_MODEL_CHAIN = [
   'gemini-flash-lite-latest',
   'gemini-3.5-flash-lite',
-  'gemini-flash-latest',
   'gemini-3.1-flash-lite',
-  'gemini-3.5-flash',
   'gemini-2.5-flash-lite',
   'gemini-2.0-flash-lite',
-  'gemini-2.0-flash',
+  'gemini-flash-latest',
   'gemini-2.5-flash',
+  'gemini-3.5-flash',
+  'gemini-2.0-flash',
 ];
 
-const getModelChain = () => {
-  const primary = (process.env.GEMINI_MODEL || '').trim();
-  const fallbacks = (process.env.GEMINI_MODEL_FALLBACKS || '')
+const DEFAULT_ADAPT_MODEL_CHAIN = [
+  'gemini-2.5-flash',
+  'gemini-flash-latest',
+  'gemini-3.5-flash',
+  'gemini-2.0-flash',
+  'gemini-flash-lite-latest',
+  'gemini-3.5-flash-lite',
+  'gemini-3.1-flash-lite',
+  'gemini-2.5-flash-lite',
+  'gemini-2.0-flash-lite',
+];
+
+const DEFAULT_MODEL_CHAIN = DEFAULT_DRAFT_MODEL_CHAIN;
+
+const parseModelList = (value = '') =>
+  String(value || '')
     .split(',')
     .map((m) => m.trim())
     .filter(Boolean);
 
-  const chain = [...new Set([primary, ...fallbacks, ...DEFAULT_MODEL_CHAIN].filter(Boolean))];
+/**
+ * Build a model chain for a generation tier.
+ * - draft: English drafting / repair (Flash-Lite first)
+ * - adapt: Khasi/Pnar/Garo translation / tighten / variation (Flash first)
+ */
+const getModelChain = (tier = 'draft') => {
+  const useAdapt = String(tier || '').toLowerCase() === 'adapt';
+  const primary = (
+    useAdapt
+      ? (process.env.GEMINI_ADAPT_MODEL || process.env.GEMINI_MODEL || '')
+      : (process.env.GEMINI_MODEL || '')
+  ).trim();
+  const fallbacks = parseModelList(
+    useAdapt
+      ? (process.env.GEMINI_ADAPT_MODEL_FALLBACKS || process.env.GEMINI_MODEL_FALLBACKS || '')
+      : (process.env.GEMINI_MODEL_FALLBACKS || ''),
+  );
+  const defaults = useAdapt ? DEFAULT_ADAPT_MODEL_CHAIN : DEFAULT_DRAFT_MODEL_CHAIN;
+  const chain = [...new Set([primary, ...fallbacks, ...defaults].filter(Boolean))];
   return chain.filter((model) => !UNAVAILABLE_MODELS.has(model));
 };
 
@@ -115,7 +147,12 @@ const generateText = async (prompt, options = {}) => {
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const models = getModelChain();
+  const models = Array.isArray(options.models) && options.models.length
+    ? options.models.filter((model) => model && !UNAVAILABLE_MODELS.has(model))
+    : getModelChain(options.tier || 'draft');
+  if (!models.length) {
+    throw new Error('No Gemini models available for this request.');
+  }
   const maxRetries = options.maxRetries ?? 2;
   const attemptErrors = [];
   let quotaHits = 0;
@@ -182,4 +219,6 @@ module.exports = {
   formatGeminiError,
   isQuotaExceededError,
   isRetryableGeminiError,
+  DEFAULT_DRAFT_MODEL_CHAIN,
+  DEFAULT_ADAPT_MODEL_CHAIN,
 };

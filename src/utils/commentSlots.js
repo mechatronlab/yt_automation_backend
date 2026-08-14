@@ -60,13 +60,19 @@ function buildLanguageSlots(languageMix = {}) {
 }
 
 function buildToneSlots(filters = {}, totalCount = 10) {
+  // Tone filters apply ONLY when the user did not provide directions.
+  const hasDirections = Boolean(String(filters.keyword || '').trim());
+  if (hasDirections) {
+    // Mode 1: ignore Positive/Neutral/Negative mix entirely.
+    return Array.from({ length: totalCount }, () => 'neutral');
+  }
   if (filters.toneMode === 'single' && filters.tone) {
     return Array.from({ length: totalCount }, () => filters.tone);
   }
   const dist = filters.toneMix || filters.toneDistribution || {
-    positive: 4,
-    neutral: 4,
-    negative: 2,
+    positive: totalCount,
+    neutral: 0,
+    negative: 0,
   };
   const slots = [];
   for (const tone of TONES) {
@@ -75,28 +81,19 @@ function buildToneSlots(filters = {}, totalCount = 10) {
       slots.push(tone);
     }
   }
+  // If user left all tones at 0, don't invent a mix — default all positive.
+  if (slots.length === 0) {
+    return Array.from({ length: totalCount }, () => 'positive');
+  }
   return shuffle(slots);
 }
 
 function buildVoiceSlots(filters = {}, totalCount = 10) {
-  if (filters.voiceMode === 'single' && filters.voice) {
-    return Array.from({ length: totalCount }, () => filters.voice);
+  // Generational voice styles removed from the product — always neutral.
+  if (filters.voiceMode === 'single' || filters.voice) {
+    return Array.from({ length: totalCount }, () => filters.voice || 'neutral');
   }
-  const dist = filters.voiceMix || filters.voiceDistribution || {
-    gen_z: 4,
-    millennial: 3,
-    gen_x: 2,
-    neutral: 1,
-    boomer: 0,
-  };
-  const slots = [];
-  for (const voice of VOICES) {
-    const count = Math.max(0, parseInt(dist[voice], 10) || 0);
-    for (let i = 0; i < count; i += 1) {
-      slots.push(voice);
-    }
-  }
-  return shuffle(slots);
+  return Array.from({ length: totalCount }, () => 'neutral');
 }
 
 function buildCommentSlots(filters = {}, totalCount = 10) {
@@ -131,12 +128,13 @@ function defaultGenerationFilters(totalCount = 100) {
 
   return {
     commentCount: totalCount,
-    languageMix: scale({ khasi: 5, pnar: 2, garo: 0, english: 3, hindi: 0 }),
+    languageMix: { khasi: totalCount, pnar: 0, garo: 0, english: 0, hindi: 0 },
     toneMode: 'mixed',
-    toneMix: scale({ positive: 4, neutral: 4, negative: 2 }),
-    voiceMode: 'mixed',
-    voiceMix: scale({ gen_z: 4, millennial: 3, gen_x: 2, neutral: 1, boomer: 0 }),
-    textSpeakPercent: 40,
+    toneMix: { positive: totalCount, neutral: 0, negative: 0 },
+    voiceMode: 'single',
+    voice: 'neutral',
+    voiceMix: { gen_z: 0, millennial: 0, gen_x: 0, boomer: 0, neutral: totalCount },
+    textSpeakPercent: 25,
   };
 }
 

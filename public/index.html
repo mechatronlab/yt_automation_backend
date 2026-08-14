@@ -2493,6 +2493,127 @@
     .wizard-filter-total.invalid {
       color: #f87171;
     }
+    .wizard-mode-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 800px) {
+      .wizard-mode-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+    .wizard-mode-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 16px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+      color: inherit;
+      font: inherit;
+      width: 100%;
+    }
+    .wizard-mode-card:hover {
+      border-color: rgba(148, 163, 184, 0.55);
+      background: rgba(255, 255, 255, 0.045);
+    }
+    .wizard-mode-card.active {
+      border-color: var(--accent);
+      background: var(--accent-bg);
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+    }
+    .wizard-mode-card:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .wizard-mode-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .wizard-mode-card-kicker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+    .wizard-mode-card.active .wizard-mode-card-kicker {
+      color: var(--accent-hover);
+    }
+    .wizard-mode-card-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(148, 163, 184, 0.45);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: transparent;
+      flex-shrink: 0;
+    }
+    .wizard-mode-card.active .wizard-mode-card-check {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+    .wizard-mode-card h4 {
+      font-size: 15px;
+      font-weight: 650;
+      margin: 0 0 8px;
+      color: var(--text-primary);
+    }
+    .wizard-mode-card-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 6px;
+    }
+    .wizard-mode-card-list li {
+      position: relative;
+      padding-left: 14px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--text-secondary);
+    }
+    .wizard-mode-card-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(148, 163, 184, 0.7);
+    }
+    .wizard-mode-card.active .wizard-mode-card-list li::before {
+      background: var(--accent-hover);
+    }
+    .wizard-mode-note {
+      display: none;
+      margin: -4px 0 18px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+    .wizard-mode-note strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .wizard-mode-panel[hidden] {
+      display: none !important;
+    }
     .wizard-mix-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -3871,22 +3992,25 @@
                     <span style="display: inline-flex; width: 28px; height: 28px; border-radius: 8px; background: var(--accent-bg); color: var(--accent-hover); align-items: center; justify-content: center;">⚙️</span>
                     Configure comment generation
                   </h3>
-                  <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
-                    Add a keyword/prompt, then choose languages, count, and spelling variants before Gemini generates comments.
+                  <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+                    Write clear directions, then choose the languages for the generated comments.
                   </p>
-
-                  <div class="wizard-filter-banner" id="wizard-filter-banner">
-                    Generating <strong id="wizard-filter-banner-count">100</strong> comments across
-                    <strong id="wizard-filter-banner-videos">0</strong> video(s) and
-                    <strong id="wizard-filter-banner-accounts">0</strong> account(s) using Gemini AI.
+                  <div class="wizard-mode-note" id="wizard-mode-note-directions" style="display:block;">
+                    <strong>Directions-first generation:</strong> Tell the generator exactly what to say or do. It still checks the video title, description, and captions to keep the comments relevant. Example: “thank the singer for this song”.
                   </div>
 
-                  <div class="wizard-filter-section" style="border-top: none; padding-top: 0; margin-top: 0;">
+                  <div class="wizard-filter-banner" id="wizard-filter-banner">
+                    Generating <strong id="wizard-filter-banner-count">10</strong> comments across
+                    <strong id="wizard-filter-banner-videos">0</strong> video(s) and
+                    <strong id="wizard-filter-banner-accounts">0</strong> account(s).
+                  </div>
+
+                  <div class="wizard-filter-section wizard-mode-panel" id="wizard-panel-directions" style="border-top: none; padding-top: 0; margin-top: 0;">
                     <div class="wizard-filter-section-header">
                       <div class="wizard-filter-section-icon">🔑</div>
                       <div>
-                        <div class="wizard-filter-section-title">Keyword</div>
-                        <div class="wizard-filter-section-desc">Write a prompt or focus topic — comments will follow this angle while staying relevant to the video.</div>
+                        <div class="wizard-filter-section-title">Your directions</div>
+                    <div class="wizard-filter-section-desc">Required. Tell the generator exactly what to do.</div>
                       </div>
                     </div>
                     <textarea
@@ -3895,23 +4019,12 @@
                       rows="4"
                       maxlength="500"
                       autocomplete="off"
-                      placeholder="Example:&#10;• Mention our free trial&#10;• Ask if they tried AI CRM for small business&#10;• Keep it casual and curious"
-                      oninput="updateWizardKeywordMeta(); readWizardFiltersFromDom()"
+                      placeholder="e.g. thank the singer for this song"
+                      oninput="updateWizardFilterTotals()"
                     ></textarea>
                     <div class="wizard-keyword-meta">
-                      <span>Tip: one clear idea per line works best</span>
+                      <span id="wizard-keyword-hint">Required</span>
                       <span id="wizard-keyword-count">0 / 500</span>
-                    </div>
-                  </div>
-
-                  <div class="wizard-filter-presets">
-                    <div class="wizard-filter-presets-label">QUICK PRESETS</div>
-                    <div class="filter-pills" id="wizard-filter-presets">
-                      <div class="filter-pill" data-preset="gen-z-mix" onclick="applyWizardFilterPreset('gen-z-mix')">Gen Z mix</div>
-                      <div class="filter-pill active" data-preset="balanced" onclick="applyWizardFilterPreset('balanced')">Balanced</div>
-                      <div class="filter-pill" data-preset="khasi-heavy" onclick="applyWizardFilterPreset('khasi-heavy')">Khasi-heavy</div>
-                      <div class="filter-pill" data-preset="all-languages" onclick="applyWizardFilterPreset('all-languages')">All languages</div>
-                      <div class="filter-pill" data-preset="split-evenly" onclick="applyWizardFilterPreset('split-evenly')">Split evenly</div>
                     </div>
                   </div>
 
@@ -3920,12 +4033,12 @@
                       <div class="wizard-filter-section-icon">💬</div>
                       <div>
                         <div class="wizard-filter-section-title">How many comments?</div>
-                        <div class="wizard-filter-section-desc">Total comments to generate per video (1–50). Each comment uses one account.</div>
+                        <div class="wizard-filter-section-desc">Total comments to generate per video (1–100). Each comment uses one account.</div>
                       </div>
                     </div>
                     <div class="wizard-count-slider-row">
-                      <input type="range" class="wizard-count-slider" id="wizard-filter-count-slider" min="1" max="100" value="100" oninput="setWizardFilterCount(this.value)">
-                      <input type="number" class="wizard-count-input" id="wizard-filter-count-input" min="1" max="100" value="100" onchange="setWizardFilterCount(this.value)">
+                      <input type="range" class="wizard-count-slider" id="wizard-filter-count-slider" min="1" max="100" value="10" oninput="setWizardFilterCount(this.value)">
+                      <input type="number" class="wizard-count-input" id="wizard-filter-count-input" min="1" max="100" value="10" onchange="setWizardFilterCount(this.value)">
                     </div>
                   </div>
 
@@ -3937,35 +4050,21 @@
                         <div class="wizard-filter-section-desc">How many comments in each language — must total the comment count above.</div>
                       </div>
                     </div>
-                    <div class="wizard-filter-total valid" id="wizard-language-total">Language counts must total 100 (100/100)</div>
+                    <div class="wizard-filter-total valid" id="wizard-language-total">Language counts must total 10 (10/10)</div>
                     <div class="wizard-mix-grid">
-                      <div class="wizard-mix-field"><label for="filter-lang-khasi">Khasi</label><input type="number" id="filter-lang-khasi" min="0" max="100" value="50" onchange="updateWizardFilterMix()"></div>
-                      <div class="wizard-mix-field"><label for="filter-lang-pnar">Pnar</label><input type="number" id="filter-lang-pnar" min="0" max="100" value="20" onchange="updateWizardFilterMix()"></div>
+                      <div class="wizard-mix-field"><label for="filter-lang-khasi">Khasi</label><input type="number" id="filter-lang-khasi" min="0" max="100" value="10" onchange="updateWizardFilterMix()"></div>
+                      <div class="wizard-mix-field"><label for="filter-lang-pnar">Pnar</label><input type="number" id="filter-lang-pnar" min="0" max="100" value="0" onchange="updateWizardFilterMix()"></div>
                       <div class="wizard-mix-field"><label for="filter-lang-garo">Garo</label><input type="number" id="filter-lang-garo" min="0" max="100" value="0" onchange="updateWizardFilterMix()"></div>
-                      <div class="wizard-mix-field"><label for="filter-lang-english">English</label><input type="number" id="filter-lang-english" min="0" max="100" value="30" onchange="updateWizardFilterMix()"></div>
+                      <div class="wizard-mix-field"><label for="filter-lang-english">English</label><input type="number" id="filter-lang-english" min="0" max="100" value="0" onchange="updateWizardFilterMix()"></div>
                       <div class="wizard-mix-field"><label for="filter-lang-hindi">Hindi</label><input type="number" id="filter-lang-hindi" min="0" max="100" value="0" onchange="updateWizardFilterMix()"></div>
                     </div>
                   </div>
 
-                  <div class="wizard-filter-section">
-                    <div class="wizard-filter-section-header">
-                      <div class="wizard-filter-section-icon">✍️</div>
-                      <div>
-                        <div class="wizard-filter-section-title">Text-speak & shorthand</div>
-                        <div class="wizard-filter-section-desc">Casual shortening applied to some comments — tuned per language. Khasi: nga→ng, kwah→kwh · English: u, rly, prolly · Hindi: nhi, bhot, yr · etc.</div>
-                      </div>
-                    </div>
-                    <div class="wizard-textspeak-row">
-                      <input type="range" class="wizard-count-slider" id="wizard-textspeak-slider" min="0" max="100" value="40" oninput="setWizardTextSpeak(this.value)">
-                      <div class="wizard-textspeak-value"><strong id="wizard-textspeak-percent">40%</strong> of comments</div>
-                    </div>
-                    <p style="font-size: 12px; color: var(--text-secondary); margin: 10px 0 0;">Only 2–5 words change per comment — not everything.</p>
-                  </div>
                 </div>
 
                 <div class="wizard-actions-footer">
                   <button class="btn-back-wizard" onclick="goToStep(2)">➔ Back</button>
-                  <span class="wizard-generate-footer-meta" id="wizard-generate-footer-meta">10 comments · Gemini AI</span>
+                  <span class="wizard-generate-footer-meta" id="wizard-generate-footer-meta">10 comments</span>
                   <button class="btn-continue-wizard" id="btn-step3-generate" onclick="generateWizardComments()">✨ Generate 10 comments</button>
                 </div>
               </div>
@@ -3986,13 +4085,6 @@
                   <div class="wizard-stat-card">
                     <div class="wizard-stat-value" id="stat-skipped-count">0</div>
                     <div class="wizard-stat-label">⏭ Skipped</div>
-                  </div>
-                  <div class="wizard-stat-card" style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                      <div class="wizard-stat-value" id="stat-quality-value">96%</div>
-                      <div class="wizard-stat-label">Avg quality</div>
-                    </div>
-                    <div style="font-size: 20px; background: var(--green-bg); color: var(--green); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">✓</div>
                   </div>
                 </div>
 
@@ -4778,6 +4870,16 @@
         if (!SELECTED_PROJECT_ID || !AUTH_PROJECTS.some(p => p.id === SELECTED_PROJECT_ID)) {
           SELECTED_PROJECT_ID = DEFAULT_PROJECT_ID;
         }
+        // TEMP TEST BYPASS — remove after comment-generation testing.
+        if (data.testGenerateBypass) {
+          localStorage.setItem('COMMENT_GEN_TEST_BYPASS', '1');
+          if (!JWT_TOKEN || !currentUser) {
+            JWT_TOKEN = 'test-bypass-token';
+            currentUser = { _id: 'test-user', name: 'Test User', email: 'test@local.dev' };
+            localStorage.setItem('jwt_token', JWT_TOKEN);
+            localStorage.setItem('user', JSON.stringify(currentUser));
+          }
+        }
         apiConfigReady = true;
         initializeGoogleSignInButton();
       } catch (e) {
@@ -4814,6 +4916,10 @@
 
       if (apiConfigReady && JWT_TOKEN && currentUser) {
         showDashboard();
+        // TEMP TEST BYPASS — remove after comment-generation testing.
+        if (isCommentGenTestBypassEnabled()) {
+          showToast('Test mode: Firebase/login bypassed for comment generation.', 'warning');
+        }
         checkVpnStatus();
         if (!vpnStatusInterval) {
           vpnStatusInterval = setInterval(checkVpnStatus, 10000);
@@ -5276,6 +5382,46 @@
       const isAccountsTabActive = () =>
         document.getElementById('tab-content-accounts')?.classList.contains('active');
 
+      // TEMP TEST BYPASS — remove after comment-generation testing.
+      const getMockTestAccounts = () => ([
+        {
+          _id: 'mock-account-1',
+          email: 'mock.alpha@example.com',
+          name: 'Mock Alpha',
+          status: 'connected',
+          isActive: true,
+          youtubeChannel: 'UC_mock_alpha_channel',
+          youtubeChannelTitle: 'Mock Alpha Channel',
+          persona: 'Casual viewer',
+          dailyCommentsUsed: 0,
+          vpn: { hasVpnConfig: false },
+        },
+        {
+          _id: 'mock-account-2',
+          email: 'mock.beta@example.com',
+          name: 'Mock Beta',
+          status: 'connected',
+          isActive: true,
+          youtubeChannel: 'UC_mock_beta_channel',
+          youtubeChannelTitle: 'Mock Beta Channel',
+          persona: 'Curious commenter',
+          dailyCommentsUsed: 0,
+          vpn: { hasVpnConfig: false },
+        },
+        {
+          _id: 'mock-account-3',
+          email: 'mock.gamma@example.com',
+          name: 'Mock Gamma',
+          status: 'connected',
+          isActive: false,
+          youtubeChannel: 'UC_mock_gamma_channel',
+          youtubeChannelTitle: 'Mock Gamma Channel',
+          persona: 'Skeptical viewer',
+          dailyCommentsUsed: 0,
+          vpn: { hasVpnConfig: false },
+        },
+      ]);
+
       if (container && isAccountsTabActive()) {
         container.innerHTML = '<div style="text-align:center;padding:40px;"><div class="spinner"></div></div>';
       }
@@ -5284,7 +5430,12 @@
         const res = await fetch(`${API_BASE}/api/google-accounts`, {
           headers: { Authorization: `Bearer ${JWT_TOKEN}` },
         });
-        const accounts = await res.json();
+        let accounts = await res.json();
+        if (!Array.isArray(accounts) || accounts.length === 0) {
+          // TEMP TEST BYPASS — remove after comment-generation testing.
+          if (isCommentGenTestBypassEnabled()) accounts = getMockTestAccounts();
+          else accounts = [];
+        }
 
         connectedAccountsList = accounts;
         updateAccountsStatCards(accounts);
@@ -5304,6 +5455,18 @@
         }
 
       } catch (e) {
+        // TEMP TEST BYPASS — remove after comment-generation testing.
+        if (isCommentGenTestBypassEnabled()) {
+          connectedAccountsList = getMockTestAccounts();
+          updateAccountsStatCards(connectedAccountsList);
+          if (document.getElementById('tab-content-comments').classList.contains('active')) {
+            renderCommentAccounts();
+          }
+          if (isAccountsTabActive() && container) {
+            renderAccountsList(connectedAccountsList);
+          }
+          return;
+        }
         if (container && isAccountsTabActive()) {
           container.innerHTML = '<div class="empty-state"><p>Failed to load accounts.</p></div>';
         }
@@ -6104,13 +6267,16 @@
     /** IDs locked when leaving step 2 — used for generate/post so step 3 filter changes cannot re-pick accounts */
     let wizardConfirmedAccountIds = null;
     let wizardComments = [];
-    let wizardCommentCount = 100;
-    let wizardCommentLanguage = 'english';
+    let wizardCommentCount = 10;
+    let wizardCommentLanguage = 'khasi';
     let wizardShowPendingOnly = false;
+    /** Directions-first generation is the only supported workflow. */
+    let wizardGenerationMode = 'directions';
     let wizardFilters = {
-      commentCount: 100,
-      languageMix: { khasi: 50, pnar: 20, garo: 0, english: 30, hindi: 0 },
-      textSpeakPercent: 40,
+      commentCount: 10,
+      languageMix: { khasi: 10, pnar: 0, garo: 0, english: 0, hindi: 0 },
+      toneMix: { positive: 10, neutral: 0, negative: 0 },
+      textSpeakPercent: 25,
       keyword: '',
     };
 
@@ -6122,23 +6288,34 @@
       ['hindi', 'filter-lang-hindi'],
     ];
 
+    const WIZARD_TONE_FIELDS = [
+      ['positive', 'filter-tone-positive'],
+      ['neutral', 'filter-tone-neutral'],
+      ['negative', 'filter-tone-negative'],
+    ];
+
+    function defaultKhasiMix(count) {
+      return { khasi: count, pnar: 0, garo: 0, english: 0, hindi: 0 };
+    }
+
     function getWizardLanguageLabel(language = wizardCommentLanguage) {
       if (wizardFilters && Object.values(wizardFilters.languageMix || {}).filter((v) => v > 0).length > 1) {
         return 'Mixed languages';
       }
       const mix = wizardFilters?.languageMix || {};
       const topLang = Object.entries(mix).sort((a, b) => b[1] - a[1])[0];
-      if (!topLang || topLang[1] === 0) return language === 'khasi' ? 'Khasi' : 'English';
+      if (!topLang || topLang[1] === 0) return 'Khasi';
       const labels = { khasi: 'Khasi', pnar: 'Pnar', garo: 'Garo', english: 'English', hindi: 'Hindi' };
-      return labels[topLang[0]] || 'English';
+      return labels[topLang[0]] || 'Khasi';
     }
 
     function deriveWizardCommentLanguage() {
       const mix = wizardFilters.languageMix || {};
       const top = Object.entries(mix).sort((a, b) => b[1] - a[1])[0];
-      if (!top || top[0] === 'english' || top[0] === 'hindi') return 'english';
-      if (top[0] === 'khasi') return 'khasi';
-      return 'english';
+      if (!top || top[1] === 0) return 'khasi';
+      if (top[0] === 'english' || top[0] === 'hindi') return top[0] === 'hindi' ? 'hindi' : 'english';
+      if (top[0] === 'khasi' || top[0] === 'pnar' || top[0] === 'garo') return top[0];
+      return 'khasi';
     }
 
     function updateWizardKeywordMeta() {
@@ -6149,21 +6326,62 @@
       countEl.textContent = `${len} / 500`;
     }
 
+    function isWizardDirectionsMode() {
+      return true;
+    }
+
+    function setWizardGenerationMode() {
+      wizardGenerationMode = 'directions';
+      syncWizardGenerationModeUi();
+      updateWizardFilterTotals();
+    }
+
+    function syncWizardGenerationModeUi() {
+      const isDirections = isWizardDirectionsMode();
+      const cardDir = document.getElementById('wizard-mode-card-directions');
+      const cardCtx = document.getElementById('wizard-mode-card-context');
+      const panelDir = document.getElementById('wizard-panel-directions');
+      const panelTone = document.getElementById('wizard-tone-section');
+      const noteDir = document.getElementById('wizard-mode-note-directions');
+      const noteCtx = document.getElementById('wizard-mode-note-context');
+      const hint = document.getElementById('wizard-keyword-hint');
+
+      if (cardDir) {
+        cardDir.classList.toggle('active', isDirections);
+        cardDir.setAttribute('aria-checked', isDirections ? 'true' : 'false');
+      }
+      if (cardCtx) {
+        cardCtx.classList.toggle('active', !isDirections);
+        cardCtx.setAttribute('aria-checked', !isDirections ? 'true' : 'false');
+      }
+      if (panelDir) panelDir.hidden = !isDirections;
+      if (panelTone) panelTone.hidden = isDirections;
+      if (noteDir) noteDir.style.display = isDirections ? 'block' : 'none';
+      if (noteCtx) noteCtx.style.display = isDirections ? 'none' : 'block';
+      if (hint) hint.textContent = 'Required';
+
+      WIZARD_TONE_FIELDS.forEach(([, id]) => {
+        const el = document.getElementById(id);
+        if (el) el.disabled = isDirections;
+      });
+    }
+
     function readWizardFiltersFromDom() {
       const languageMix = {};
       WIZARD_LANGUAGE_FIELDS.forEach(([key, id]) => {
         languageMix[key] = Math.max(0, parseInt(document.getElementById(id)?.value, 10) || 0);
       });
-
       const keywordEl = document.getElementById('wizard-filter-keyword');
       wizardFilters = {
         commentCount: wizardCommentCount,
         languageMix,
-        textSpeakPercent: wizardFilters.textSpeakPercent,
+        toneMix: { positive: 0, neutral: wizardCommentCount, negative: 0 },
+        textSpeakPercent: 25,
         keyword: (keywordEl?.value || wizardFilters.keyword || '').trim(),
       };
       wizardCommentLanguage = deriveWizardCommentLanguage();
       updateWizardKeywordMeta();
+      syncWizardGenerationModeUi();
       return wizardFilters;
     }
 
@@ -6171,6 +6389,10 @@
       WIZARD_LANGUAGE_FIELDS.forEach(([key, id]) => {
         const el = document.getElementById(id);
         if (el) el.value = wizardFilters.languageMix[key] ?? 0;
+      });
+      WIZARD_TONE_FIELDS.forEach(([key, id]) => {
+        const el = document.getElementById(id);
+        if (el) el.value = wizardFilters.toneMix?.[key] ?? 0;
       });
 
       const keywordEl = document.getElementById('wizard-filter-keyword');
@@ -6184,10 +6406,7 @@
       if (countSlider) countSlider.value = wizardCommentCount;
       if (countInput) countInput.value = wizardCommentCount;
 
-      const textSlider = document.getElementById('wizard-textspeak-slider');
-      if (textSlider) textSlider.value = wizardFilters.textSpeakPercent;
-      const textPercent = document.getElementById('wizard-textspeak-percent');
-      if (textPercent) textPercent.textContent = `${wizardFilters.textSpeakPercent}%`;
+      syncWizardGenerationModeUi();
     }
 
     function scaleWizardMix(mix, total) {
@@ -6195,11 +6414,7 @@
       const oldTotal = keys.reduce((sum, key) => sum + (mix[key] || 0), 0);
       const next = {};
       if (oldTotal <= 0) {
-        const base = Math.floor(total / keys.length);
-        keys.forEach((key, index) => {
-          next[key] = index === keys.length - 1 ? total - base * (keys.length - 1) : base;
-        });
-        return next;
+        return defaultKhasiMix(total);
       }
       let assigned = 0;
       keys.forEach((key, index) => {
@@ -6216,10 +6431,13 @@
     function updateWizardFilterTotals() {
       readWizardFiltersFromDom();
       const total = wizardCommentCount;
-
       const langSum = Object.values(wizardFilters.languageMix).reduce((a, b) => a + b, 0);
+      const toneSum = Object.values(wizardFilters.toneMix || {}).reduce((a, b) => a + b, 0);
+      const isDirections = isWizardDirectionsMode();
+      const directionsText = (wizardFilters.keyword || '').trim();
 
       const langEl = document.getElementById('wizard-language-total');
+      const toneEl = document.getElementById('wizard-tone-total');
       const generateBtn = document.getElementById('btn-step3-generate');
       const footerMeta = document.getElementById('wizard-generate-footer-meta');
 
@@ -6227,14 +6445,25 @@
         langEl.textContent = `Language counts must total ${total} (${langSum}/${total})`;
         langEl.className = `wizard-filter-total ${langSum === total ? 'valid' : 'invalid'}`;
       }
+      if (toneEl) {
+        if (isDirections) {
+          toneEl.textContent = 'Tone mix not used in Mode 1';
+          toneEl.className = 'wizard-filter-total valid';
+        } else {
+          toneEl.textContent = `Tone counts must total ${total} (${toneSum}/${total})`;
+          toneEl.className = `wizard-filter-total ${toneSum === total ? 'valid' : 'invalid'}`;
+        }
+      }
 
-      const valid = langSum === total;
+      const directionsOk = !isDirections || directionsText.length > 0;
+      const toneOk = isDirections || toneSum === total;
+      const valid = langSum === total && toneOk && directionsOk;
       if (generateBtn) {
         generateBtn.disabled = !valid;
         generateBtn.textContent = `✨ Generate ${total} comment${total === 1 ? '' : 's'}`;
       }
       if (footerMeta) {
-        footerMeta.textContent = `${total} comment${total === 1 ? '' : 's'} · Gemini AI`;
+        footerMeta.textContent = `${total} comment${total === 1 ? '' : 's'} · Directions-first`;
       }
 
       const bannerCount = document.getElementById('wizard-filter-banner-count');
@@ -6257,10 +6486,11 @@
     }
 
     function setWizardFilterCount(value) {
-      const next = Math.max(1, Math.min(100, Number(value) || 100));
+      const next = Math.max(1, Math.min(100, Number(value) || 10));
       wizardCommentCount = next;
       wizardFilters.commentCount = next;
-      wizardFilters.languageMix = scaleWizardMix(wizardFilters.languageMix, next);
+      wizardFilters.languageMix = scaleWizardMix(wizardFilters.languageMix || defaultKhasiMix(next), next);
+      wizardFilters.toneMix = { positive: 0, neutral: next, negative: 0 };
       writeWizardFiltersToDom();
       updateWizardFilterTotals();
       if (wizardCurrentStep === 2) {
@@ -6274,58 +6504,13 @@
     }
 
     function setWizardTextSpeak(value) {
-      wizardFilters.textSpeakPercent = Math.max(0, Math.min(100, Number(value) || 0));
-      const textSlider = document.getElementById('wizard-textspeak-slider');
-      const textPercent = document.getElementById('wizard-textspeak-percent');
-      if (textSlider) textSlider.value = wizardFilters.textSpeakPercent;
-      if (textPercent) textPercent.textContent = `${wizardFilters.textSpeakPercent}%`;
-    }
-
-    function applyWizardFilterPreset(preset) {
-      const total = wizardCommentCount;
-      document.querySelectorAll('#wizard-filter-presets .filter-pill').forEach((pill) => {
-        pill.classList.toggle('active', pill.dataset.preset === preset);
-      });
-
-      if (preset === 'gen-z-mix') {
-        wizardFilters = {
-          ...wizardFilters,
-          languageMix: { khasi: 0, pnar: 0, garo: 0, english: total, hindi: 0 },
-          textSpeakPercent: 60,
-        };
-      } else if (preset === 'khasi-heavy') {
-        wizardFilters = {
-          ...wizardFilters,
-          languageMix: scaleWizardMix({ khasi: 7, pnar: 1, garo: 0, english: 2, hindi: 0 }, total),
-          textSpeakPercent: 35,
-        };
-      } else if (preset === 'all-languages') {
-        wizardFilters = {
-          ...wizardFilters,
-          languageMix: scaleWizardMix({ khasi: 1, pnar: 1, garo: 1, english: 1, hindi: 1 }, total),
-          textSpeakPercent: 40,
-        };
-      } else if (preset === 'split-evenly') {
-        wizardFilters = {
-          ...wizardFilters,
-          languageMix: scaleWizardMix({ khasi: 1, pnar: 1, garo: 1, english: 1, hindi: 1 }, total),
-          textSpeakPercent: 30,
-        };
-      } else {
-        wizardFilters = {
-          ...wizardFilters,
-          languageMix: scaleWizardMix({ khasi: 5, pnar: 2, garo: 0, english: 3, hindi: 0 }, total),
-          textSpeakPercent: 40,
-        };
-      }
-
-      writeWizardFiltersToDom();
-      updateWizardFilterTotals();
+      wizardFilters.textSpeakPercent = 25;
     }
 
     function getWizardGenerationPayload() {
       readWizardFiltersFromDom();
-      const keyword = (wizardFilters.keyword || '').trim();
+      const isDirections = isWizardDirectionsMode();
+      const keyword = isDirections ? (wizardFilters.keyword || '').trim() : '';
       return {
         count: wizardCommentCount,
         language: wizardCommentLanguage,
@@ -6333,7 +6518,12 @@
         filters: {
           commentCount: wizardCommentCount,
           languageMix: wizardFilters.languageMix,
-          textSpeakPercent: wizardFilters.textSpeakPercent,
+          toneMode: 'ignored',
+          toneMix: { positive: 0, neutral: wizardCommentCount, negative: 0 },
+          voiceMode: 'single',
+          voice: 'neutral',
+          voiceMix: { gen_z: 0, millennial: 0, gen_x: 0, boomer: 0, neutral: wizardCommentCount },
+          textSpeakPercent: 25,
           keyword,
         },
       };
@@ -6846,14 +7036,36 @@
       }).join('');
 
       const missingChannel = selectedAccounts.filter((acc) => !acc.youtubeChannel);
-      continueBtn.disabled = selectedCount === 0 || missingChannel.length > 0;
-      if (missingChannel.length > 0 && stepDesc) {
+      // TEMP TEST BYPASS — remove after comment-generation testing.
+      continueBtn.disabled = isCommentGenTestBypassEnabled()
+        ? false
+        : (selectedCount === 0 || missingChannel.length > 0);
+      if (missingChannel.length > 0 && stepDesc && !isCommentGenTestBypassEnabled()) {
         stepDesc.textContent = `Select a YouTube channel for ${missingChannel.length} selected account(s) before continuing.`;
+      }
+    }
+
+    // TEMP TEST BYPASS — remove after comment-generation testing.
+    // Enable in browser console: localStorage.setItem('COMMENT_GEN_TEST_BYPASS','1')
+    // Disable: localStorage.removeItem('COMMENT_GEN_TEST_BYPASS')
+    function isCommentGenTestBypassEnabled() {
+      try {
+        return localStorage.getItem('COMMENT_GEN_TEST_BYPASS') === '1'
+          || new URLSearchParams(window.location.search).get('testGenerate') === '1';
+      } catch (_) {
+        return false;
       }
     }
 
     function continueFromAccountStep() {
       const selected = getSelectedWizardAccounts();
+      // TEMP TEST BYPASS — remove after comment-generation testing.
+      if (!selected.length && isCommentGenTestBypassEnabled()) {
+        wizardConfirmedAccountIds = [];
+        showToast('Test bypass: generating without linked accounts.', 'warning');
+        goToStep(3);
+        return;
+      }
       if (!selected.length) {
         showToast('Select at least one account.', 'error');
         return;
@@ -7036,7 +7248,11 @@
       const originalText = continueBtn.innerHTML;
 
       if (!updateWizardFilterTotals()) {
-        showToast('Filter counts must match your total comment count.', 'error');
+        if (isWizardDirectionsMode() && !(wizardFilters.keyword || '').trim()) {
+          showToast('Mode 1 needs directions in the box before you generate.', 'error');
+        } else {
+          showToast('Language / tone counts must match your total comment count.', 'error');
+        }
         return;
       }
 
@@ -7047,13 +7263,22 @@
 
       try {
         const payload = getWizardGenerationPayload();
-        const selectedAccounts = getSelectedWizardAccounts();
-
-        if (selectedAccounts.length === 0) {
+        let selectedAccounts = getSelectedWizardAccounts();
+        // TEMP TEST BYPASS — remove after comment-generation testing.
+        const testBypass = isCommentGenTestBypassEnabled();
+        if (selectedAccounts.length === 0 && testBypass) {
+          selectedAccounts = [{
+            _id: 'test-account-1',
+            name: 'Test Commenter',
+            email: 'test.commenter@example.com',
+            persona: 'Local test commenter',
+            youtubeChannel: 'test-channel',
+          }];
+        } else if (selectedAccounts.length === 0) {
           throw new Error('Select at least one account before generating comments.');
         }
         const noChannel = selectedAccounts.filter((acc) => !acc.youtubeChannel);
-        if (noChannel.length) {
+        if (noChannel.length && !testBypass) {
           throw new Error(
             `Select a YouTube channel for: ${noChannel.map((a) => a.email || a.name).join(', ')}`
           );
@@ -7072,7 +7297,9 @@
               title: video.title,
               id: video.id,
             })),
-            accounts: selectedAccounts.map((acc) => ({
+            accounts: testBypass && getSelectedWizardAccounts().length === 0
+              ? []
+              : selectedAccounts.map((acc) => ({
               _id: acc._id,
               id: acc._id.toString(),
               name: acc.name,
@@ -7134,15 +7361,15 @@
         });
 
         if (wizardComments.length === 0) {
-          throw new Error('No comments were generated. Check Gemini API key and quota.');
+          throw new Error('No comments were generated. Please try again.');
         }
 
         renderWizardReview();
         goToStep(4);
-        if (data.languageProvider && data.languageProvider !== 'gemini') {
-          showToast('Comments generated with fallback — Gemini may be unavailable.', 'warning');
+        if (data.languageProvider && data.languageProvider !== 'gemini' && data.languageProvider !== 'exact-phrase') {
+          showToast('Comments generated with fallback templates.', 'warning');
         } else {
-          showToast(`Generated ${wizardComments.length} unique comments with Gemini`, 'success');
+          showToast(`Generated ${wizardComments.length} comments`, 'success');
         }
       } catch (err) {
         console.error('Error generating comments:', err);
@@ -7203,10 +7430,10 @@
           <div class="comment-row">
             <div class="comment-meta-badges">
               <span class="comment-meta-badge lang">${escHtml(formatWizardLanguageLabel(c.language))}</span>
-              <span class="comment-meta-badge voice-${escHtml(c.voice || 'neutral')}">${escHtml(formatWizardVoiceLabel(c.voice))}</span>
-              <span class="comment-meta-badge tone-${escHtml(c.tone || 'positive')}">${escHtml(formatWizardToneLabel(c.tone))}</span>
+              ${isWizardDirectionsMode()
+                ? ''
+                : `<span class="comment-meta-badge tone-${escHtml(c.tone || 'positive')}">${escHtml(formatWizardToneLabel(c.tone))}</span>`}
               ${c.hasSpellingErrors ? '<span class="comment-meta-badge txtspk">txtspk</span>' : ''}
-              <span class="comment-meta-badge quality">${c.quality || 90}% quality</span>
             </div>
             ${actionHtml}
           </div>
@@ -7219,7 +7446,6 @@
       const genVal = document.getElementById('stat-generated-count');
       const appVal = document.getElementById('stat-approved-count');
       const skpVal = document.getElementById('stat-skipped-count');
-      const qVal = document.getElementById('stat-quality-value');
       const postBtn = document.getElementById('btn-post-wizard');
       const pendingCountEl = document.getElementById('wizard-pending-count');
       const reviewedCountEl = document.getElementById('wizard-reviewed-count');
@@ -7236,14 +7462,9 @@
       const reviewed = approved + skipped;
       const progressPct = total > 0 ? Math.round((reviewed / total) * 100) : 0;
 
-      const avgQuality = total > 0
-        ? Math.round(wizardComments.reduce((acc, c) => acc + (c.quality || 0), 0) / total)
-        : 0;
-
       genVal.textContent = total;
       appVal.textContent = approved;
       skpVal.textContent = skipped;
-      qVal.textContent = `${avgQuality}%`;
       if (pendingCountEl) pendingCountEl.textContent = pending;
       if (reviewedCountEl) reviewedCountEl.textContent = reviewed;
       if (totalCountEl) totalCountEl.textContent = total;
@@ -7947,17 +8168,19 @@
       wizardSelectedAccounts.clear();
       wizardConfirmedAccountIds = null;
       wizardComments = [];
-      wizardCommentCount = 100;
-      wizardCommentLanguage = 'english';
+      wizardCommentCount = 10;
+      wizardCommentLanguage = 'khasi';
       wizardShowPendingOnly = false;
+      wizardGenerationMode = 'directions';
       wizardFilters = {
-        commentCount: 100,
-        languageMix: { khasi: 50, pnar: 20, garo: 0, english: 30, hindi: 0 },
-        textSpeakPercent: 40,
+        commentCount: 10,
+        languageMix: { khasi: 10, pnar: 0, garo: 0, english: 0, hindi: 0 },
+        toneMix: { positive: 10, neutral: 0, negative: 0 },
+        textSpeakPercent: 25,
         keyword: '',
       };
       writeWizardFiltersToDom();
-      applyWizardFilterPreset('balanced');
+      updateWizardFilterTotals();
       
       // Hide results, show wizard
       document.getElementById('results-section').classList.remove('visible');
